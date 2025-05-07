@@ -1,53 +1,163 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atemanimation</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background: #000000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-        }
-        .container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background: url(https://i.postimg.cc/Yqm2m5Vy/final2.gif);
-            background-size: cover;
-            animation: animate 5s linear infinite; 
-        }
-        @keyframes animate {
-            0% { box-shadow: 0 0 0 15px rgba(200, 225, 247, 0.1), 0 0 0 30px rgba(200, 225, 247, 0.1), 0 0 0 45px rgba(200, 225, 247, 0.1), 0 0 0 60px rgba(200, 225, 247, 0.1), 0 0 0 70px rgba(200, 225, 247, 0.1); }
-            50% { box-shadow: 0 0 0 25px rgba(200, 225, 247, 0.1), 0 0 0 50px rgba(200, 225, 247, 0.1), 0 0 0 75px rgba(200, 225, 247, 0.1), 0 0 0 100px rgba(200, 225, 247, 0.1), 0 0 0 125px rgba(200, 225, 247, 0.1); }
-            100% { box-shadow: 0 0 0 15px rgba(200, 225, 247, 0.1), 0 0 0 30px rgba(200, 225, 247, 0.1), 0 0 0 45px rgba(200, 225, 247, 0.1), 0 0 0 60px rgba(200, 225, 247, 0.1), 0 0 0 70px rgba(200, 225, 247, 0.1); }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>Rauchfrei Tracker Pro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background-color: #000;
+      font-family: Arial, sans-serif;
+      color: white;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .input-block {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      margin: 5px;
+      border-radius: 8px;
+      border: none;
+    }
+    button {
+      background-color: #10b981;
+      color: white;
+      cursor: pointer;
+    }
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+    .reel {
+      background: #111;
+      border-radius: 16px;
+      padding: 20px;
+      width: 220px;
+      text-align: center;
+    }
+    .progress-circle {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: conic-gradient(#10b981 0%, #333 0%);
+      margin: 10px auto;
+      position: relative;
+    }
+    .progress-circle span {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 18px;
+      color: white;
+    }
+    .info-box {
+      background: #111;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
 </head>
 <body>
 
-    <div class="container"></div>
+  <h1>🚭 Rauchfrei Tracker Pro</h1>
 
-    <script>
-        function updateBreathSpeed(speed) {
-            document.querySelector('.container').style.animationDuration = speed + 's';
-        }
+  <div class="input-block">
+    <label>Aufhördatum & Uhrzeit:</label><br />
+    <input type="datetime-local" id="quitDate" /><br />
 
-        function receiveArduinoData(value) {
-            let newSpeed = Math.max(2, Math.min(10, value / 10)); 
-            updateBreathSpeed(newSpeed);
-        }
-    </script>
+    <label>Zigaretten pro Tag:</label><br />
+    <input type="number" id="cigsPerDay" value="20" /><br />
+
+    <label>Preis pro Schachtel (€):</label><br />
+    <input type="number" id="packPrice" value="8" step="0.01" /><br />
+
+    <label>Zigaretten pro Schachtel:</label><br />
+    <input type="number" id="cigsPerPack" value="20" /><br />
+
+    <button onclick="showProgress()">Fortschritt anzeigen</button>
+  </div>
+
+  <div id="info" class="info-box"></div>
+  <div id="reels" class="grid"></div>
+
+  <script>
+    const milestones = [
+      { title: "Puls normalisiert sich", hours: 8, description: "Puls sinkt auf Normalniveau." },
+      { title: "Sauerstoff steigt", hours: 12, description: "Mehr Sauerstoff im Blut." },
+      { title: "CO abgebaut", hours: 24, description: "CO-Wert ist fast null." },
+      { title: "Geschmack/Geruch kehrt zurück", hours: 48, description: "Sinne beginnen sich zu regenerieren." },
+      { title: "Hautdurchblutung steigt", hours: 72, description: "Die Haut wird besser durchblutet." },
+      { title: "Lungenfunktion verbessert", hours: 168, description: "Besseres Atmen nach 1 Woche." },
+      { title: "Herzinfarktrisiko sinkt", hours: 720, description: "Risiko nach einem Monat deutlich reduziert." }
+    ];
+
+    function showProgress() {
+      const quitInput = document.getElementById("quitDate").value;
+      const cigsPerDay = parseInt(document.getElementById("cigsPerDay").value);
+      const packPrice = parseFloat(document.getElementById("packPrice").value);
+      const cigsPerPack = parseInt(document.getElementById("cigsPerPack").value);
+
+      if (!quitInput || isNaN(cigsPerDay) || isNaN(packPrice) || isNaN(cigsPerPack)) {
+        alert("Bitte alle Eingaben korrekt ausfüllen!");
+        return;
+      }
+
+      const quitTime = new Date(quitInput);
+      const now = new Date();
+      const diffHours = (now - quitTime) / 1000 / 60 / 60;
+      const diffDays = diffHours / 24;
+
+      // Rechnen
+      const totalCigsAvoided = Math.floor(cigsPerDay * diffDays);
+      const totalMoneySaved = ((totalCigsAvoided / cigsPerPack) * packPrice).toFixed(2);
+      const lifeRegainedMin = totalCigsAvoided * 11;
+      const lifeRegainedHr = Math.floor(lifeRegainedMin / 60);
+      const lifeRegainedMinRest = lifeRegainedMin % 60;
+
+      // Info-Box anzeigen
+      const infoBox = document.getElementById("info");
+      infoBox.innerHTML = `
+        <h2>Dein Fortschritt</h2>
+        <p><strong>Gesparte Zigaretten:</strong> ${totalCigsAvoided}</p>
+        <p><strong>Gespartes Geld:</strong> € ${totalMoneySaved}</p>
+        <p><strong>Zurückgewonnene Lebenszeit:</strong> ${lifeRegainedHr} Stunden ${lifeRegainedMinRest} Minuten</p>
+      `;
+
+      // Meilenstein-Reels anzeigen
+      const reelsContainer = document.getElementById("reels");
+      reelsContainer.innerHTML = "";
+
+      milestones.forEach(m => {
+        const percent = Math.min((diffHours / m.hours) * 100, 100);
+        const reel = document.createElement("div");
+        reel.className = "reel";
+        reel.innerHTML = `
+          <h3>${m.title}</h3>
+          <div class="progress-circle" style="background: conic-gradient(#10b981 ${percent}%, #333 ${percent}%);">
+            <span>${Math.floor(percent)}%</span>
+          </div>
+          <p>${m.description}</p>
+          ${percent === 100 ? '<p style="color:#10b981;">✅ Erreicht!</p>' : ""}
+        `;
+        reelsContainer.appendChild(reel);
+      });
+    }
+  </script>
 
 </body>
 </html>
