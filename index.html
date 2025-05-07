@@ -70,6 +70,9 @@
       margin-left: auto;
       margin-right: auto;
     }
+    #info, #reels {
+      display: none; /* Initially hide the progress info */
+    }
   </style>
 </head>
 <body>
@@ -89,6 +92,7 @@
     <label>Zigaretten pro Schachtel:</label><br />
     <input type="number" id="cigsPerPack" value="20" /><br />
 
+    <button onclick="saveData()">Daten speichern</button>
     <button onclick="showProgress()">Fortschritt anzeigen</button>
     <button onclick="resetData()" style="background-color: #ef4444;">Daten zurücksetzen</button>
   </div>
@@ -118,11 +122,9 @@
       if (cigs) document.getElementById("cigsPerDay").value = cigs;
       if (price) document.getElementById("packPrice").value = price;
       if (perPack) document.getElementById("cigsPerPack").value = perPack;
-
-      if (quit) showProgress();
     };
 
-    function showProgress() {
+    function saveData() {
       const quitInput = document.getElementById("quitDate").value;
       const cigsPerDay = parseInt(document.getElementById("cigsPerDay").value);
       const packPrice = parseFloat(document.getElementById("packPrice").value);
@@ -138,6 +140,20 @@
       localStorage.setItem("cigsPerDay", cigsPerDay);
       localStorage.setItem("packPrice", packPrice);
       localStorage.setItem("cigsPerPack", cigsPerPack);
+
+      alert("Daten wurden gespeichert!");
+    }
+
+    function showProgress() {
+      const quitInput = localStorage.getItem("quitDate");
+      const cigsPerDay = parseInt(localStorage.getItem("cigsPerDay"));
+      const packPrice = parseFloat(localStorage.getItem("packPrice"));
+      const cigsPerPack = parseInt(localStorage.getItem("cigsPerPack"));
+
+      if (!quitInput || isNaN(cigsPerDay) || isNaN(packPrice) || isNaN(cigsPerPack)) {
+        alert("Bitte speichere zuerst deine Daten!");
+        return;
+      }
 
       const quitTime = new Date(quitInput);
       const now = new Date();
@@ -157,6 +173,7 @@
         <p><strong>Gespartes Geld:</strong> € ${totalMoneySaved}</p>
         <p><strong>Zurückgewonnene Lebenszeit:</strong> ${lifeRegainedHr} Stunden ${lifeRegainedMinRest} Minuten</p>
       `;
+      infoBox.style.display = "block"; // Show progress info
 
       const reelsContainer = document.getElementById("reels");
       reelsContainer.innerHTML = "";
@@ -175,6 +192,7 @@
         `;
         reelsContainer.appendChild(reel);
       });
+      reelsContainer.style.display = "flex"; // Show progress milestones
     }
 
     function resetData() {
