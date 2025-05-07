@@ -95,75 +95,67 @@
 
   <h1>🚭 Rauchfrei Tracker Pro</h1>
 
+  <!-- Hauptbuttons -->
   <div class="input-block">
+    <button onclick="toggleSettings()">⚙️ Einstellungen</button>
+    <button onclick="showProgress()">📊 Fortschritt anzeigen</button>
+    <button onclick="resetData()" class="button-reset">Daten zurücksetzen</button>
+  </div>
+
+  <!-- Einstellungsbereich -->
+  <div id="settingsPanel" class="input-block" style="display: none;">
+    <h2>Einstellungen</h2>
     <label>Aufhördatum & Uhrzeit:</label><br />
     <input type="datetime-local" id="quitDate" /><br />
-
     <label>Zigaretten pro Tag:</label><br />
-    <input type="number" id="cigsPerDay" value="20" /><br />
-
+    <input type="number" id="cigsPerDay" /><br />
     <label>Preis pro Schachtel (€):</label><br />
-    <input type="number" id="packPrice" value="8" step="0.01" /><br />
-
+    <input type="number" id="packPrice" step="0.01" /><br />
     <label>Zigaretten pro Schachtel:</label><br />
-    <input type="number" id="cigsPerPack" value="20" /><br />
-
+    <input type="number" id="cigsPerPack" /><br />
     <label>Alter:</label><br />
-    <input type="number" id="age" value="30" /><br />
-
+    <input type="number" id="age" /><br />
     <label>Gerauchte Jahre:</label><br />
-    <input type="number" id="yearsSmoked" value="10" /><br />
-
-    <button onclick="showProgress()">Fortschritt anzeigen</button>
-    <button onclick="resetData()" class="button-reset">Daten zurücksetzen</button>
+    <input type="number" id="yearsSmoked" /><br />
   </div>
 
   <div id="info" class="info-box"></div>
   <div id="reels" class="grid"></div>
 
   <script>
-    const milestones = {
-      shortTerm: [
-        { title: "Blutdruck sinkt leicht", minutes: 20, description: "Bereits 20 Minuten nach der letzten Zigarette beginnt dein Blutdruck zu sinken." },
-        { title: "Puls normalisiert sich", minutes: 30, description: "Der Herzschlag verlangsamt sich und kehrt zu einem normalen Rhythmus zurück." },
-        { title: "Körpertemperatur normalisiert sich", minutes: 30, description: "Hände und Füße werden wärmer, da die Durchblutung besser wird." },
-        { title: "Kohlendioxidspiegel sinkt", hours: 8, description: "Kohlendioxid im Blut reduziert sich, mehr Sauerstoff kann transportiert werden." },
-        { title: "Sauerstoffgehalt steigt", hours: 8, description: "Der Körper wird besser mit Sauerstoff versorgt." },
-        { title: "Rauchpartikel aus Bronchien entfernt", hours: 12, description: "Der Reinigungsprozess in den Atemwegen beginnt." },
-        { title: "Geruchs- und Geschmackssinn verbessert", days: 2, description: "Diese Sinne regenerieren sich merklich." },
-        { title: "Atmung wird leichter", days: 3, description: "Die Bronchien entspannen sich, Husten kann weniger werden." },
-        { title: "Nikotin vollständig abgebaut", days: 3, description: "Das gesamte Nikotin ist aus dem Körper entfernt." }
-      ],
-      midTerm: [
-        { title: "Mehr Energiegefühl", days: 5, description: "Viele fühlen sich wacher und fitter." },
-        { title: "Schlaf verbessert sich", days: 7, description: "Besserer Schlaf durch fehlendes Nikotin." },
-        { title: "Verdauung normalisiert sich", days: 10, description: "Der Darm passt sich an das Nichtrauchen an." },
-        { title: "Haut wird rosiger", days: 14, description: "Die Hautdurchblutung verbessert sich." },
-        { title: "Herzinfarktrisiko sinkt", days: 14, description: "Das Risiko für einen Herzinfarkt sinkt." },
-        { title: "Lungenfunktion verbessert sich", months: 1, description: "Die Flimmerhärchen beginnen sich zu regenerieren." },
-        { title: "Kreislauf stabilisiert sich", months: 1, description: "Das Herz-Kreislaufsystem passt sich an." }
-      ],
-      longTerm: [
-        { title: "Kondition verbessert sich", months: 3, description: "Du fühlst dich belastbarer." },
-        { title: "Rückfallrisiko sinkt stark", months: 6, description: "Du hast viele Routinen neu gelernt." },
-        { title: "Lunge fast vollständig regeneriert", months: 9, description: "Reinigung ist weit fortgeschritten." },
-        { title: "1 Jahr rauchfrei", years: 1, description: "Ein ganzes Jahr rauchfrei – große Leistung!" },
-        { title: "Krebsrisiko beginnt zu sinken", years: 1, description: "Das Risiko für viele Krebsarten verringert sich." },
-        { title: "Herz-Kreislauf-Risiko wie Nichtraucher", years: 5, description: "Dein Herzinfarktrisiko ist auf Normalniveau." },
-        { title: "Körper fast vollständig regeneriert", years: 15, description: "Viele Schäden sind nun repariert." }
-      ]
-    };
+    function toggleSettings() {
+      const panel = document.getElementById("settingsPanel");
+      panel.style.display = panel.style.display === "none" ? "block" : "none";
+    }
+
+    function loadSettings() {
+      const fields = ["quitDate", "cigsPerDay", "packPrice", "cigsPerPack", "age", "yearsSmoked"];
+      fields.forEach(id => {
+        const saved = localStorage.getItem(id);
+        if (saved !== null) document.getElementById(id).value = saved;
+        document.getElementById(id).addEventListener("input", () => {
+          localStorage.setItem(id, document.getElementById(id).value);
+        });
+      });
+    }
+
+    window.onload = loadSettings;
+
+    function resetData() {
+      localStorage.clear();
+      location.reload();
+    }
 
     function showProgress() {
-      const quitInput = document.getElementById("quitDate").value;
-      const cigsPerDay = parseInt(document.getElementById("cigsPerDay").value);
-      const packPrice = parseFloat(document.getElementById("packPrice").value);
-      const cigsPerPack = parseInt(document.getElementById("cigsPerPack").value);
-      const age = parseInt(document.getElementById("age").value);
-      const yearsSmoked = parseInt(document.getElementById("yearsSmoked").value);
+      const quitInput = localStorage.getItem("quitDate");
+      const cigsPerDay = parseInt(localStorage.getItem("cigsPerDay"));
+      const packPrice = parseFloat(localStorage.getItem("packPrice"));
+      const cigsPerPack = parseInt(localStorage.getItem("cigsPerPack"));
+      const age = parseInt(localStorage.getItem("age"));
+      const yearsSmoked = parseInt(localStorage.getItem("yearsSmoked"));
 
       if (!quitInput || isNaN(cigsPerDay) || isNaN(packPrice) || isNaN(cigsPerPack) || isNaN(age) || isNaN(yearsSmoked)) {
-        alert("Bitte alle Eingaben korrekt ausfüllen!");
+        alert("Bitte fülle die Einstellungen aus!");
         return;
       }
 
@@ -191,50 +183,51 @@
       const reelsContainer = document.getElementById("reels");
       reelsContainer.innerHTML = "";
 
-      function createMilestoneCategory(categoryName, milestonesArray, timeDiff) {
-        const categoryDiv = document.createElement("div");
-        categoryDiv.className = "category-title";
-        categoryDiv.innerText = categoryName;
-        reelsContainer.appendChild(categoryDiv);
+      const milestones = [];
+      const shortTerm = [
+        { title: "Blutdruck sinkt leicht", minutes: 20, description: "Bereits 20 Minuten nach der letzten Zigarette beginnt dein Blutdruck zu sinken." },
+        { title: "Puls normalisiert sich", minutes: 30, description: "Der Herzschlag verlangsamt sich und kehrt zu einem normalen Rhythmus zurück." },
+        { title: "Kohlendioxidspiegel sinkt", hours: 8, description: "Kohlendioxid im Blut reduziert sich, mehr Sauerstoff kann transportiert werden." },
+        { title: "Geruchs- und Geschmackssinn verbessert", days: 2, description: "Diese Sinne regenerieren sich merklich." },
+        { title: "Nikotin vollständig abgebaut", days: 3, description: "Das gesamte Nikotin ist aus dem Körper entfernt." },
+        { title: "Lungenfunktion verbessert sich", months: 1, description: "Die Flimmerhärchen beginnen sich zu regenerieren." },
+        { title: "Herzinfarktrisiko sinkt", months: 1, description: "Das Risiko für einen Herzinfarkt sinkt." },
+        { title: "Jahresmeilenstein erreicht", years: 1, description: "Ein ganzes Jahr rauchfrei – große Leistung!" },
+        { title: "Lungenkrebsrisiko halbiert", years: 10, description: "Halbiertes Risiko im Vergleich zu Rauchern." },
+        { title: "Körper fast vollständig regeneriert", years: 15, description: "Viele Schäden sind nun repariert." },
+      ];
 
-        milestonesArray.forEach(m => {
-          let percent = 0;
-          if (m.minutes) {
-            percent = Math.min((timeDiff * 60 / m.minutes) * 100, 100);
-          } else if (m.hours) {
-            percent = Math.min((timeDiff / m.hours) * 100, 100);
-          } else if (m.days) {
-            percent = Math.min((timeDiff / m.days) * 100, 100);
-          } else if (m.months) {
-            percent = Math.min((timeDiff / (m.months * 30)) * 100, 100);
-          } else if (m.years) {
-            percent = Math.min((timeDiff / (m.years * 365)) * 100, 100);
-          }
-
-          const reel = document.createElement("div");
-          reel.className = "reel";
-          reel.innerHTML = `
-            <h3 class="milestone-title">${m.title}</h3>
-            <div class="progress-circle" style="background: conic-gradient(#10b981 ${percent}%, #333 ${percent}%);">
-              <span>${Math.floor(percent)}%</span>
-            </div>
-            <p class="milestone-description">${m.description}</p>
-            ${percent === 100 ? '<p class="milestone-status">✅ Erreicht!</p>' : ""}
-          `;
-          reelsContainer.appendChild(reel);
+      for (let i = 30; i <= 200; i++) {
+        milestones.push({
+          title: `Tag ${i}`,
+          days: i,
+          description: `Du bist seit ${i} Tagen rauchfrei. Dein Körper regeneriert sich weiter – bleib dran!`
         });
       }
 
-      createMilestoneCategory('Kurzfristige Meilensteine', milestones.shortTerm, diffHours);
-      createMilestoneCategory('Mittelfristige Meilensteine', milestones.midTerm, diffDays);
-      createMilestoneCategory('Langfristige Meilensteine', milestones.longTerm, diffYears);
-    }
+      const allMilestones = [...shortTerm, ...milestones];
 
-    function resetData() {
-      localStorage.clear();
-      location.reload();
+      allMilestones.forEach(m => {
+        let percent = 0;
+        if (m.minutes) percent = Math.min((diffHours * 60 / m.minutes) * 100, 100);
+        else if (m.hours) percent = Math.min((diffHours / m.hours) * 100, 100);
+        else if (m.days) percent = Math.min((diffDays / m.days) * 100, 100);
+        else if (m.months) percent = Math.min((diffMonths / m.months) * 100, 100);
+        else if (m.years) percent = Math.min((diffYears / m.years) * 100, 100);
+
+        const reel = document.createElement("div");
+        reel.className = "reel";
+        reel.innerHTML = `
+          <h3 class="milestone-title">${m.title}</h3>
+          <div class="progress-circle" style="background: conic-gradient(#10b981 ${percent}%, #333 ${percent}%);">
+            <span>${Math.floor(percent)}%</span>
+          </div>
+          <p class="milestone-description">${m.description}</p>
+          ${percent === 100 ? '<p class="milestone-status">✅ Erreicht!</p>' : ""}
+        `;
+        reelsContainer.appendChild(reel);
+      });
     }
   </script>
-
 </body>
 </html>
