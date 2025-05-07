@@ -14,23 +14,61 @@
     }
     h1 {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 30px;
     }
-    .button {
+    /* Menü-Stil */
+    .menu {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      background-color: #333;
+      padding: 10px;
+    }
+    .menu button {
+      background-color: #444;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .menu button:hover {
+      background-color: #666;
+    }
+    /* Inhalt */
+    .content {
+      display: none;
+    }
+    .active {
+      display: block;
+    }
+    .input-block {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    input, button {
       padding: 10px;
       font-size: 16px;
       margin: 5px;
       border-radius: 8px;
       border: none;
-      cursor: pointer;
     }
-    .button-primary {
+    button {
       background-color: #10b981;
       color: white;
+      cursor: pointer;
     }
     .button-reset {
       background-color: #ef4444;
-      color: white;
+    }
+    .info-box {
+      background: #111;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
     }
     .grid {
       display: flex;
@@ -45,212 +83,197 @@
       width: 250px;
       text-align: center;
     }
-    .progress-circle {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      background: conic-gradient(#10b981 0%, #333 0%);
-      margin: 10px auto;
-      position: relative;
-    }
-    .progress-circle span {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 18px;
-      color: white;
-    }
-    .info-box {
-      background: #111;
-      padding: 20px;
-      border-radius: 12px;
-      margin-bottom: 30px;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .milestone-status {
-      margin-top: 5px;
-      color: #10b981;
-    }
-    .hidden {
-      display: none;
-    }
   </style>
 </head>
 <body>
 
   <h1>🚭 Rauchfrei Tracker Pro</h1>
 
-  <div style="text-align: center;">
-    <button class="button button-primary" onclick="showProgress()">Fortschritt anzeigen</button>
-    <button class="button button-reset" onclick="resetData()">Daten zurücksetzen</button>
-    <button class="button" onclick="toggleSettings()">⚙️ Einstellungen</button>
+  <!-- Menü-Navigation -->
+  <div class="menu">
+    <button onclick="showPage('start')">🏠 Start</button>
+    <button onclick="showPage('settings')">⚙️ Einstellungen</button>
+    <button onclick="showPage('addMilestone')">➕ Meilenstein hinzufügen</button>
   </div>
 
-  <div id="settings" class="info-box hidden">
+  <!-- Startseite -->
+  <div id="start" class="content active">
+    <div id="info" class="info-box"></div>
+    <div id="reels" class="grid"></div>
+  </div>
+
+  <!-- Einstellungen -->
+  <div id="settings" class="content">
     <h2>Einstellungen</h2>
-    <label>Aufhördatum & Uhrzeit:</label><br />
-    <input type="datetime-local" id="quitDate" /><br />
+    <div class="input-block">
+      <label>Aufhördatum & Uhrzeit:</label><br />
+      <input type="datetime-local" id="quitDate" /><br />
 
-    <label>Zigaretten pro Tag:</label><br />
-    <input type="number" id="cigsPerDay" value="20" /><br />
+      <label>Zigaretten pro Tag:</label><br />
+      <input type="number" id="cigsPerDay" value="20" /><br />
 
-    <label>Preis pro Schachtel (€):</label><br />
-    <input type="number" id="packPrice" value="8" step="0.01" /><br />
+      <label>Preis pro Schachtel (€):</label><br />
+      <input type="number" id="packPrice" value="8" step="0.01" /><br />
 
-    <label>Zigaretten pro Schachtel:</label><br />
-    <input type="number" id="cigsPerPack" value="20" /><br />
+      <label>Zigaretten pro Schachtel:</label><br />
+      <input type="number" id="cigsPerPack" value="20" /><br />
 
-    <label>Alter:</label><br />
-    <input type="number" id="age" value="30" /><br />
+      <label>Alter:</label><br />
+      <input type="number" id="age" value="30" /><br />
 
-    <label>Gerauchte Jahre:</label><br />
-    <input type="number" id="yearsSmoked" value="10" /><br />
+      <label>Gerauchte Jahre:</label><br />
+      <input type="number" id="yearsSmoked" value="10" /><br />
 
-    <hr />
-    <h3>Benutzerdefinierten Meilenstein hinzufügen</h3>
-    <input type="text" id="customTitle" placeholder="Titel"><br />
-    <input type="number" id="customMinutes" placeholder="Minuten seit Rauchstopp"><br />
-    <input type="text" id="customDescription" placeholder="Beschreibung (optional)"><br />
-    <button class="button button-primary" onclick="addCustomMilestone(
-      document.getElementById('customTitle').value,
-      document.getElementById('customMinutes').value,
-      document.getElementById('customDescription').value
-    )">➕ Meilenstein hinzufügen</button>
+      <button onclick="saveSettings()">Einstellungen speichern</button>
+      <button onclick="resetData()" class="button-reset">Daten zurücksetzen</button>
+    </div>
   </div>
 
-  <div id="info" class="info-box"></div>
-  <div id="reels" class="grid"></div>
+  <!-- Meilenstein hinzufügen -->
+  <div id="addMilestone" class="content">
+    <h2>Meilenstein hinzufügen</h2>
+    <div class="input-block">
+      <label>Titel:</label><br />
+      <input type="text" id="milestoneTitle" /><br />
+
+      <label>Beschreibung:</label><br />
+      <input type="text" id="milestoneDescription" /><br />
+
+      <label>Zeitpunkt (in Minuten, Stunden, Tagen, Monaten, Jahren):</label><br />
+      <input type="number" id="milestoneTimeValue" value="1" /><br />
+      <select id="milestoneTimeUnit">
+        <option value="minutes">Minuten</option>
+        <option value="hours">Stunden</option>
+        <option value="days">Tagen</option>
+        <option value="months">Monaten</option>
+        <option value="years">Jahren</option>
+      </select><br />
+
+      <button onclick="addMilestone()">Meilenstein hinzufügen</button>
+    </div>
+  </div>
 
   <script>
-    const milestones = [
-      { title: "Blutdruck normalisiert sich", minutes: 20, description: "Schon nach 20 Minuten beginnt dein Körper sich zu erholen." },
-      { title: "Puls wird ruhiger", minutes: 30, description: "Der Puls sinkt auf ein gesundes Niveau." },
-      { title: "Mehr Sauerstoff", hours: 8, description: "Dein Blut enthält weniger Kohlenmonoxid." },
-      { title: "Geruchssinn verbessert sich", days: 2, description: "Dein Geschmack und Geruch kehren zurück." },
-      { title: "Nikotin abgebaut", days: 3, description: "Kein Nikotin mehr im Körper." },
-      { title: "Energie kehrt zurück", days: 5, description: "Du fühlst dich vitaler." },
-      { title: "Kreislauf verbessert", weeks: 2, description: "Durchblutung und Ausdauer steigen." },
-      { title: "Lungenfunktion steigt", months: 1, description: "Bessere Lungenkapazität." },
-      { title: "Rückfallrisiko sinkt", months: 6, description: "Weniger Verlangen." },
-      { title: "Ein Jahr rauchfrei!", years: 1, description: "Herzinfarktrisiko stark reduziert." },
-      { title: "Krebsrisiko sinkt", years: 5, description: "Lungenkrebsrisiko halbiert." },
-      { title: "Körper fast regeneriert", years: 15, description: "Herz-Kreislauf-System wie bei Nichtrauchern." }
-    ];
+    let milestones = JSON.parse(localStorage.getItem('milestones')) || [];
 
-    let customMilestones = JSON.parse(localStorage.getItem("customMilestones") || "[]");
-
-    function toggleSettings() {
-      document.getElementById("settings").classList.toggle("hidden");
-    }
-
-    function saveInputs() {
-      const fields = ["quitDate", "cigsPerDay", "packPrice", "cigsPerPack", "age", "yearsSmoked"];
-      fields.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) localStorage.setItem(id, el.value);
+    // Zeigt die entsprechende Seite an
+    function showPage(pageId) {
+      document.querySelectorAll('.content').forEach(page => {
+        page.classList.remove('active');
       });
+      document.getElementById(pageId).classList.add('active');
     }
 
-    function loadInputs() {
-      const fields = ["quitDate", "cigsPerDay", "packPrice", "cigsPerPack", "age", "yearsSmoked"];
-      fields.forEach(id => {
-        const el = document.getElementById(id);
-        if (el && localStorage.getItem(id)) el.value = localStorage.getItem(id);
-      });
-    }
+    // Speichern der Einstellungen
+    function saveSettings() {
+      const quitDate = document.getElementById('quitDate').value;
+      const cigsPerDay = parseInt(document.getElementById('cigsPerDay').value);
+      const packPrice = parseFloat(document.getElementById('packPrice').value);
+      const cigsPerPack = parseInt(document.getElementById('cigsPerPack').value);
+      const age = parseInt(document.getElementById('age').value);
+      const yearsSmoked = parseInt(document.getElementById('yearsSmoked').value);
 
-    function addCustomMilestone(title, minutesSinceQuit, description) {
-      if (!title || isNaN(minutesSinceQuit)) {
-        alert("Bitte gültige Werte für Titel und Minuten eingeben.");
+      if (!quitDate || isNaN(cigsPerDay) || isNaN(packPrice) || isNaN(cigsPerPack) || isNaN(age) || isNaN(yearsSmoked)) {
+        alert("Bitte alle Eingaben korrekt ausfüllen!");
         return;
       }
 
-      customMilestones.push({
-        title: title,
-        custom: true,
-        minutes: parseFloat(minutesSinceQuit),
-        description: description || ""
-      });
+      localStorage.setItem('quitDate', quitDate);
+      localStorage.setItem('cigsPerDay', cigsPerDay);
+      localStorage.setItem('packPrice', packPrice);
+      localStorage.setItem('cigsPerPack', cigsPerPack);
+      localStorage.setItem('age', age);
+      localStorage.setItem('yearsSmoked', yearsSmoked);
 
-      localStorage.setItem("customMilestones", JSON.stringify(customMilestones));
-      showProgress();
+      alert("Einstellungen gespeichert!");
     }
 
-    function showProgress() {
-      saveInputs();
+    // Meilenstein hinzufügen
+    function addMilestone() {
+      const title = document.getElementById('milestoneTitle').value;
+      const description = document.getElementById('milestoneDescription').value;
+      const timeValue = parseInt(document.getElementById('milestoneTimeValue').value);
+      const timeUnit = document.getElementById('milestoneTimeUnit').value;
 
-      const quitInput = document.getElementById("quitDate").value;
-      const cigsPerDay = parseInt(document.getElementById("cigsPerDay").value);
-      const packPrice = parseFloat(document.getElementById("packPrice").value);
-      const cigsPerPack = parseInt(document.getElementById("cigsPerPack").value);
-
-      if (!quitInput || isNaN(cigsPerDay) || isNaN(packPrice) || isNaN(cigsPerPack)) {
-        alert("Bitte alle Einstellungen korrekt ausfüllen.");
+      if (!title || !description || isNaN(timeValue)) {
+        alert("Bitte alle Eingaben korrekt ausfüllen!");
         return;
       }
 
-      const quitTime = new Date(quitInput);
-      const now = new Date();
-      const diffMin = (now - quitTime) / 1000 / 60;
+      const newMilestone = {
+        title,
+        description,
+        timeValue,
+        timeUnit,
+        timestamp: Date.now() + convertTimeToMilliseconds(timeValue, timeUnit)
+      };
 
-      const diffDays = diffMin / 1440;
-      const totalCigsAvoided = Math.floor(cigsPerDay * diffDays);
-      const totalMoneySaved = ((totalCigsAvoided / cigsPerPack) * packPrice).toFixed(2);
-      const lifeRegainedMin = totalCigsAvoided * 11;
-      const lifeRegainedHr = Math.floor(lifeRegainedMin / 60);
-      const lifeRegainedMinRest = lifeRegainedMin % 60;
+      milestones.push(newMilestone);
+      milestones.sort((a, b) => a.timestamp - b.timestamp);  // Zeitlich sortieren
 
+      localStorage.setItem('milestones', JSON.stringify(milestones));
+
+      alert("Meilenstein hinzugefügt!");
+      showPage('start');
+      displayProgress();  // Update der Fortschrittsanzeige
+    }
+
+    // Hilfsfunktion zur Zeitumrechnung
+    function convertTimeToMilliseconds(value, unit) {
+      switch (unit) {
+        case 'minutes': return value * 60000;
+        case 'hours': return value * 3600000;
+        case 'days': return value * 86400000;
+        case 'months': return value * 2592000000; // Grob: 30 Tage
+        case 'years': return value * 31536000000; // Grob: 365 Tage
+        default: return 0;
+      }
+    }
+
+    // Fortschritt anzeigen
+    function displayProgress() {
       const infoBox = document.getElementById("info");
+      const quitDate = localStorage.getItem('quitDate');
+      const now = new Date();
+      const quitTime = new Date(quitDate);
+      const diffTime = now - quitTime;
+      const diffDays = diffTime / (1000 * 3600 * 24);
+
       infoBox.innerHTML = `
         <h2>Dein Fortschritt</h2>
-        <p><strong>Zigaretten vermieden:</strong> ${totalCigsAvoided}</p>
-        <p><strong>Geld gespart:</strong> € ${totalMoneySaved}</p>
-        <p><strong>Zurückgewonnene Lebenszeit:</strong> ${lifeRegainedHr} Std ${lifeRegainedMinRest} Min</p>
+        <p><strong>Gesparte Tage:</strong> ${Math.floor(diffDays)}</p>
+        <p><strong>Meilensteine erreicht:</strong></p>
+        <div id="reels"></div>
       `;
 
       const reelsContainer = document.getElementById("reels");
       reelsContainer.innerHTML = "";
 
-      [...milestones, ...customMilestones]
-        .sort((a, b) => getMinutes(a) - getMinutes(b))
-        .forEach(m => {
-          const min = getMinutes(m);
-          const percent = Math.min((diffMin / min) * 100, 100);
-          const reel = document.createElement("div");
-          reel.className = "reel";
-          reel.innerHTML = `
-            <h3>${m.title}</h3>
-            <div class="progress-circle" style="background: conic-gradient(#10b981 ${percent}%, #333 ${percent}%);">
-              <span>${Math.floor(percent)}%</span>
-            </div>
-            <p>${m.description}</p>
-            ${percent === 100 ? '<p class="milestone-status">✅ Erreicht!</p>' : ''}
-          `;
-          reelsContainer.appendChild(reel);
-        });
+      milestones.forEach(milestone => {
+        const percent = Math.min((diffTime / milestone.timestamp) * 100, 100);
+        const reel = document.createElement("div");
+        reel.className = "reel";
+        reel.innerHTML = `
+          <h3 class="milestone-title">${milestone.title}</h3>
+          <div class="progress-circle" style="background: conic-gradient(#10b981 ${percent}%, #333 ${percent}%);">
+            <span>${Math.floor(percent)}%</span>
+          </div>
+          <p class="milestone-description">${milestone.description}</p>
+          ${percent === 100 ? '<p class="milestone-status">✅ Erreicht!</p>' : ""}
+        `;
+        reelsContainer.appendChild(reel);
+      });
     }
 
-    function getMinutes(m) {
-      if (m.minutes) return m.minutes;
-      if (m.hours) return m.hours * 60;
-      if (m.days) return m.days * 1440;
-      if (m.weeks) return m.weeks * 10080;
-      if (m.months) return m.months * 43200;
-      if (m.years) return m.years * 525600;
-      return 0;
-    }
-
+    // Daten zurücksetzen
     function resetData() {
-      if (confirm("Willst du wirklich alle Daten löschen?")) {
-        localStorage.clear();
-        location.reload();
-      }
+      localStorage.clear();
+      location.reload();
     }
 
-    window.onload = loadInputs;
+    // Initialisierung
+    displayProgress();
   </script>
+
 </body>
 </html>
