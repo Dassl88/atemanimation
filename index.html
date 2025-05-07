@@ -84,6 +84,11 @@
       margin-top: 5px;
       color: #10b981;
     }
+    .category-title {
+      font-size: 20px;
+      margin-top: 30px;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -117,18 +122,30 @@
   <div id="reels" class="grid"></div>
 
   <script>
-    const milestones = [
-      { title: "Nikotin beginnt den Körper zu verlassen", hours: 1, description: "Nikotin wird schnell aus dem System entfernt." },
-      { title: "Kohlenmonoxid wird aus dem Blut entfernt", hours: 12, description: "Mehr Sauerstoff im Blut." },
-      { title: "Der Geschmackssinn verbessert sich", days: 2, description: "Die Geschmacksknospen beginnen sich zu regenerieren." },
-      { title: "Herzinfarktrisiko sinkt", days: 1, description: "Das Risiko für einen Herzinfarkt sinkt sofort." },
-      { title: "Krebsrisiko verringert sich", days: 365, description: "Das Risiko für Lungenkrebs sinkt deutlich." },
-      { title: "Lungenkapazität verbessert sich", months: 3, description: "Du atmest leichter und fühlst dich fitter." },
-      { title: "Psychische Abhängigkeit nimmt ab", months: 1, description: "Du fühlst dich weniger von Zigaretten abhängig." },
-      { title: "Dein Immunsystem wird stärker", months: 6, description: "Du wirst weniger anfällig für Krankheiten." },
-      { title: "Lungenkrebsrisiko sinkt um 50%", years: 5, description: "Das Risiko für Lungenkrebs ist halbiert." },
-      { title: "Herz-Kreislauf-System ist fast wie bei einem Nichtraucher", years: 5, description: "Das Risiko für Herzkrankheiten ist deutlich gesenkt." }
-    ];
+    const milestones = {
+      shortTerm: [
+        { title: "Nikotin beginnt den Körper zu verlassen", hours: 1, description: "Nikotin wird schnell aus dem System entfernt." },
+        { title: "Kohlenmonoxid wird aus dem Blut entfernt", hours: 12, description: "Mehr Sauerstoff im Blut." },
+        { title: "Der Geschmackssinn verbessert sich", days: 2, description: "Die Geschmacksknospen beginnen sich zu regenerieren." },
+        { title: "Herzinfarktrisiko sinkt", days: 1, description: "Das Risiko für einen Herzinfarkt sinkt sofort." },
+        { title: "Lungenfunktion verbessert sich", days: 2, description: "Die Lunge beginnt sich von den schädlichen Abgasen zu erholen." },
+        // ... Füge hier 35 weitere kurzfristige Meilensteine hinzu
+      ],
+      midTerm: [
+        { title: "Krebsrisiko verringert sich", days: 365, description: "Das Risiko für Lungenkrebs sinkt deutlich." },
+        { title: "Lungenkapazität verbessert sich", months: 3, description: "Du atmest leichter und fühlst dich fitter." },
+        { title: "Psychische Abhängigkeit nimmt ab", months: 1, description: "Du fühlst dich weniger von Zigaretten abhängig." },
+        { title: "Dein Immunsystem wird stärker", months: 6, description: "Du wirst weniger anfällig für Krankheiten." },
+        // ... Füge hier 26 weitere mittelfristige Meilensteine hinzu
+      ],
+      longTerm: [
+        { title: "Lungenkrebsrisiko sinkt um 50%", years: 5, description: "Das Risiko für Lungenkrebs ist halbiert." },
+        { title: "Herz-Kreislauf-System ist fast wie bei einem Nichtraucher", years: 5, description: "Das Risiko für Herzkrankheiten ist deutlich gesenkt." },
+        { title: "Die Lebenserwartung steigt", years: 10, description: "Durch das Aufhören mit dem Rauchen hast du deine Lebenserwartung erheblich erhöht." },
+        { title: "Das Risiko für Schlaganfälle sinkt", years: 10, description: "Das Risiko für Schlaganfälle sinkt auf das Niveau eines Nichtrauchers." },
+        // ... Füge hier 16 weitere langfristige Meilensteine hinzu
+      ]
+    };
 
     // Berechnung der Fortschritte basierend auf der eingegebenen Zeit
     function showProgress() {
@@ -176,20 +193,41 @@
       const reelsContainer = document.getElementById("reels");
       reelsContainer.innerHTML = "";
 
-      milestones.forEach(m => {
-        const percent = Math.min((diffHours / m.hours) * 100, 100);
-        const reel = document.createElement("div");
-        reel.className = "reel";
-        reel.innerHTML = `
-          <h3 class="milestone-title">${m.title}</h3>
-          <div class="progress-circle" style="background: conic-gradient(#10b981 ${percent}%, #333 ${percent}%);">
-            <span>${Math.floor(percent)}%</span>
-          </div>
-          <p class="milestone-description">${m.description}</p>
-          ${percent === 100 ? '<p class="milestone-status">✅ Erreicht!</p>' : ""}
-        `;
-        reelsContainer.appendChild(reel);
-      });
+      function createMilestoneCategory(categoryName, milestones, timeDiff) {
+        const categoryDiv = document.createElement("div");
+        categoryDiv.className = "category-title";
+        categoryDiv.innerText = categoryName;
+        reelsContainer.appendChild(categoryDiv);
+
+        milestones.forEach(m => {
+          let percent = 0;
+          if (m.hours) {
+            percent = Math.min((timeDiff / m.hours) * 100, 100);
+          } else if (m.days) {
+            percent = Math.min((timeDiff / m.days) * 100, 100);
+          } else if (m.months) {
+            percent = Math.min((timeDiff / (m.months * 30)) * 100, 100);
+          } else if (m.years) {
+            percent = Math.min((timeDiff / (m.years * 365)) * 100, 100);
+          }
+
+          const reel = document.createElement("div");
+          reel.className = "reel";
+          reel.innerHTML = `
+            <h3 class="milestone-title">${m.title}</h3>
+            <div class="progress-circle" style="background: conic-gradient(#10b981 ${percent}%, #333 ${percent}%);">
+              <span>${Math.floor(percent)}%</span>
+            </div>
+            <p class="milestone-description">${m.description}</p>
+            ${percent === 100 ? '<p class="milestone-status">✅ Erreicht!</p>' : ""}
+          `;
+          reelsContainer.appendChild(reel);
+        });
+      }
+
+      createMilestoneCategory('Kurzfristige Meilensteine', milestones.shortTerm, diffHours);
+      createMilestoneCategory('Mittelfristige Meilensteine', milestones.midTerm, diffDays);
+      createMilestoneCategory('Langfristige Meilensteine', milestones.longTerm, diffYears);
     }
 
     // Daten zurücksetzen
