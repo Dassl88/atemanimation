@@ -14,32 +14,39 @@
     }
     h1 {
       text-align: center;
+      margin-bottom: 20px;
+    }
+    .buttons {
+      text-align: center;
       margin-bottom: 30px;
     }
-    .settings-block, .info-box {
-      background: #111;
-      padding: 20px;
-      border-radius: 12px;
-      max-width: 600px;
-      margin: 20px auto;
-    }
-    .hidden {
-      display: none;
-    }
-    input, button {
-      padding: 10px;
+    button {
+      padding: 10px 20px;
       font-size: 16px;
       margin: 5px;
       border-radius: 8px;
       border: none;
-    }
-    button {
       background-color: #10b981;
       color: white;
       cursor: pointer;
     }
-    .danger {
-      background-color: #ef4444;
+    .hidden {
+      display: none;
+    }
+    .settings {
+      max-width: 400px;
+      margin: 0 auto 30px auto;
+      background: #111;
+      padding: 20px;
+      border-radius: 12px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: none;
     }
     .grid {
       display: flex;
@@ -51,7 +58,7 @@
       background: #111;
       border-radius: 16px;
       padding: 20px;
-      width: 260px;
+      width: 240px;
       text-align: center;
     }
     .progress-circle {
@@ -70,12 +77,26 @@
       font-size: 18px;
       color: white;
     }
+    .info-box {
+      background: #111;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
   </style>
 </head>
 <body>
   <h1>🚭 Rauchfrei Tracker Pro</h1>
 
-  <div class="settings-block hidden" id="settings">
+  <div class="buttons">
+    <button onclick="toggleSettings()">Einstellungen</button>
+    <button onclick="showProgress()">Fortschritt anzeigen</button>
+  </div>
+
+  <div id="settings" class="settings hidden">
     <label>Aufhördatum & Uhrzeit:</label><br />
     <input type="datetime-local" id="quitDate" /><br />
 
@@ -89,12 +110,7 @@
     <input type="number" id="cigsPerPack" value="20" /><br />
 
     <button onclick="saveSettings()">Speichern</button>
-    <button onclick="resetData()" class="danger">Daten zurücksetzen</button>
-  </div>
-
-  <div style="text-align: center;">
-    <button onclick="toggleSettings()">⚙️ Einstellungen</button>
-    <button onclick="showProgress()">📈 Fortschritt anzeigen</button>
+    <button onclick="resetData()" style="background-color: #ef4444;">Daten zurücksetzen</button>
   </div>
 
   <div id="info" class="info-box"></div>
@@ -102,57 +118,51 @@
 
   <script>
     const milestones = [
-      { title: "Blutdruck sinkt", hours: 0.33, description: "Nach 20 Minuten normalisiert sich dein Blutdruck." },
-      { title: "Sauerstoff steigt", hours: 8, description: "Der Sauerstoffgehalt im Blut steigt deutlich." },
-      { title: "CO abgebaut", hours: 24, description: "Kohlenmonoxid ist aus dem Körper verschwunden." },
-      { title: "Geschmack/Geruch kehrt zurück", hours: 48, description: "Sinne verbessern sich stark." },
-      { title: "Leichtere Atmung", hours: 72, description: "Bronchien entspannen sich, Lunge beginnt sich zu erholen." },
-      { title: "Körperlicher Entzug am Höhepunkt", hours: 72, description: "Stärkster Entzug: Schlafstörungen, Reizbarkeit." },
-      { title: "Körperlicher Entzug klingt ab", hours: 336, description: "Ab Woche 2 ist der körperliche Entzug meist vorbei." },
-      { title: "Psychische Triggerphase beginnt", hours: 504, description: "Ab Woche 3 treten Gewohnheitsreize wie Stress auf." },
-      { title: "Haut wird rosiger", hours: 720, description: "Nach 1 Monat verbesserte Hautdurchblutung." },
-      { title: "Kreislauf stabil", hours: 1440, description: "Nach 2 Monaten ist dein Kreislauf stabiler." },
-      { title: "Lungenfunktion verbessert", hours: 2160, description: "3 Monate: Lunge kann bis zu 30% mehr leisten." },
-      { title: "Rückfallrisiko sinkt", hours: 2160, description: "Nach 3 Monaten deutlich geringeres Rückfallrisiko." },
-      { title: "Stimmung stabiler", hours: 4320, description: "Nach 6 Monaten weniger Reizbarkeit und Stimmungsschwankungen." },
-      { title: "Lungenzellen regeneriert", hours: 6480, description: "Nach 9 Monaten weniger Husten und Infekte." },
-      { title: "Herzrisiko halbiert", hours: 8760, description: "1 Jahr rauchfrei – Risiko für Herzkrankheit halbiert." },
-      { title: "Schlaganfallrisiko sinkt", hours: 17520, description: "Nach 2 Jahren sinkt das Schlaganfallrisiko." },
-      { title: "Lungenkrebsrisiko sinkt", hours: 43800, description: "Nach 5 Jahren sinkt das Risiko stark." },
-      { title: "Herzrisiko wie Nichtraucher", hours: 131400, description: "Nach 15 Jahren gleiches Risiko wie Nie-Raucher." }
+      { title: "Puls normalisiert sich", hours: 0.3, description: "Blutdruck und Puls sinken nach 20 Minuten." },
+      { title: "CO halbiert", hours: 8, description: "Kohlenmonoxid im Blut halbiert sich." },
+      { title: "CO vollständig abgebaut", hours: 12, description: "CO-Wert ist auf Null, Sauerstoff steigt." },
+      { title: "Geschmack & Geruch zurück", hours: 48, description: "Sinne regenerieren sich." },
+      { title: "Bronchien entspannen sich", hours: 72, description: "Bessere Atmung, weniger Schleim." },
+      { title: "Entzugserscheinungen Höchststand", hours: 72, description: "Stärkster körperlicher Suchtdruck bis Tag 3." },
+      { title: "Bessere Hautdurchblutung", hours: 120, description: "Haut wird rosiger durch bessere Durchblutung." },
+      { title: "Schlaf normalisiert sich", hours: 168, description: "Nach ca. 1 Woche ruhigerer Schlaf." },
+      { title: "Lungenfunktion verbessert", hours: 336, description: "2 Wochen nach Rauchstopp steigt die Lungenkapazität." },
+      { title: "Entzug körperlich vorbei", hours: 336, description: "Körperlicher Entzug meist überwunden (Woche 2)." },
+      { title: "Psychische Trigger nehmen ab", hours: 720, description: "Nach einem Monat ist man stabiler gegenüber Auslösern." },
+      { title: "Haut verbessert sich sichtbar", hours: 1440, description: "Nach 2 Monaten: weniger Pickel, bessere Elastizität." },
+      { title: "Lunge regeneriert", hours: 2160, description: "3 Monate – besseres Atmen, Ausdauer steigt." },
+      { title: "Immunsystem gestärkt", hours: 2880, description: "Nach 4 Monaten: seltener krank." },
+      { title: "Schleimproduktion sinkt", hours: 4320, description: "Nach 6 Monaten: weniger Husten, Atemwege frei." },
+      { title: "Herzinfarktrisiko halbiert", hours: 8760, description: "Nach 1 Jahr ist das Risiko um 50 % reduziert." },
+      { title: "Lunge weiter gereinigt", hours: 13140, description: "Nach 1,5 Jahren – tiefere Atmung, mehr Energie." },
+      { title: "Rückfallgefahr stark gesunken", hours: 13140, description: "Nach 1,5 Jahren bleibt die Mehrheit rauchfrei." },
+      { title: "Gefäßgesundheit wie Nichtraucher", hours: 17520, description: "Nach 2 Jahren: fast normales Herz-Kreislauf-Risiko." },
+      { title: "Mentale Stärke wächst", hours: 26280, description: "Nach 3 Jahren: kaum Rauchverlangen." },
+      { title: "Schlaganfallrisiko normal", hours: 43800, description: "Nach 5 Jahren: Risiko wie bei Nichtrauchern." },
+      { title: "Lungenkrebsrisiko halbiert", hours: 87600, description: "Nach 10 Jahren halb so hoch wie bei Rauchern." },
+      { title: "Herzgesundheit wie nie geraucht", hours: 131400, description: "Nach 15 Jahren – vollständige Regeneration." }
     ];
-
-    window.onload = function () {
-      const quit = localStorage.getItem("quitDate");
-      const cigs = localStorage.getItem("cigsPerDay");
-      const price = localStorage.getItem("packPrice");
-      const perPack = localStorage.getItem("cigsPerPack");
-
-      if (quit) document.getElementById("quitDate").value = quit;
-      if (cigs) document.getElementById("cigsPerDay").value = cigs;
-      if (price) document.getElementById("packPrice").value = price;
-      if (perPack) document.getElementById("cigsPerPack").value = perPack;
-    };
 
     function toggleSettings() {
       document.getElementById("settings").classList.toggle("hidden");
     }
 
     function saveSettings() {
-      const quitInput = document.getElementById("quitDate").value;
-      const cigsPerDay = parseInt(document.getElementById("cigsPerDay").value);
-      const packPrice = parseFloat(document.getElementById("packPrice").value);
-      const cigsPerPack = parseInt(document.getElementById("cigsPerPack").value);
+      const quit = document.getElementById("quitDate").value;
+      const cigs = document.getElementById("cigsPerDay").value;
+      const price = document.getElementById("packPrice").value;
+      const perPack = document.getElementById("cigsPerPack").value;
 
-      if (!quitInput || isNaN(cigsPerDay) || isNaN(packPrice) || isNaN(cigsPerPack)) {
-        alert("Bitte alle Eingaben korrekt ausfüllen!");
+      if (!quit || !cigs || !price || !perPack) {
+        alert("Bitte alle Eingaben ausfüllen.");
         return;
       }
 
-      localStorage.setItem("quitDate", quitInput);
-      localStorage.setItem("cigsPerDay", cigsPerDay);
-      localStorage.setItem("packPrice", packPrice);
-      localStorage.setItem("cigsPerPack", cigsPerPack);
+      localStorage.setItem("quitDate", quit);
+      localStorage.setItem("cigsPerDay", cigs);
+      localStorage.setItem("packPrice", price);
+      localStorage.setItem("cigsPerPack", perPack);
+      alert("Einstellungen gespeichert.");
       toggleSettings();
     }
 
@@ -163,7 +173,7 @@
       const cigsPerPack = parseInt(localStorage.getItem("cigsPerPack"));
 
       if (!quitInput || isNaN(cigsPerDay) || isNaN(packPrice) || isNaN(cigsPerPack)) {
-        alert("Bitte zuerst unter Einstellungen alle Daten eingeben.");
+        alert("Bitte Einstellungen zuerst ausfüllen.");
         return;
       }
 
