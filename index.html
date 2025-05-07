@@ -70,8 +70,8 @@
       margin-left: auto;
       margin-right: auto;
     }
-    #info, #reels {
-      display: none; /* Initially hide the progress info */
+    #settings, #progress {
+      display: none;
     }
   </style>
 </head>
@@ -79,7 +79,15 @@
 
   <h1>🚭 Rauchfrei Tracker Pro</h1>
 
-  <div class="input-block">
+  <!-- Buttons for navigation -->
+  <div style="text-align: center;">
+    <button onclick="showSettings()">Einstellungen</button>
+    <button onclick="showProgress()">Fortschritt anzeigen</button>
+  </div>
+
+  <!-- Settings Form -->
+  <div id="settings" class="input-block">
+    <h2>Einstellungen</h2>
     <label>Aufhördatum & Uhrzeit:</label><br />
     <input type="datetime-local" id="quitDate" /><br />
 
@@ -93,12 +101,14 @@
     <input type="number" id="cigsPerPack" value="20" /><br />
 
     <button onclick="saveData()">Daten speichern</button>
-    <button onclick="showProgress()">Fortschritt anzeigen</button>
     <button onclick="resetData()" style="background-color: #ef4444;">Daten zurücksetzen</button>
   </div>
 
-  <div id="info" class="info-box"></div>
-  <div id="reels" class="grid"></div>
+  <!-- Progress Display -->
+  <div id="progress">
+    <div id="info" class="info-box"></div>
+    <div id="reels" class="grid"></div>
+  </div>
 
   <script>
     const milestones = [
@@ -124,6 +134,7 @@
       if (perPack) document.getElementById("cigsPerPack").value = perPack;
     };
 
+    // Save user settings
     function saveData() {
       const quitInput = document.getElementById("quitDate").value;
       const cigsPerDay = parseInt(document.getElementById("cigsPerDay").value);
@@ -144,7 +155,17 @@
       alert("Daten wurden gespeichert!");
     }
 
+    // Show Settings form
+    function showSettings() {
+      document.getElementById("settings").style.display = "block";
+      document.getElementById("progress").style.display = "none";
+    }
+
+    // Show Progress
     function showProgress() {
+      document.getElementById("settings").style.display = "none";
+      document.getElementById("progress").style.display = "block";
+
       const quitInput = localStorage.getItem("quitDate");
       const cigsPerDay = parseInt(localStorage.getItem("cigsPerDay"));
       const packPrice = parseFloat(localStorage.getItem("packPrice"));
@@ -173,7 +194,6 @@
         <p><strong>Gespartes Geld:</strong> € ${totalMoneySaved}</p>
         <p><strong>Zurückgewonnene Lebenszeit:</strong> ${lifeRegainedHr} Stunden ${lifeRegainedMinRest} Minuten</p>
       `;
-      infoBox.style.display = "block"; // Show progress info
 
       const reelsContainer = document.getElementById("reels");
       reelsContainer.innerHTML = "";
@@ -192,9 +212,9 @@
         `;
         reelsContainer.appendChild(reel);
       });
-      reelsContainer.style.display = "flex"; // Show progress milestones
     }
 
+    // Reset all saved data
     function resetData() {
       localStorage.clear();
       location.reload();
@@ -203,4 +223,3 @@
 
 </body>
 </html>
-
