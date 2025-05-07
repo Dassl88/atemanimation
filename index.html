@@ -125,5 +125,103 @@
       { title: "Psychische Entzugserscheinungen lassen nach", days: 7, description: "Das Verlangen wird immer weniger intensiv." },
       { title: "Besseres Selbstvertrauen", days: 14, description: "Du spürst erste Erfolge und gewinnst Vertrauen." },
       { title: "Husten wird weniger", days: 30, description: "Husten und Atembeschwerden verschwinden." },
-      { title: "Rückfallgefahr sinkt", months: 1, description: "Nach 1 Monat sinkt die Rückfallgefahr deutlich.
+      { title: "Rückfallgefahr sinkt", months: 1, description: "Nach 1 Monat sinkt die Rückfallgefahr deutlich." },
+      { title: "Herz-Kreislaufsystem regeneriert", months: 3, description: "Das Risiko für Herzkrankheiten sinkt." },
+      { title: "Lungenkapazität verbessert sich", months: 6, description: "Die Lunge arbeitet effizienter." },
+      { title: "Risiko für Lungenkrebs halbiert sich", years: 5, description: "Die Wahrscheinlichkeit für Lungenkrebs sinkt deutlich." },
+      { title: "Risiko für Herzkrankheiten sinkt", years: 5, description: "Das Risiko für Herz-Kreislauf-Erkrankungen sinkt." },
+      { title: "Lebenszeitverlängerung", years: 15, description: "Durch das Aufhören steigt deine Lebenserwartung." },
+    ];
 
+    // Funktion zur Anzeige des Fortschritts
+    function showProgress() {
+      const quitInput = document.getElementById("quitDate").value;
+      const cigsPerDay = parseInt(document.getElementById("cigsPerDay").value);
+      const packPrice = parseFloat(document.getElementById("packPrice").value);
+      const cigsPerPack = parseInt(document.getElementById("cigsPerPack").value);
+      const age = parseInt(document.getElementById("age").value);
+      const weight = parseInt(document.getElementById("weight").value);
+      const yearsSmoked = parseInt(document.getElementById("yearsSmoked").value);
+
+      // Sicherstellen, dass alle Eingabewerte vorhanden sind
+      if (!quitInput || isNaN(cigsPerDay) || isNaN(packPrice) || isNaN(cigsPerPack) || isNaN(age) || isNaN(weight) || isNaN(yearsSmoked)) {
+        alert("Bitte alle Eingaben korrekt ausfüllen!");
+        return;
+      }
+
+      // Berechnung des Fortschritts
+      const quitTime = new Date(quitInput);
+      const now = new Date();
+      const diffTime = now - quitTime; // Differenz in Millisekunden
+      const diffHours = diffTime / 1000 / 60 / 60; // Umrechnung in Stunden
+      const diffDays = diffHours / 24; // Umrechnung in Tage
+
+      const totalCigsAvoided = Math.floor(cigsPerDay * diffDays);
+      const totalMoneySaved = ((totalCigsAvoided / cigsPerPack) * packPrice).toFixed(2);
+      const lifeRegainedMin = totalCigsAvoided * 11; // Annahme: 11 Minuten Lebenszeit pro Zigarette
+      const lifeRegainedHr = Math.floor(lifeRegainedMin / 60);
+      const lifeRegainedMinRest = lifeRegainedMin % 60;
+
+      // Anzeige der Fortschritte im Info-Box
+      const infoBox = document.getElementById("info");
+      infoBox.innerHTML = `
+        <h2>Dein Fortschritt</h2>
+        <p><strong>Gesparte Zigaretten:</strong> ${totalCigsAvoided}</p>
+        <p><strong>Gespartes Geld:</strong> € ${totalMoneySaved}</p>
+        <p><strong>Zurückgewonnene Lebenszeit:</strong> ${lifeRegainedHr} Stunden ${lifeRegainedMinRest} Minuten</p>
+      `;
+
+      // Anzeige der Meilensteine im Fortschritt
+      const reelsContainer = document.getElementById("reels");
+      reelsContainer.innerHTML = ""; // Leeren der vorherigen Anzeige
+
+      milestones.forEach(m => {
+        let percent = 0;
+        if (m.hours) {
+          percent = Math.min((diffHours / m.hours) * 100, 100);
+        } else if (m.days) {
+          percent = Math.min((diffDays / m.days) * 100, 100);
+        } else if (m.months) {
+          percent = Math.min((diffDays / 30 / m.months) * 100, 100);
+        } else if (m.years) {
+          percent = Math.min((diffDays / 365 / m.years) * 100, 100);
+        }
+
+        const reel = document.createElement("div");
+        reel.className = "reel";
+        reel.innerHTML = `
+          <h3>${m.title}</h3>
+          <div class="progress-circle" style="background: conic-gradient(#10b981 ${percent}%, #333 ${percent}%);">
+            <span>${Math.floor(percent)}%</span>
+          </div>
+          <p>${m.description}</p>
+        `;
+        reelsContainer.appendChild(reel);
+      });
+
+      // Speichern der Daten im localStorage
+      localStorage.setItem("quitDate", quitInput);
+      localStorage.setItem("cigsPerDay", cigsPerDay);
+      localStorage.setItem("packPrice", packPrice);
+      localStorage.setItem("cigsPerPack", cigsPerPack);
+      localStorage.setItem("age", age);
+      localStorage.setItem("weight", weight);
+      localStorage.setItem("yearsSmoked", yearsSmoked);
+    }
+
+    // Funktion zum Zurücksetzen der Daten
+    function resetData() {
+      localStorage.clear();
+      document.getElementById("quitDate").value = "";
+      document.getElementById("cigsPerDay").value = "";
+      document.getElementById("packPrice").value = "";
+      document.getElementById("cigsPerPack").value = "";
+      document.getElementById("age").value = "";
+      document.getElementById("weight").value = "";
+      document.getElementById("yearsSmoked").value = "";
+      document.getElementById("info").innerHTML = "";
+      document.getElementById("reels").innerHTML = "";
+    }
+  </script>
+</body>
+</html>
