@@ -90,6 +90,7 @@
     <input type="number" id="cigsPerPack" value="20" /><br />
 
     <button onclick="showProgress()">Fortschritt anzeigen</button>
+    <button onclick="resetData()" style="background-color: #ef4444;">Daten zurücksetzen</button>
   </div>
 
   <div id="info" class="info-box"></div>
@@ -106,6 +107,21 @@
       { title: "Herzinfarktrisiko sinkt", hours: 720, description: "Risiko nach einem Monat deutlich reduziert." }
     ];
 
+    // Daten aus localStorage laden (falls vorhanden)
+    window.onload = function () {
+      const quit = localStorage.getItem("quitDate");
+      const cigs = localStorage.getItem("cigsPerDay");
+      const price = localStorage.getItem("packPrice");
+      const perPack = localStorage.getItem("cigsPerPack");
+
+      if (quit) document.getElementById("quitDate").value = quit;
+      if (cigs) document.getElementById("cigsPerDay").value = cigs;
+      if (price) document.getElementById("packPrice").value = price;
+      if (perPack) document.getElementById("cigsPerPack").value = perPack;
+
+      if (quit) showProgress();
+    };
+
     function showProgress() {
       const quitInput = document.getElementById("quitDate").value;
       const cigsPerDay = parseInt(document.getElementById("cigsPerDay").value);
@@ -117,19 +133,23 @@
         return;
       }
 
+      // Eingaben speichern
+      localStorage.setItem("quitDate", quitInput);
+      localStorage.setItem("cigsPerDay", cigsPerDay);
+      localStorage.setItem("packPrice", packPrice);
+      localStorage.setItem("cigsPerPack", cigsPerPack);
+
       const quitTime = new Date(quitInput);
       const now = new Date();
       const diffHours = (now - quitTime) / 1000 / 60 / 60;
       const diffDays = diffHours / 24;
 
-      // Rechnen
       const totalCigsAvoided = Math.floor(cigsPerDay * diffDays);
       const totalMoneySaved = ((totalCigsAvoided / cigsPerPack) * packPrice).toFixed(2);
       const lifeRegainedMin = totalCigsAvoided * 11;
       const lifeRegainedHr = Math.floor(lifeRegainedMin / 60);
       const lifeRegainedMinRest = lifeRegainedMin % 60;
 
-      // Info-Box anzeigen
       const infoBox = document.getElementById("info");
       infoBox.innerHTML = `
         <h2>Dein Fortschritt</h2>
@@ -138,7 +158,6 @@
         <p><strong>Zurückgewonnene Lebenszeit:</strong> ${lifeRegainedHr} Stunden ${lifeRegainedMinRest} Minuten</p>
       `;
 
-      // Meilenstein-Reels anzeigen
       const reelsContainer = document.getElementById("reels");
       reelsContainer.innerHTML = "";
 
@@ -156,6 +175,11 @@
         `;
         reelsContainer.appendChild(reel);
       });
+    }
+
+    function resetData() {
+      localStorage.clear();
+      location.reload();
     }
   </script>
 
