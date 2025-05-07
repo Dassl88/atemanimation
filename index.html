@@ -1,270 +1,162 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rauchfrei Tracker</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f9;
-      color: #333;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rauchfrei Fortschritt</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #121212;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        header, footer {
+            background-color: #1f1f1f;
+            padding: 1em;
+            text-align: center;
+        }
+        .container {
+            padding: 1em;
+        }
+        .progress {
+            background: #1f1f1f;
+            border-radius: 10px;
+            margin: 1em 0;
+            padding: 1em;
+        }
+        .progress h3 {
+            margin: 0 0 0.5em;
+        }
+        .circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 6px solid #4caf50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.5em;
+            font-size: 1.2em;
+        }
+        nav {
+            background: #333;
+            display: flex;
+            justify-content: space-around;
+            padding: 1em 0;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+        }
+        .stats {
+            margin-top: 2em;
+            background-color: #1f1f1f;
+            padding: 1em;
+            border-radius: 10px;
+        }
+    </style>
+    <script>
+        let quitDate = new Date();
+        let cigarettesPerDay = 0;
+        let costPerPack = 0;
+        let cigsPerPack = 20;
 
-    header {
-      background-color: #4caf50;
-      color: white;
-      padding: 15px;
-      text-align: center;
-      font-size: 24px;
-    }
+        function updateStats() {
+            const now = new Date();
+            const timeDiff = now - quitDate;
+            const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+            const savedCigs = Math.floor(days * cigarettesPerDay);
+            const savedMoney = ((savedCigs / cigsPerPack) * costPerPack).toFixed(2);
+            const savedLife = (savedCigs * 11 / 60).toFixed(1); // 11 Minuten pro Zigarette
 
-    .container {
-      padding: 20px;
-    }
+            document.getElementById("savedCigs").innerText = savedCigs + " Zigaretten";
+            document.getElementById("savedMoney").innerText = savedMoney + " €";
+            document.getElementById("savedLife").innerText = savedLife + " Stunden";
+        }
 
-    .content {
-      display: none;
-    }
-
-    .active {
-      display: block;
-    }
-
-    .section-title {
-      font-size: 20px;
-      margin-bottom: 10px;
-    }
-
-    .card {
-      background-color: white;
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      margin-bottom: 20px;
-    }
-
-    .progress-bar {
-      height: 30px;
-      background-color: #ddd;
-      border-radius: 15px;
-      position: relative;
-      overflow: hidden;
-      margin-top: 10px;
-    }
-
-    .progress-bar-fill {
-      height: 100%;
-      background-color: #4caf50;
-      width: 0%;
-      transition: width 1s ease-in-out;
-    }
-
-    .button {
-      background-color: #4caf50;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      text-align: center;
-    }
-
-    .button:hover {
-      background-color: #45a049;
-    }
-
-    .milestone {
-      background-color: #e0ffe0;
-      padding: 15px;
-      margin-bottom: 10px;
-      border-left: 5px solid #4caf50;
-    }
-
-    .milestone.reached {
-      background-color: #d0ffd0;
-      border-left: 5px solid #81c784;
-    }
-
-    .input-field {
-      margin-bottom: 10px;
-      width: 100%;
-    }
-
-    .input-field input {
-      width: 100%;
-      padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-
-    .input-field select, .input-field button {
-      width: 100%;
-      padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-
-    .footer {
-      text-align: center;
-      margin-top: 20px;
-      padding: 20px;
-      background-color: #4caf50;
-      color: white;
-    }
-  </style>
+        function saveSettings(e) {
+            e.preventDefault();
+            quitDate = new Date(document.getElementById("quitDate").value);
+            cigarettesPerDay = parseInt(document.getElementById("cigsPerDay").value);
+            costPerPack = parseFloat(document.getElementById("packCost").value);
+            cigsPerPack = parseInt(document.getElementById("cigsPerPack").value);
+            updateStats();
+        }
+    </script>
 </head>
 <body>
+    <header>
+        <h1>Rauchfrei App</h1>
+    </header>
 
-<header>
-  🚭 Raucherentwöhnung Tracker
-</header>
+    <nav>
+        <a href="#fortschritt">Fortschritt</a>
+        <a href="#meilenstein">Meilenstein erstellen</a>
+        <a href="#einstellungen">Einstellungen</a>
+    </nav>
 
-<div class="container">
-  <!-- Startseite -->
-  <div id="home" class="content active">
-    <div class="card">
-      <h2 class="section-title">Dein Fortschritt</h2>
-      <div id="progressInfo">
-        <!-- Fortschritt und Meilensteine werden hier angezeigt -->
-      </div>
-    </div>
-
-    <div class="card">
-      <h2 class="section-title">Meilensteine</h2>
-      <div id="milestoneList"></div>
-    </div>
-
-    <button class="button" onclick="showPage('settings')">Einstellungen</button>
-  </div>
-
-  <!-- Einstellungen -->
-  <div id="settings" class="content">
-    <h2 class="section-title">Einstellungen</h2>
-    <div class="input-field">
-      <label for="quitDate">Aufhördatum:</label>
-      <input type="datetime-local" id="quitDate" />
-    </div>
-
-    <div class="input-field">
-      <label for="cigsPerDay">Zigaretten pro Tag:</label>
-      <input type="number" id="cigsPerDay" value="20" min="1" />
-    </div>
-
-    <div class="input-field">
-      <label for="packPrice">Preis pro Packung (€):</label>
-      <input type="number" id="packPrice" value="8" min="0" step="0.01" />
-    </div>
-
-    <div class="input-field">
-      <label for="cigsPerPack">Zigaretten pro Packung:</label>
-      <input type="number" id="cigsPerPack" value="20" min="1" />
-    </div>
-
-    <button class="button" onclick="saveSettings()">Einstellungen speichern</button>
-    <button class="button" onclick="showPage('home')">Zurück zur Startseite</button>
-  </div>
-</div>
-
-<div class="footer">
-  &copy; 2025 Rauchfrei Tracker. Alle Rechte vorbehalten.
-</div>
-
-<script>
-  // Variablen
-  let milestones = [];
-  let quitDate = localStorage.getItem('quitDate');
-  let cigsPerDay = localStorage.getItem('cigsPerDay') || 20;
-  let packPrice = localStorage.getItem('packPrice') || 8;
-  let cigsPerPack = localStorage.getItem('cigsPerPack') || 20;
-
-  // Standardmeilensteine
-  const defaultMilestones = [
-    { title: "Tag 1", description: "Der erste Tag ohne Zigaretten", timeInDays: 1 },
-    { title: "Woche 1", description: "1 Woche rauchfrei", timeInDays: 7 },
-    { title: "Monat 1", description: "1 Monat rauchfrei", timeInDays: 30 },
-    { title: "Jahr 1", description: "1 Jahr rauchfrei", timeInDays: 365 },
-  ];
-
-  // Initialisierung
-  function init() {
-    // Meilensteine laden
-    milestones = JSON.parse(localStorage.getItem('milestones')) || defaultMilestones;
-    renderHomePage();
-  }
-
-  // Fortschritt anzeigen
-  function renderHomePage() {
-    if (quitDate) {
-      const currentDate = new Date();
-      const quitDateTime = new Date(quitDate);
-      const diffTime = currentDate - quitDateTime;
-      const diffDays = Math.floor(diffTime / (1000 * 3600 * 24));
-      const savedMoney = (diffDays * cigsPerDay * (packPrice / cigsPerPack)).toFixed(2);
-
-      // Fortschrittsanzeige
-      document.getElementById('progressInfo').innerHTML = `
-        <p><strong>Gesparte Zeit:</strong> ${diffDays} Tage</p>
-        <p><strong>Gespartes Geld:</strong> €${savedMoney}</p>
-        <div class="progress-bar">
-          <div class="progress-bar-fill" style="width: ${Math.min(diffDays / 365 * 100, 100)}%"></div>
+    <div class="container" id="fortschritt">
+        <h2>Dein Fortschritt</h2>
+        <div class="progress">
+            <h3>Puls</h3>
+            <div class="circle">100%</div>
+            <p>Dein Puls hat sich normalisiert.</p>
         </div>
-      `;
+        <div class="progress">
+            <h3>Sauerstoff</h3>
+            <div class="circle">100%</div>
+            <p>Dein Sauerstoffgehalt im Blut ist optimal.</p>
+        </div>
+        <div class="progress">
+            <h3>Kohlenmonoxid</h3>
+            <div class="circle">59%</div>
+            <p>Weniger Kohlenmonoxid im Blut.</p>
+        </div>
+        <!-- Weitere Meilensteine -->
+        <!-- Platzhalter: 56 weitere Fortschritte (können dynamisch geladen oder ergänzt werden) -->
+    </div>
 
-      // Meilensteine
-      const milestoneList = document.getElementById('milestoneList');
-      milestoneList.innerHTML = '';
-      milestones.forEach((milestone) => {
-        const milestoneDate = new Date(quitDateTime);
-        milestoneDate.setDate(milestoneDate.getDate() + milestone.timeInDays);
+    <div class="container stats">
+        <h2>Deine Erfolge</h2>
+        <p><strong>Nicht gerauchte Zigaretten:</strong> <span id="savedCigs">0</span></p>
+        <p><strong>Gespartes Geld:</strong> <span id="savedMoney">0 €</span></p>
+        <p><strong>Gewonnene Lebenszeit:</strong> <span id="savedLife">0 Stunden</span></p>
+    </div>
 
-        const reached = diffTime >= (milestoneDate - quitDateTime);
-        milestoneList.innerHTML += `
-          <div class="milestone ${reached ? 'reached' : ''}">
-            <h3>${milestone.title}</h3>
-            <p>${milestone.description}</p>
-            <p>Erreicht am: ${milestoneDate.toLocaleDateString()}</p>
-          </div>
-        `;
-      });
-    } else {
-      document.getElementById('progressInfo').innerHTML = `
-        <p>Du hast noch kein Aufhördatum festgelegt.</p>
-      `;
-    }
-  }
+    <div class="container" id="meilenstein">
+        <h2>Meilenstein erstellen</h2>
+        <form>
+            <input type="text" placeholder="Titel" required><br>
+            <textarea placeholder="Beschreibung"></textarea><br>
+            <label>Zeit seit Rauchstopp:</label><br>
+            <input type="number" placeholder="Minuten"> Minuten
+            <input type="number" placeholder="Stunden"> Stunden
+            <input type="number" placeholder="Tage"> Tage
+            <input type="number" placeholder="Monate"> Monate
+            <input type="number" placeholder="Jahre"> Jahre<br>
+            <button type="submit">Speichern</button>
+        </form>
+    </div>
 
-  // Einstellungen speichern
-  function saveSettings() {
-    quitDate = document.getElementById('quitDate').value;
-    cigsPerDay = document.getElementById('cigsPerDay').value;
-    packPrice = document.getElementById('packPrice').value;
-    cigsPerPack = document.getElementById('cigsPerPack').value;
+    <div class="container" id="einstellungen">
+        <h2>Einstellungen</h2>
+        <form onsubmit="saveSettings(event)">
+            <label>Rauchstopp Datum:</label><br>
+            <input type="datetime-local" id="quitDate" required><br>
+            <label>Zigaretten pro Tag:</label>
+            <input type="number" id="cigsPerDay" required><br>
+            <label>Kosten pro Packung (€):</label>
+            <input type="number" step="0.01" id="packCost" required><br>
+            <label>Zigaretten pro Packung:</label>
+            <input type="number" id="cigsPerPack" required><br>
+            <button type="submit">Speichern</button>
+        </form>
+    </div>
 
-    // Speichern
-    localStorage.setItem('quitDate', quitDate);
-    localStorage.setItem('cigsPerDay', cigsPerDay);
-    localStorage.setItem('packPrice', packPrice);
-    localStorage.setItem('cigsPerPack', cigsPerPack);
-
-    alert('Einstellungen gespeichert!');
-    showPage('home');
-    renderHomePage();
-  }
-
-  // Seite wechseln
-  function showPage(pageId) {
-    document.querySelectorAll('.content').forEach(page => {
-      page.classList.remove('active');
-    });
-    document.getElementById(pageId).classList.add('active');
-  }
-
-  // Initialisierung
-  init();
-</script>
-
+    <footer>
+        <p>&copy; 2025 Rauchfrei App</p>
+    </footer>
 </body>
 </html>
