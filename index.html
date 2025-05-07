@@ -124,55 +124,36 @@
   <script>
     const milestones = {
       shortTerm: [
-         { title: "Blutdruck sinkt leicht", minutes: 20, description: "Bereits 20 Minuten nach der letzten Zigarette beginnt dein Blutdruck zu sinken." },
-  { title: "Puls normalisiert sich", minutes: 30, description: "Der Herzschlag verlangsamt sich und kehrt zu einem normalen Rhythmus zurück." },
-  { title: "Körpertemperatur normalisiert sich", minutes: 30, description: "Hände und Füße werden wärmer, da die Durchblutung besser wird." },
-  { title: "Kohlendioxidspiegel sinkt", hours: 8, description: "Kohlendioxid im Blut reduziert sich, mehr Sauerstoff kann transportiert werden." },
-  { title: "Sauerstoffgehalt steigt", hours: 8, description: "Der Körper wird besser mit Sauerstoff versorgt." },
-  { title: "Rauchpartikel aus Bronchien entfernt", hours: 12, description: "Der Reinigungsprozess in den Atemwegen beginnt." },
-  { title: "Geruchs- und Geschmackssinn verbessert", days: 2, description: "Diese Sinne regenerieren sich merklich." },
-  { title: "Atmung wird leichter", days: 3, description: "Die Bronchien entspannen sich, Husten kann weniger werden." },
-  { title: "Nikotin vollständig abgebaut", days: 3, description: "Das gesamte Nikotin ist aus dem Körper entfernt." },
-  { title: "Mehr Energiegefühl", days: 5, description: "Viele fühlen sich wacher und fitter." },
-  { title: "Schlaf verbessert sich", days: 7, description: "Besserer Schlaf durch fehlendes Nikotin." },
-  { title: "Verdauung normalisiert sich", days: 10, description: "Der Darm passt sich an das Nichtrauchen an." },
-  { title: "Haut wird rosiger", days: 14, description: "Die Hautdurchblutung verbessert sich." },
-  { title: "Herzinfarktrisiko sinkt", days: 14, description: "Das Risiko für einen Herzinfarkt sinkt." },
-  { title: "Lungenfunktion verbessert sich", months: 1, description: "Die Flimmerhärchen beginnen sich zu regenerieren." },
-  { title: "Kreislauf stabilisiert sich", months: 1, description: "Das Herz-Kreislaufsystem passt sich an." },
-  { title: "Erhöhte Leistungsfähigkeit", months: 2, description: "Sportliche Aktivität fällt leichter." },
-  { title: "Husten nimmt weiter ab", months: 2, description: "Weniger Reizungen der Bronchien." },
-  { title: "Stabilere Stimmung", months: 2, description: "Psychisches Wohlbefinden steigt." },
-  { title: "Bessere Haut", months: 2, description: "Weniger Unreinheiten und eine frischere Haut." },
-  { title: "Verbessertes Immunsystem", months: 3, description: "Du wirst seltener krank." },
-  { title: "Zahnbelag reduziert sich", months: 3, description: "Weniger Nikotinablagerungen an Zähnen." },
-  { title: "Kondition verbessert sich", months: 3, description: "Du fühlst dich belastbarer." },
-  { title: "Nervenstärke steigt", months: 3, description: "Du wirst innerlich ruhiger." },
-  { title: "Rückfallrisiko sinkt stark", months: 6, description: "Du hast viele Routinen neu gelernt." },
-  { title: "Lunge fast vollständig regeneriert", months: 9, description: "Reinigung ist weit fortgeschritten." },
-  { title: "Jahresmeilenstein erreicht", years: 1, description: "Ein ganzes Jahr rauchfrei – große Leistung!" },
-  { title: "Krebsrisiko beginnt zu sinken", years: 1, description: "Das Risiko für viele Krebsarten verringert sich." },
-  { title: "Gefäße gesünder", years: 2, description: "Deine Blutgefäße sind weniger verkalkt." },
-  { title: "Schlaganfallrisiko stark reduziert", years: 3, description: "Wird vergleichbar mit dem eines Nichtrauchers." },
-  { title: "Herz-Kreislauf-Risiko wie Nichtraucher", years: 5, description: "Dein Herzinfarktrisiko ist auf Normalniveau." },
-  { title: "Lungenkrebsrisiko halbiert", years: 10, description: "Halbiertes Risiko im Vergleich zu Rauchern." },
-  { title: "Körper fast vollständig regeneriert", years: 15, description: "Viele Schäden sind nun repariert." },
-  { title: "Lebensqualität auf Höchstniveau", years: 20, description: "Dein Körper profitiert langfristig vom Rauchstopp." },
-  // Automatisch generierte Tages-Meilensteine ab Tag 30
-  // Damit 200 Meilensteine erreicht werden
-  // Diese dienen der Motivation und Wiederholung positiver Effekte
-];
+        { title: "Blutdruck sinkt leicht", minutes: 20, description: "Bereits 20 Minuten nach der letzten Zigarette beginnt dein Blutdruck zu sinken." },
+        { title: "Puls normalisiert sich", minutes: 30, description: "Der Herzschlag verlangsamt sich und kehrt zu einem normalen Rhythmus zurück." },
+        { title: "Körpertemperatur normalisiert sich", minutes: 30, description: "Hände und Füße werden wärmer, da die Durchblutung besser wird." },
+        { title: "Kohlendioxidspiegel sinkt", hours: 8, description: "Kohlendioxid im Blut reduziert sich, mehr Sauerstoff kann transportiert werden." },
+        { title: "Sauerstoffgehalt steigt", hours: 8, description: "Der Körper wird besser mit Sauerstoff versorgt." },
+        { title: "Rauchpartikel aus Bronchien entfernt", hours: 12, description: "Der Reinigungsprozess in den Atemwegen beginnt." },
+        { title: "Geruchs- und Geschmackssinn verbessert", days: 2, description: "Diese Sinne regenerieren sich merklich." },
+        { title: "Atmung wird leichter", days: 3, description: "Die Bronchien entspannen sich, Husten kann weniger werden." },
+        { title: "Nikotin vollständig abgebaut", days: 3, description: "Das gesamte Nikotin ist aus dem Körper entfernt." }
+      ],
+      midTerm: [
+        { title: "Mehr Energiegefühl", days: 5, description: "Viele fühlen sich wacher und fitter." },
+        { title: "Schlaf verbessert sich", days: 7, description: "Besserer Schlaf durch fehlendes Nikotin." },
+        { title: "Verdauung normalisiert sich", days: 10, description: "Der Darm passt sich an das Nichtrauchen an." },
+        { title: "Haut wird rosiger", days: 14, description: "Die Hautdurchblutung verbessert sich." },
+        { title: "Herzinfarktrisiko sinkt", days: 14, description: "Das Risiko für einen Herzinfarkt sinkt." },
+        { title: "Lungenfunktion verbessert sich", months: 1, description: "Die Flimmerhärchen beginnen sich zu regenerieren." },
+        { title: "Kreislauf stabilisiert sich", months: 1, description: "Das Herz-Kreislaufsystem passt sich an." }
+      ],
+      longTerm: [
+        { title: "Kondition verbessert sich", months: 3, description: "Du fühlst dich belastbarer." },
+        { title: "Rückfallrisiko sinkt stark", months: 6, description: "Du hast viele Routinen neu gelernt." },
+        { title: "Lunge fast vollständig regeneriert", months: 9, description: "Reinigung ist weit fortgeschritten." },
+        { title: "1 Jahr rauchfrei", years: 1, description: "Ein ganzes Jahr rauchfrei – große Leistung!" },
+        { title: "Krebsrisiko beginnt zu sinken", years: 1, description: "Das Risiko für viele Krebsarten verringert sich." },
+        { title: "Herz-Kreislauf-Risiko wie Nichtraucher", years: 5, description: "Dein Herzinfarktrisiko ist auf Normalniveau." },
+        { title: "Körper fast vollständig regeneriert", years: 15, description: "Viele Schäden sind nun repariert." }
+      ]
+    };
 
-for (let i = 30; milestones.length < 200; i++) {
-  milestones.push({
-    title: `Weiterer Fortschritt – Tag ${i}`,
-    days: i,
-    description: `Du bist seit ${i} Tagen rauchfrei. Dein Körper regeneriert sich weiter – bleib dran!`
-  });
-}
- 
-
-    // Berechnung der Fortschritte basierend auf der eingegebenen Zeit
     function showProgress() {
       const quitInput = document.getElementById("quitDate").value;
       const cigsPerDay = parseInt(document.getElementById("cigsPerDay").value);
@@ -185,14 +166,6 @@ for (let i = 30; milestones.length < 200; i++) {
         alert("Bitte alle Eingaben korrekt ausfüllen!");
         return;
       }
-
-      // Eingaben speichern
-      localStorage.setItem("quitDate", quitInput);
-      localStorage.setItem("cigsPerDay", cigsPerDay);
-      localStorage.setItem("packPrice", packPrice);
-      localStorage.setItem("cigsPerPack", cigsPerPack);
-      localStorage.setItem("age", age);
-      localStorage.setItem("yearsSmoked", yearsSmoked);
 
       const quitTime = new Date(quitInput);
       const now = new Date();
@@ -218,15 +191,17 @@ for (let i = 30; milestones.length < 200; i++) {
       const reelsContainer = document.getElementById("reels");
       reelsContainer.innerHTML = "";
 
-      function createMilestoneCategory(categoryName, milestones, timeDiff) {
+      function createMilestoneCategory(categoryName, milestonesArray, timeDiff) {
         const categoryDiv = document.createElement("div");
         categoryDiv.className = "category-title";
         categoryDiv.innerText = categoryName;
         reelsContainer.appendChild(categoryDiv);
 
-        milestones.forEach(m => {
+        milestonesArray.forEach(m => {
           let percent = 0;
-          if (m.hours) {
+          if (m.minutes) {
+            percent = Math.min((timeDiff * 60 / m.minutes) * 100, 100);
+          } else if (m.hours) {
             percent = Math.min((timeDiff / m.hours) * 100, 100);
           } else if (m.days) {
             percent = Math.min((timeDiff / m.days) * 100, 100);
@@ -255,7 +230,6 @@ for (let i = 30; milestones.length < 200; i++) {
       createMilestoneCategory('Langfristige Meilensteine', milestones.longTerm, diffYears);
     }
 
-    // Daten zurücksetzen
     function resetData() {
       localStorage.clear();
       location.reload();
