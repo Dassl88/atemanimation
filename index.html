@@ -12,10 +12,11 @@
       font-family: Arial, sans-serif;
       color: white;
     }
-    h1, h2, h3 {
+    h1 {
       text-align: center;
+      margin-bottom: 30px;
     }
-    .input-block, .settings {
+    .input-block {
       text-align: center;
       margin-bottom: 30px;
     }
@@ -33,29 +34,12 @@
     }
     .grid {
       display: flex;
-      flex-direction: column;
-      gap: 40px;
-    }
-    .category {
-      background: #111;
-      border-radius: 16px;
-      padding: 20px;
-    }
-    .category-title {
-      font-size: 24px;
-      margin-bottom: 10px;
-      text-align: center;
-      border-bottom: 1px solid #333;
-      padding-bottom: 5px;
-    }
-    .reel-container {
-      display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 20px;
     }
     .reel {
-      background: #1a1a1a;
+      background: #111;
       border-radius: 16px;
       padding: 20px;
       width: 220px;
@@ -86,88 +70,112 @@
       margin-left: auto;
       margin-right: auto;
     }
+    .category-block {
+      margin-bottom: 30px;
+    }
+    .category-title {
+      font-size: 20px;
+      text-align: center;
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
+
   <h1>🚭 Rauchfrei Tracker Pro</h1>
-  <div class="settings">
-    <button onclick="toggleSettings()">⚙️ Einstellungen anzeigen</button>
-  </div>
-  <div class="input-block" id="settingsBlock" style="display:none;">
+
+  <div class="input-block">
     <label>Aufhördatum & Uhrzeit:</label><br />
     <input type="datetime-local" id="quitDate" /><br />
+
     <label>Zigaretten pro Tag:</label><br />
     <input type="number" id="cigsPerDay" value="20" /><br />
+
     <label>Preis pro Schachtel (€):</label><br />
     <input type="number" id="packPrice" value="8" step="0.01" /><br />
+
     <label>Zigaretten pro Schachtel:</label><br />
     <input type="number" id="cigsPerPack" value="20" /><br />
+
+    <label>Dein Alter (in Jahren):</label><br />
+    <input type="number" id="age" /><br />
+
+    <label>Dein Gewicht (in kg):</label><br />
+    <input type="number" id="weight" /><br />
+
+    <label>Wie lange hast du geraucht (in Jahren):</label><br />
+    <input type="number" id="yearsSmoked" /><br />
+
     <button onclick="showProgress()">Fortschritt anzeigen</button>
     <button onclick="resetData()" style="background-color: #ef4444;">Daten zurücksetzen</button>
   </div>
+
   <div id="info" class="info-box"></div>
   <div id="reels" class="grid"></div>
 
   <script>
-    const categories = {
-      "Kurzfristig (Stunden-Tage)": [
-        { title: "Puls normalisiert sich", hours: 8, description: "Puls sinkt auf Normalniveau." },
-        { title: "Sauerstoff steigt", hours: 12, description: "Mehr Sauerstoff im Blut." },
-        { title: "CO abgebaut", hours: 24, description: "CO-Wert ist fast null." },
-        { title: "Geschmack/Geruch kehrt zurück", hours: 48, description: "Sinne beginnen sich zu regenerieren." },
-        { title: "Hautdurchblutung steigt", hours: 72, description: "Die Haut wird besser durchblutet." },
-        { title: "Entzug: stärkster Druck", hours: 72, description: "Höchster körperlicher Suchtdruck ist überstanden." }
-      ],
-      "Mittelfristig (Wochen)": [
-        { title: "Lungenfunktion verbessert sich", hours: 168, description: "Besseres Atmen nach 1 Woche." },
-        { title: "Entzug klingt ab", hours: 336, description: "Körperlicher Entzug lässt nach 2 Wochen nach." },
-        { title: "Mehr Energie", hours: 504, description: "Mehr Energie, weniger Husten (3 Wochen)." }
-      ],
-      "Langfristig (Monate-Jahre)": [
-        { title: "Rückfallgefahr sinkt", hours: 2160, description: "3 Monate: Rückfallgefahr verringert sich." },
-        { title: "Atemwege stabilisieren", hours: 4320, description: "6 Monate: Weniger Infekte." },
-        { title: "Hautbild verbessert sich", hours: 8760, description: "1 Jahr: Haut wird frischer." },
-        { title: "Herzinfarktrisiko halbiert", hours: 17520, description: "2 Jahre: Herzinfarktrisiko halbiert." },
-        { title: "Krebsrisiken sinken", hours: 43800, description: "5 Jahre: Risiko für einige Krebsarten halbiert." },
-        { title: "Lebenserwartung steigt", hours: 131400, description: "15 Jahre: Risiko wie bei Nichtrauchern." }
-      ],
-      "Psychische Entwicklung": [
-        { title: "Reizbarkeit und Schlaf", hours: 72, description: "Reizbarkeit, Schlafprobleme in den ersten Tagen." },
-        { title: "Psychisches Verlangen", hours: 720, description: "Verlangen nach alten Auslösern wie Stress, Alkohol." },
-        { title: "Neue Gewohnheiten", hours: 2160, description: "Neue Routinen nach 3 Monaten etabliert." }
-      ]
-    };
+    const milestones = [
+      { title: "Puls normalisiert sich", hours: 8, description: "Puls sinkt auf Normalniveau." },
+      { title: "Sauerstoff steigt", hours: 12, description: "Mehr Sauerstoff im Blut." },
+      { title: "CO abgebaut", hours: 24, description: "CO-Wert ist fast null." },
+      { title: "Geschmack/Geruch kehrt zurück", hours: 48, description: "Sinne beginnen sich zu regenerieren." },
+      { title: "Hautdurchblutung steigt", hours: 72, description: "Die Haut wird besser durchblutet." },
+      { title: "Lungenfunktion verbessert", hours: 168, description: "Besseres Atmen nach 1 Woche." },
+      { title: "Herzinfarktrisiko sinkt", hours: 720, description: "Risiko nach einem Monat deutlich reduziert." },
+      { title: "Psychische Entzugserscheinungen lassen nach", days: 7, description: "Das Verlangen wird immer weniger intensiv." },
+      { title: "Besseres Selbstvertrauen", days: 14, description: "Du spürst erste Erfolge und gewinnst Vertrauen." },
+      { title: "Husten wird weniger", days: 30, description: "Husten und Atembeschwerden verschwinden." },
+      { title: "Rückfallgefahr sinkt", months: 1, description: "Nach 1 Monat sinkt die Rückfallgefahr deutlich." },
+      { title: "Herz-Kreislaufsystem regeneriert", months: 3, description: "Das Risiko für Herzkrankheiten sinkt." },
+      { title: "Lungenkapazität verbessert sich", months: 6, description: "Die Lunge arbeitet effizienter." },
+      { title: "Risiko für Lungenkrebs halbiert sich", years: 5, description: "Die Wahrscheinlichkeit für Lungenkrebs sinkt deutlich." },
+      { title: "Risiko für Herzkrankheiten sinkt", years: 5, description: "Das Risiko für Herz-Kreislauf-Erkrankungen sinkt." },
+      { title: "Lebenszeitverlängerung", years: 15, description: "Durch das Aufhören steigt deine Lebenserwartung." },
+    ];
 
+    // Daten aus localStorage laden (falls vorhanden)
     window.onload = function () {
       const quit = localStorage.getItem("quitDate");
       const cigs = localStorage.getItem("cigsPerDay");
       const price = localStorage.getItem("packPrice");
       const perPack = localStorage.getItem("cigsPerPack");
+      const age = localStorage.getItem("age");
+      const weight = localStorage.getItem("weight");
+      const yearsSmoked = localStorage.getItem("yearsSmoked");
+
       if (quit) document.getElementById("quitDate").value = quit;
       if (cigs) document.getElementById("cigsPerDay").value = cigs;
       if (price) document.getElementById("packPrice").value = price;
       if (perPack) document.getElementById("cigsPerPack").value = perPack;
+      if (age) document.getElementById("age").value = age;
+      if (weight) document.getElementById("weight").value = weight;
+      if (yearsSmoked) document.getElementById("yearsSmoked").value = yearsSmoked;
+
       if (quit) showProgress();
     };
-
-    function toggleSettings() {
-      const block = document.getElementById("settingsBlock");
-      block.style.display = block.style.display === "none" ? "block" : "none";
-    }
 
     function showProgress() {
       const quitInput = document.getElementById("quitDate").value;
       const cigsPerDay = parseInt(document.getElementById("cigsPerDay").value);
       const packPrice = parseFloat(document.getElementById("packPrice").value);
       const cigsPerPack = parseInt(document.getElementById("cigsPerPack").value);
-      if (!quitInput || isNaN(cigsPerDay) || isNaN(packPrice) || isNaN(cigsPerPack)) {
+      const age = parseInt(document.getElementById("age").value);
+      const weight = parseInt(document.getElementById("weight").value);
+      const yearsSmoked = parseInt(document.getElementById("yearsSmoked").value);
+
+      if (!quitInput || isNaN(cigsPerDay) || isNaN(packPrice) || isNaN(cigsPerPack) || isNaN(age) || isNaN(weight) || isNaN(yearsSmoked)) {
         alert("Bitte alle Eingaben korrekt ausfüllen!");
         return;
       }
+
+      // Eingaben speichern
       localStorage.setItem("quitDate", quitInput);
       localStorage.setItem("cigsPerDay", cigsPerDay);
       localStorage.setItem("packPrice", packPrice);
       localStorage.setItem("cigsPerPack", cigsPerPack);
+      localStorage.setItem("age", age);
+      localStorage.setItem("weight", weight);
+      localStorage.setItem("yearsSmoked", yearsSmoked);
 
       const quitTime = new Date(quitInput);
       const now = new Date();
@@ -191,38 +199,24 @@
       const reelsContainer = document.getElementById("reels");
       reelsContainer.innerHTML = "";
 
-      for (const [category, milestones] of Object.entries(categories)) {
-        const section = document.createElement("div");
-        section.className = "category";
-        section.innerHTML = `<div class="category-title">${category}</div>`;
+      milestones.forEach(m => {
+        let percent;
+        if (m.hours) {
+          percent = Math.min((diffHours / m.hours) * 100, 100);
+        } else if (m.days) {
+          percent = Math.min((diffDays / m.days) * 100, 100);
+        } else if (m.months) {
+          percent = Math.min((diffDays / 30 / m.months) * 100, 100);
+        } else if (m.years) {
+          percent = Math.min((diffDays / 365 / m.years) * 100, 100);
+        }
+        const reel = document.createElement("div");
+        reel.className = "reel";
+        reel.innerHTML = `
+          <h3>${m.title}</h3>
+          <div class="progress-circle" style="background: conic-gradient(#10b981 ${percent}%, #333 ${percent}%);">
+            <span>${Math.floor(percent)}%</span>
+          </div>
+          <p>${m.description}</p>
+          ${percent === 
 
-        const group = document.createElement("div");
-        group.className = "reel-container";
-
-        milestones.forEach(m => {
-          const percent = Math.min((diffHours / m.hours) * 100, 100);
-          const reel = document.createElement("div");
-          reel.className = "reel";
-          reel.innerHTML = `
-            <h3>${m.title}</h3>
-            <div class="progress-circle" style="background: conic-gradient(#10b981 ${percent}%, #333 ${percent}%);">
-              <span>${Math.floor(percent)}%</span>
-            </div>
-            <p>${m.description}</p>
-            ${percent === 100 ? '<p style="color:#10b981;">✅ Erreicht!</p>' : ""}
-          `;
-          group.appendChild(reel);
-        });
-
-        section.appendChild(group);
-        reelsContainer.appendChild(section);
-      }
-    }
-
-    function resetData() {
-      localStorage.clear();
-      location.reload();
-    }
-  </script>
-</body>
-</html>
