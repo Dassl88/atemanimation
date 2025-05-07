@@ -12,53 +12,53 @@
       font-family: Arial, sans-serif;
       color: white;
     }
-    h1 {
+    h1, h2, h3 {
       text-align: center;
-      margin-bottom: 20px;
     }
-    .buttons {
+    .input-block, .settings {
       text-align: center;
       margin-bottom: 30px;
     }
-    button {
-      padding: 10px 20px;
+    input, button {
+      padding: 10px;
       font-size: 16px;
       margin: 5px;
       border-radius: 8px;
       border: none;
+    }
+    button {
       background-color: #10b981;
       color: white;
       cursor: pointer;
     }
-    .hidden {
-      display: none;
-    }
-    .settings {
-      max-width: 400px;
-      margin: 0 auto 30px auto;
-      background: #111;
-      padding: 20px;
-      border-radius: 12px;
-    }
-    input {
-      width: 100%;
-      padding: 10px;
-      font-size: 16px;
-      margin: 10px 0;
-      border-radius: 8px;
-      border: none;
-    }
     .grid {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+    .category {
+      background: #111;
+      border-radius: 16px;
+      padding: 20px;
+    }
+    .category-title {
+      font-size: 24px;
+      margin-bottom: 10px;
+      text-align: center;
+      border-bottom: 1px solid #333;
+      padding-bottom: 5px;
+    }
+    .reel-container {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 20px;
     }
     .reel {
-      background: #111;
+      background: #1a1a1a;
       border-radius: 16px;
       padding: 20px;
-      width: 240px;
+      width: 220px;
       text-align: center;
     }
     .progress-circle {
@@ -90,92 +90,84 @@
 </head>
 <body>
   <h1>🚭 Rauchfrei Tracker Pro</h1>
-
-  <div class="buttons">
-    <button onclick="toggleSettings()">Einstellungen</button>
-    <button onclick="showProgress()">Fortschritt anzeigen</button>
+  <div class="settings">
+    <button onclick="toggleSettings()">⚙️ Einstellungen anzeigen</button>
   </div>
-
-  <div id="settings" class="settings hidden">
+  <div class="input-block" id="settingsBlock" style="display:none;">
     <label>Aufhördatum & Uhrzeit:</label><br />
     <input type="datetime-local" id="quitDate" /><br />
-
     <label>Zigaretten pro Tag:</label><br />
     <input type="number" id="cigsPerDay" value="20" /><br />
-
     <label>Preis pro Schachtel (€):</label><br />
     <input type="number" id="packPrice" value="8" step="0.01" /><br />
-
     <label>Zigaretten pro Schachtel:</label><br />
     <input type="number" id="cigsPerPack" value="20" /><br />
-
-    <button onclick="saveSettings()">Speichern</button>
+    <button onclick="showProgress()">Fortschritt anzeigen</button>
     <button onclick="resetData()" style="background-color: #ef4444;">Daten zurücksetzen</button>
   </div>
-
   <div id="info" class="info-box"></div>
   <div id="reels" class="grid"></div>
 
   <script>
-    const milestones = [
-      { title: "Puls normalisiert sich", hours: 0.3, description: "Blutdruck und Puls sinken nach 20 Minuten." },
-      { title: "CO halbiert", hours: 8, description: "Kohlenmonoxid im Blut halbiert sich." },
-      { title: "CO vollständig abgebaut", hours: 12, description: "CO-Wert ist auf Null, Sauerstoff steigt." },
-      { title: "Geschmack & Geruch zurück", hours: 48, description: "Sinne regenerieren sich." },
-      { title: "Bronchien entspannen sich", hours: 72, description: "Bessere Atmung, weniger Schleim." },
-      { title: "Entzugserscheinungen Höchststand", hours: 72, description: "Stärkster körperlicher Suchtdruck bis Tag 3." },
-      { title: "Bessere Hautdurchblutung", hours: 120, description: "Haut wird rosiger durch bessere Durchblutung." },
-      { title: "Schlaf normalisiert sich", hours: 168, description: "Nach ca. 1 Woche ruhigerer Schlaf." },
-      { title: "Lungenfunktion verbessert", hours: 336, description: "2 Wochen nach Rauchstopp steigt die Lungenkapazität." },
-      { title: "Entzug körperlich vorbei", hours: 336, description: "Körperlicher Entzug meist überwunden (Woche 2)." },
-      { title: "Psychische Trigger nehmen ab", hours: 720, description: "Nach einem Monat ist man stabiler gegenüber Auslösern." },
-      { title: "Haut verbessert sich sichtbar", hours: 1440, description: "Nach 2 Monaten: weniger Pickel, bessere Elastizität." },
-      { title: "Lunge regeneriert", hours: 2160, description: "3 Monate – besseres Atmen, Ausdauer steigt." },
-      { title: "Immunsystem gestärkt", hours: 2880, description: "Nach 4 Monaten: seltener krank." },
-      { title: "Schleimproduktion sinkt", hours: 4320, description: "Nach 6 Monaten: weniger Husten, Atemwege frei." },
-      { title: "Herzinfarktrisiko halbiert", hours: 8760, description: "Nach 1 Jahr ist das Risiko um 50 % reduziert." },
-      { title: "Lunge weiter gereinigt", hours: 13140, description: "Nach 1,5 Jahren – tiefere Atmung, mehr Energie." },
-      { title: "Rückfallgefahr stark gesunken", hours: 13140, description: "Nach 1,5 Jahren bleibt die Mehrheit rauchfrei." },
-      { title: "Gefäßgesundheit wie Nichtraucher", hours: 17520, description: "Nach 2 Jahren: fast normales Herz-Kreislauf-Risiko." },
-      { title: "Mentale Stärke wächst", hours: 26280, description: "Nach 3 Jahren: kaum Rauchverlangen." },
-      { title: "Schlaganfallrisiko normal", hours: 43800, description: "Nach 5 Jahren: Risiko wie bei Nichtrauchern." },
-      { title: "Lungenkrebsrisiko halbiert", hours: 87600, description: "Nach 10 Jahren halb so hoch wie bei Rauchern." },
-      { title: "Herzgesundheit wie nie geraucht", hours: 131400, description: "Nach 15 Jahren – vollständige Regeneration." }
-    ];
+    const categories = {
+      "Kurzfristig (Stunden-Tage)": [
+        { title: "Puls normalisiert sich", hours: 8, description: "Puls sinkt auf Normalniveau." },
+        { title: "Sauerstoff steigt", hours: 12, description: "Mehr Sauerstoff im Blut." },
+        { title: "CO abgebaut", hours: 24, description: "CO-Wert ist fast null." },
+        { title: "Geschmack/Geruch kehrt zurück", hours: 48, description: "Sinne beginnen sich zu regenerieren." },
+        { title: "Hautdurchblutung steigt", hours: 72, description: "Die Haut wird besser durchblutet." },
+        { title: "Entzug: stärkster Druck", hours: 72, description: "Höchster körperlicher Suchtdruck ist überstanden." }
+      ],
+      "Mittelfristig (Wochen)": [
+        { title: "Lungenfunktion verbessert sich", hours: 168, description: "Besseres Atmen nach 1 Woche." },
+        { title: "Entzug klingt ab", hours: 336, description: "Körperlicher Entzug lässt nach 2 Wochen nach." },
+        { title: "Mehr Energie", hours: 504, description: "Mehr Energie, weniger Husten (3 Wochen)." }
+      ],
+      "Langfristig (Monate-Jahre)": [
+        { title: "Rückfallgefahr sinkt", hours: 2160, description: "3 Monate: Rückfallgefahr verringert sich." },
+        { title: "Atemwege stabilisieren", hours: 4320, description: "6 Monate: Weniger Infekte." },
+        { title: "Hautbild verbessert sich", hours: 8760, description: "1 Jahr: Haut wird frischer." },
+        { title: "Herzinfarktrisiko halbiert", hours: 17520, description: "2 Jahre: Herzinfarktrisiko halbiert." },
+        { title: "Krebsrisiken sinken", hours: 43800, description: "5 Jahre: Risiko für einige Krebsarten halbiert." },
+        { title: "Lebenserwartung steigt", hours: 131400, description: "15 Jahre: Risiko wie bei Nichtrauchern." }
+      ],
+      "Psychische Entwicklung": [
+        { title: "Reizbarkeit und Schlaf", hours: 72, description: "Reizbarkeit, Schlafprobleme in den ersten Tagen." },
+        { title: "Psychisches Verlangen", hours: 720, description: "Verlangen nach alten Auslösern wie Stress, Alkohol." },
+        { title: "Neue Gewohnheiten", hours: 2160, description: "Neue Routinen nach 3 Monaten etabliert." }
+      ]
+    };
+
+    window.onload = function () {
+      const quit = localStorage.getItem("quitDate");
+      const cigs = localStorage.getItem("cigsPerDay");
+      const price = localStorage.getItem("packPrice");
+      const perPack = localStorage.getItem("cigsPerPack");
+      if (quit) document.getElementById("quitDate").value = quit;
+      if (cigs) document.getElementById("cigsPerDay").value = cigs;
+      if (price) document.getElementById("packPrice").value = price;
+      if (perPack) document.getElementById("cigsPerPack").value = perPack;
+      if (quit) showProgress();
+    };
 
     function toggleSettings() {
-      document.getElementById("settings").classList.toggle("hidden");
-    }
-
-    function saveSettings() {
-      const quit = document.getElementById("quitDate").value;
-      const cigs = document.getElementById("cigsPerDay").value;
-      const price = document.getElementById("packPrice").value;
-      const perPack = document.getElementById("cigsPerPack").value;
-
-      if (!quit || !cigs || !price || !perPack) {
-        alert("Bitte alle Eingaben ausfüllen.");
-        return;
-      }
-
-      localStorage.setItem("quitDate", quit);
-      localStorage.setItem("cigsPerDay", cigs);
-      localStorage.setItem("packPrice", price);
-      localStorage.setItem("cigsPerPack", perPack);
-      alert("Einstellungen gespeichert.");
-      toggleSettings();
+      const block = document.getElementById("settingsBlock");
+      block.style.display = block.style.display === "none" ? "block" : "none";
     }
 
     function showProgress() {
-      const quitInput = localStorage.getItem("quitDate");
-      const cigsPerDay = parseInt(localStorage.getItem("cigsPerDay"));
-      const packPrice = parseFloat(localStorage.getItem("packPrice"));
-      const cigsPerPack = parseInt(localStorage.getItem("cigsPerPack"));
-
+      const quitInput = document.getElementById("quitDate").value;
+      const cigsPerDay = parseInt(document.getElementById("cigsPerDay").value);
+      const packPrice = parseFloat(document.getElementById("packPrice").value);
+      const cigsPerPack = parseInt(document.getElementById("cigsPerPack").value);
       if (!quitInput || isNaN(cigsPerDay) || isNaN(packPrice) || isNaN(cigsPerPack)) {
-        alert("Bitte Einstellungen zuerst ausfüllen.");
+        alert("Bitte alle Eingaben korrekt ausfüllen!");
         return;
       }
+      localStorage.setItem("quitDate", quitInput);
+      localStorage.setItem("cigsPerDay", cigsPerDay);
+      localStorage.setItem("packPrice", packPrice);
+      localStorage.setItem("cigsPerPack", cigsPerPack);
 
       const quitTime = new Date(quitInput);
       const now = new Date();
@@ -188,7 +180,8 @@
       const lifeRegainedHr = Math.floor(lifeRegainedMin / 60);
       const lifeRegainedMinRest = lifeRegainedMin % 60;
 
-      document.getElementById("info").innerHTML = `
+      const infoBox = document.getElementById("info");
+      infoBox.innerHTML = `
         <h2>Dein Fortschritt</h2>
         <p><strong>Gesparte Zigaretten:</strong> ${totalCigsAvoided}</p>
         <p><strong>Gespartes Geld:</strong> € ${totalMoneySaved}</p>
@@ -198,20 +191,32 @@
       const reelsContainer = document.getElementById("reels");
       reelsContainer.innerHTML = "";
 
-      milestones.forEach(m => {
-        const percent = Math.min((diffHours / m.hours) * 100, 100);
-        const reel = document.createElement("div");
-        reel.className = "reel";
-        reel.innerHTML = `
-          <h3>${m.title}</h3>
-          <div class="progress-circle" style="background: conic-gradient(#10b981 ${percent}%, #333 ${percent}%);">
-            <span>${Math.floor(percent)}%</span>
-          </div>
-          <p>${m.description}</p>
-          ${percent === 100 ? '<p style="color:#10b981;">✅ Erreicht!</p>' : ""}
-        `;
-        reelsContainer.appendChild(reel);
-      });
+      for (const [category, milestones] of Object.entries(categories)) {
+        const section = document.createElement("div");
+        section.className = "category";
+        section.innerHTML = `<div class="category-title">${category}</div>`;
+
+        const group = document.createElement("div");
+        group.className = "reel-container";
+
+        milestones.forEach(m => {
+          const percent = Math.min((diffHours / m.hours) * 100, 100);
+          const reel = document.createElement("div");
+          reel.className = "reel";
+          reel.innerHTML = `
+            <h3>${m.title}</h3>
+            <div class="progress-circle" style="background: conic-gradient(#10b981 ${percent}%, #333 ${percent}%);">
+              <span>${Math.floor(percent)}%</span>
+            </div>
+            <p>${m.description}</p>
+            ${percent === 100 ? '<p style="color:#10b981;">✅ Erreicht!</p>' : ""}
+          `;
+          group.appendChild(reel);
+        });
+
+        section.appendChild(group);
+        reelsContainer.appendChild(section);
+      }
     }
 
     function resetData() {
