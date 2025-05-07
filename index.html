@@ -83,6 +83,23 @@
       width: 250px;
       text-align: center;
     }
+    .progress-ring {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: conic-gradient(#10b981 0%, #333 0%);
+      margin: 0 auto;
+    }
+    .progress-ring span {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 24px;
+      font-weight: bold;
+      color: white;
+    }
   </style>
 </head>
 <body>
@@ -155,6 +172,20 @@
 
   <script>
     let milestones = JSON.parse(localStorage.getItem('milestones')) || [];
+
+    // Vordefinierte Meilensteine
+    const defaultMilestones = [
+      { title: "Tag 1", description: "Der erste Tag ohne Zigaretten", timeValue: 1, timeUnit: "days" },
+      { title: "Woche 1", description: "1 Woche rauchfrei", timeValue: 7, timeUnit: "days" },
+      { title: "Monat 1", description: "1 Monat rauchfrei", timeValue: 1, timeUnit: "months" },
+      { title: "Jahr 1", description: "1 Jahr rauchfrei", timeValue: 1, timeUnit: "years" }
+    ];
+
+    // Fügt vordefinierte Meilensteine hinzu, falls noch keine Meilensteine vorhanden sind
+    if (milestones.length === 0) {
+      milestones = defaultMilestones;
+      localStorage.setItem('milestones', JSON.stringify(milestones));
+    }
 
     // Zeigt die entsprechende Seite an
     function showPage(pageId) {
@@ -255,7 +286,7 @@
         reel.className = "reel";
         reel.innerHTML = `
           <h3 class="milestone-title">${milestone.title}</h3>
-          <div class="progress-circle" style="background: conic-gradient(#10b981 ${percent}%, #333 ${percent}%);">
+          <div class="progress-ring" style="background: conic-gradient(#10b981 ${percent}%, #333 ${percent}%);">
             <span>${Math.floor(percent)}%</span>
           </div>
           <p class="milestone-description">${milestone.description}</p>
@@ -277,3 +308,4 @@
 
 </body>
 </html>
+
