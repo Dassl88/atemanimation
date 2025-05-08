@@ -1,430 +1,166 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rauchfrei App</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        background: #121212;
-        color: white;
-    }
-    header, nav, main, section {
-        padding: 20px;
-    }
-    header h1, section h2 {
-        text-align: center;
-    }
-    nav {
-        position: fixed;
-        top: 0;
-        width: 100%;
-        background: #1f1f1f;
-        display: flex;
-        justify-content: space-around;
-        padding: 10px 0;
-        z-index: 1000;
-    }
-    nav a {
-        color: white;
-        text-decoration: none;
-        font-weight: bold;
-        cursor: pointer;
-        padding: 10px 20px;
-        border-radius: 5px;
-    }
-    nav a.active-nav {
-        background-color: green;
-    }
-    .circle {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        background: conic-gradient(green 0%, #444 0);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 10px auto;
-        font-size: 18px;
-        font-weight: bold;
-        color: white;
-    }
-    .milestone {
-        background: #1f1f1f;
-        padding: 15px;
-        border-radius: 10px;
-        margin: 20px;
-        text-align: center;
-        box-shadow: 0 0 10px rgba(0,0,0,0.3);
-    }
-    .milestone h3 {
-        margin-bottom: 10px;
-    }
-    .milestone p {
-        font-size: 14px;
-        color: #ccc;
-    }
-    .health-grid {
-        display: flex;
-        justify-content: space-around;
-        flex-wrap: wrap;
-        margin-top: 20px;
-    }
-    .health-item {
-        text-align: center;
-        margin: 10px;
-    }
-    .stats {
-        text-align: center;
-        margin-bottom: 20px;
-    }
-    .section {
-        display: none;
-    }
-    .active {
-        display: block;
-        margin-top: 80px;
-    }
-    .greeting {
-        text-align: center;
-        margin-bottom: 10px;
-        font-size: 20px;
-    }
-    .quote {
-        text-align: center;
-        font-style: italic;
-        color: #aaa;
-        margin-bottom: 20px;
-    }
-</style>
+    <meta charset="UTF-8">
+    <title>Rauchfrei Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #121212;
+            color: white;
+            margin: 0;
+            padding-bottom: 100px;
+        }
+        nav {
+            background: #1f1f1f;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+        nav a.active-nav {
+            background: green;
+        }
+        .section {
+            display: none;
+            padding: 20px;
+        }
+        .active {
+            display: block;
+        }
+        .circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: conic-gradient(green 0%, #444 0%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px auto;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+        }
+        .milestone {
+            background: #1f1f1f;
+            margin: 15px;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        .milestone h3 {
+            margin-bottom: 10px;
+        }
+        .health-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        .health-item {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-<nav>
-    <a id="navStart" onclick="showSection('start')">Start</a>
-    <a id="navDaten" onclick="showSection('daten')">Daten</a>
-    <a id="navMeilensteine" onclick="showSection('meilensteine')">Meilensteine</a>
-</nav>
-
-<section id="start" class="section active">
-    <header>
-        <h1>Rauchfrei Dashboard</h1>
-    </header>
-    <div class="greeting" id="greetingText">Willkommen!</div>
-    <div class="quote" id="quoteText"></div>
-    <h2 style="text-align:center;">Wiedererlangte Gesundheit</h2>
-    <div class="health-grid">
-        <div class="health-item">
-            <h3>Kurzfristig</h3>
-            <div class="circle" id="healthKurz"></div>
+    <nav>
+        <a href="#" class="active-nav" onclick="showSection('dashboard')">Dashboard</a>
+        <a href="#" onclick="showSection('meilensteine')">Meilensteine</a>
+    </nav>
+    <section id="dashboard" class="section active">
+        <h2 style="text-align:center;">Wiedererlangte Gesundheit</h2>
+        <div class="health-grid">
+            <div class="health-item"><h4>Kurzfristig</h4><div class="circle" id="shortHealth">0%</div></div>
+            <div class="health-item"><h4>Mittelfristig</h4><div class="circle" id="midHealth">0%</div></div>
+            <div class="health-item"><h4>Langfristig</h4><div class="circle" id="longHealth">0%</div></div>
+            <div class="health-item"><h4>Sehr langfristig</h4><div class="circle" id="veryHealth">0%</div></div>
         </div>
-        <div class="health-item">
-            <h3>Mittelfristig</h3>
-            <div class="circle" id="healthMittel"></div>
-        </div>
-        <div class="health-item">
-            <h3>Langfristig</h3>
-            <div class="circle" id="healthLang"></div>
-        </div>
-        <div class="health-item">
-            <h3>Sehr langfristig</h3>
-            <div class="circle" id="healthSehr"></div>
-        </div>
-    </div>
-    <div class="stats">
-        <p>Nicht geraucht seit: <strong id="timeSmokeFree">-</strong></p>
-        <p>Nicht gerauchte Zigaretten: <strong id="cigsSaved">-</strong></p>
-        <p>Wiedergewonnene Lebenszeit: <strong id="lifeGained">-</strong></p>
-        <p>Gespartes Geld: <strong id="moneySaved">-</strong></p>
-    </div>
-</section>
+    </section>
+    <section id="meilensteine" class="section">
+        <h2 style="text-align:center;">Alle Meilensteine</h2>
+        <div id="milestoneList"></div>
+    </section>
+    <script>
+        const quitDate = new Date("2024-01-01T00:00:00"); // Beispiel: Benutzer hat am 1. Jan aufgehört
 
-<section id="daten" class="section">
-    <header>
-        <h2>Meine Daten</h2>
-    </header>
-    <form id="userDataForm" style="display: flex; flex-direction: column; gap: 15px; max-width: 500px; margin: auto; background: #1f1f1f; padding: 20px; border-radius: 10px;">
-  <label for="name">Name</label>
-  <input type="text" id="name" name="name" placeholder="Dein Name">
+        const milestones = [{'Kategorie': 'Kurzfristig', 'Titel': 'Puls und Blutdruck', 'Beschreibung': '🕒 Nach 20 Minuten: Puls und Blutdruck sinken auf Normalniveau.'}, {'Kategorie': 'Kurzfristig', 'Titel': 'Körpertemperatur reguliert sich', 'Beschreibung': '🕒 Nach 30 Minuten: Hände und Füße werden besser durchblutet.'}, {'Kategorie': 'Kurzfristig', 'Titel': 'Sauerstoffgehalt', 'Beschreibung': '🕒 Nach 8 Stunden: Sauerstoffgehalt im Blut normalisiert sich.'}, {'Kategorie': 'Kurzfristig', 'Titel': 'Kohlenmonoxidspiegel sinkt', 'Beschreibung': '🕒 Nach 12–24 Stunden: Kohlenmonoxid wird aus dem Körper abgebaut.'}, {'Kategorie': 'Kurzfristig', 'Titel': 'Durchblutung verbessert sich', 'Beschreibung': '🕒 Nach 2 Stunden: Kreislauf stabilisiert sich.'}, {'Kategorie': 'Kurzfristig', 'Titel': 'Geruch des Rauchens nimmt ab', 'Beschreibung': '🕒 Nach 1–2 Tagen: Kleidung, Atem und Haut riechen frischer.'}, {'Kategorie': 'Kurzfristig', 'Titel': 'Riechsinn schärft sich', 'Beschreibung': '🕒 Nach 48 Stunden: Geruchssinn verbessert sich deutlich.'}, {'Kategorie': 'Kurzfristig', 'Titel': 'Geschmackssinn kehrt zurück', 'Beschreibung': '🕒 Nach 2 Tagen: Essen schmeckt wieder intensiver.'}, {'Kategorie': 'Kurzfristig', 'Titel': 'Nikotinabbau', 'Beschreibung': '🕒 Nach 2–3 Tagen: Nikotin ist komplett aus dem Körper verschwunden.'}, {'Kategorie': 'Kurzfristig', 'Titel': 'Atemwege beginnen sich zu reinigen', 'Beschreibung': '🕒 Nach 1–2 Tagen: Lunge beginnt Schleim und Schadstoffe abzutransportieren.'}, {'Kategorie': 'Mittelfristig', 'Titel': 'Lungenfunktion deutlich verbessert', 'Beschreibung': '🕒 Nach 2–3 Wochen: Lungenkapazität steigt spürbar.'}, {'Kategorie': 'Mittelfristig', 'Titel': 'Atemnot reduziert sich', 'Beschreibung': '🕒 Nach 3–4 Wochen: Du atmest leichter.'}, {'Kategorie': 'Mittelfristig', 'Titel': 'Husten lässt nach', 'Beschreibung': '🕒 Nach 3–6 Wochen: Reizhusten verschwindet.'}, {'Kategorie': 'Mittelfristig', 'Titel': 'Flimmerhärchen regenerieren sich', 'Beschreibung': '🕒 Nach 2–6 Wochen: Zilien beginnen wieder zu arbeiten.'}, {'Kategorie': 'Mittelfristig', 'Titel': 'Immunsystem wird stärker', 'Beschreibung': '🕒 Nach 3 Wochen: Abwehrkräfte steigen.'}, {'Kategorie': 'Mittelfristig', 'Titel': 'Besserer Teint', 'Beschreibung': '🕒 Nach 4 Wochen: Haut wirkt vitaler.'}, {'Kategorie': 'Mittelfristig', 'Titel': 'Sexualfunktion verbessert sich', 'Beschreibung': '🕒 Nach 4–5 Wochen: Bessere Durchblutung erhöht Libido.'}, {'Kategorie': 'Mittelfristig', 'Titel': 'Stabilerer Hormonhaushalt', 'Beschreibung': '🕒 Ab Woche 4: Weniger Stresshormone.'}, {'Kategorie': 'Mittelfristig', 'Titel': 'Emotionale Ausgeglichenheit', 'Beschreibung': '🕒 Nach 4–6 Wochen: Stimmung stabilisiert sich.'}, {'Kategorie': 'Mittelfristig', 'Titel': 'Mehr Ausdauer beim Sport', 'Beschreibung': '🕒 Ab Woche 4: Kondition verbessert sich.'}, {'Kategorie': 'Mittelfristig', 'Titel': 'Schlaf wird erholsamer', 'Beschreibung': '🕒 Nach 5 Wochen: Tiefere Schlafphasen.'}, {'Kategorie': 'Mittelfristig', 'Titel': 'Konzentration steigt deutlich', 'Beschreibung': '🕒 Ab Woche 3–4: Mentale Klarheit kehrt vollständig zurück.'}, {'Kategorie': 'Mittelfristig', 'Titel': 'Erhöhte Energie im Alltag', 'Beschreibung': '🕒 Nach 4–6 Wochen: Weniger Erschöpfung.'}, {'Kategorie': 'Mittelfristig', 'Titel': 'Schweiß riecht neutraler', 'Beschreibung': '🕒 Nach 4 Wochen: Keine Giftstoffe mehr im Hautgeruch.'}, {'Kategorie': 'Mittelfristig', 'Titel': 'Blut fließt besser', 'Beschreibung': '🕒 Nach 4–5 Wochen: Geringeres Thromboserisiko.'}, {'Kategorie': 'Mittelfristig', 'Titel': 'Infektanfälligkeit sinkt', 'Beschreibung': '🕒 Nach 6 Wochen: Weniger Atemwegserkrankungen.'}, {'Kategorie': 'Mittelfristig', 'Titel': 'Zellregeneration in Gang', 'Beschreibung': '🕒 Nach 4 Wochen: Organfunktionen verbessern sich.'}, {'Kategorie': 'Mittelfristig', 'Titel': 'Entzündungswerte sinken', 'Beschreibung': '🕒 Ab Woche 5: Weniger stille Entzündungen.'}, {'Kategorie': 'Mittelfristig', 'Titel': 'Herzfrequenzvariabilität steigt', 'Beschreibung': '🕒 Nach 6 Wochen: Körper reagiert flexibler auf Stress.'}, {'Kategorie': 'Mittelfristig', 'Titel': 'Nägel und Haare wachsen gesünder', 'Beschreibung': '🕒 Ab Woche 5: Stärker und kräftiger.'}, {'Kategorie': 'Langfristig', 'Titel': 'Zähne werden heller', 'Beschreibung': '🕒 Nach 2–3 Monaten: Verfärbungen verschwinden allmählich.'}, {'Kategorie': 'Langfristig', 'Titel': 'Besseres Hautbild', 'Beschreibung': '🕒 Nach 3 Monaten: Weniger Falten und Unreinheiten.'}, {'Kategorie': 'Langfristig', 'Titel': 'Stoffwechsel stabilisiert sich', 'Beschreibung': '🕒 Nach 2 Monaten: Gewicht pendelt sich ein.'}, {'Kategorie': 'Langfristig', 'Titel': 'Verdauung normalisiert sich', 'Beschreibung': '🕒 Ab Monat 2–3: Regulärer Rhythmus.'}, {'Kategorie': 'Langfristig', 'Titel': 'Schleimproduktion auf Normalniveau', 'Beschreibung': '🕒 Nach 3–6 Monaten: Weniger Auswurf.'}, {'Kategorie': 'Langfristig', 'Titel': 'Husten verschwindet vollständig', 'Beschreibung': '🕒 Nach 6 Monaten: Bronchien sind sauber.'}, {'Kategorie': 'Langfristig', 'Titel': 'Atemtiefe nimmt zu', 'Beschreibung': '🕒 Nach 4–6 Monaten: Spürbar mehr Luft beim Atmen.'}, {'Kategorie': 'Langfristig', 'Titel': 'Lungenfunktion nahe am Optimum', 'Beschreibung': '🕒 Nach 9 Monaten: Fast vollständige Regeneration.'}, {'Kategorie': 'Langfristig', 'Titel': 'Psychische Entlastung dauerhaft spürbar', 'Beschreibung': '🕒 Ab 6 Monaten: Kein mentaler Zwang mehr.'}, {'Kategorie': 'Langfristig', 'Titel': 'Herzinfarktrisiko halbiert', 'Beschreibung': '🕒 Nach 1 Jahr: Nur noch halb so hoch wie bei Rauchern.'}, {'Kategorie': 'Sehr langfristig', 'Titel': 'Schlaganfallrisiko sinkt', 'Beschreibung': '🕒 Nach 5 Jahren: Auf Niveau eines Nichtrauchers.'}, {'Kategorie': 'Sehr langfristig', 'Titel': 'Kehlkopf-, Speiseröhren-, Mundkrebsrisiko halbiert', 'Beschreibung': '🕒 Nach 5–10 Jahren: Signifikant gesenktes Krebsrisiko.'}, {'Kategorie': 'Sehr langfristig', 'Titel': 'Bauchspeicheldrüsenkrebsrisiko sinkt', 'Beschreibung': '🕒 Nach 10 Jahren: Fast wie bei Nichtrauchern.'}, {'Kategorie': 'Sehr langfristig', 'Titel': 'Krebsrisiko insgesamt deutlich gesenkt', 'Beschreibung': '🕒 Ab 5 Jahren: Fortschreitende Reduktion bei allen Krebsarten.'}, {'Kategorie': 'Sehr langfristig', 'Titel': 'COPD-Risiko sinkt weiter', 'Beschreibung': '🕒 Nach 5–10 Jahren: Lungenfunktion bleibt stabil.'}, {'Kategorie': 'Sehr langfristig', 'Titel': 'Diabetesrisiko reduziert', 'Beschreibung': '🕒 Nach 5 Jahren: Stoffwechsel normalisiert sich weiter.'}, {'Kategorie': 'Sehr langfristig', 'Titel': 'Langfristig bessere Fruchtbarkeit', 'Beschreibung': '🕒 Nach 1–3 Jahren: Spermienqualität und Eisprunghäufigkeit steigen.'}, {'Kategorie': 'Sehr langfristig', 'Titel': 'Zellalterung verlangsamt', 'Beschreibung': '🕒 Ab Jahr 1: Telomerabbau verlangsamt sich.'}, {'Kategorie': 'Sehr langfristig', 'Titel': 'Herz-Kreislauf-Gesundheit wie bei Nichtrauchern', 'Beschreibung': '🕒 Nach 10–15 Jahren: Risiko für koronare Herzerkrankungen wieder normal.'}, {'Kategorie': 'Sehr langfristig', 'Titel': 'Lebenserwartung steigt', 'Beschreibung': '🕒 Nach 10 Jahren: 5–10 Jahre länger leben als Raucher.'}, {'Kategorie': 'Sehr langfristig', 'Titel': 'Gelenkgesundheit besser', 'Beschreibung': '🕒 Nach 3 Jahren: Weniger Entzündungen in Knochen und Gelenken.'}, {'Kategorie': 'Sehr langfristig', 'Titel': 'Rückfallrisiko extrem gering', 'Beschreibung': '🕒 Nach 5 Jahren: Sehr unwahrscheinlich wieder rückfällig zu werden.'}, {'Kategorie': 'Sehr langfristig', 'Titel': 'Identität als Nichtraucher verankert', 'Beschreibung': '🕒 Nach 3–5 Jahren: Rauchen ist kein inneres Thema mehr.'}, {'Kategorie': 'Sehr langfristig', 'Titel': 'Psychisches Gleichgewicht stabilisiert', 'Beschreibung': '🕒 Nach 1–2 Jahren: Emotionale Resilienz verbessert sich dauerhaft.'}, {'Kategorie': 'Sehr langfristig', 'Titel': 'Weniger chronische Erkrankungen', 'Beschreibung': '🕒 Ab Jahr 5: Reduziertes Risiko für viele Langzeiterkrankungen.'}, {'Kategorie': 'Sehr langfristig', 'Titel': 'Immunsystem auf Top-Niveau', 'Beschreibung': '🕒 Nach 1–2 Jahren: Abwehrsystem wie bei Nichtrauchern.'}, {'Kategorie': 'Sehr langfristig', 'Titel': 'Bessere Gehirnleistung im Alter', 'Beschreibung': '🕒 Nach 5–10 Jahren: Weniger Demenzrisiko.'}, {'Kategorie': 'Sehr langfristig', 'Titel': 'Selbstvertrauen maximal', 'Beschreibung': '🕒 Ab Jahr 3: Stolz auf das eigene Durchhaltevermögen.'}, {'Kategorie': 'Sehr langfristig', 'Titel': 'Zellen altern langsamer', 'Beschreibung': '🕒 Langfristig ab Jahr 2: Zellschutz und Reparaturprozesse laufen effizienter.'}, {'Kategorie': 'Sehr langfristig', 'Titel': 'Höhere Lebensqualität insgesamt', 'Beschreibung': '🕒 Nach 10 Jahren und mehr: Mehr Energie, Freiheit und Gesundheit.'}];
 
-  <label for="quitDate">Aufhördatum</label>
-  <input type="date" id="quitDate" name="quitDate">
-
-  <label for="quitTime">Aufhörzeit</label>
-  <input type="time" id="quitTime" name="quitTime">
-
-  <label for="cigsPerDay">Zigaretten pro Tag</label>
-  <input type="number" id="cigsPerDay" name="cigsPerDay" min="0">
-
-  <label for="packPrice">Preis pro Schachtel (€)</label>
-  <input type="number" step="0.01" id="packPrice" name="packPrice" min="0">
-
-  <label for="cigsPerPack">Zigaretten pro Schachtel</label>
-  <input type="number" id="cigsPerPack" name="cigsPerPack" min="1">
-
-  <label for="age">Alter</label>
-  <input type="number" id="age" name="age" min="0">
-
-  <label for="smokeYears">Jahre geraucht</label>
-  <input type="number" id="smokeYears" name="smokeYears" min="0">
-
-  <button type="submit">Speichern</button>
-</form>
-</section>
-
-<section id="meilensteine" class="section">
-  <header>
-    <h2>Meilensteine</h2>
-  </header>
-  <div class="meilenstein-container">
-    <div class="milestone" data-category="Kurzfristig" style="text-align: center">
-  <h3>Puls und Blutdruck</h3>
-  <div class="circle"><span>0%</span>
-  </div>
-  <p>🕒 Nach 20 Minuten: Puls und Blutdruck sinken auf Normalniveau.</p>
-</div>
-$1
-<div class="milestone" data-category="Kurzfristig">
-  <h3>Raucherhusten nimmt zu</h3>
-  <div class="circle" style="background: conic-gradient(green 0%, #444 0)">
-    <span>0%</span>
-  </div>
-  <p>🕒 Nach 2–3 Tagen: Reinigungshusten wird stärker – ein gutes Zeichen.</p>
-</div>
-<div class="milestone" data-category="Kurzfristig">
-  <h3>Mentale Klarheit kehrt zurück</h3>
-  <div class="circle" style="background: conic-gradient(green 0%, #444 0)">
-    <span>0%</span>
-  </div>
-  <p>🕒 Nach 3 Tagen: Erste Konzentrationsverbesserung tritt ein.</p>
-</div>
-<div class="milestone" data-category="Kurzfristig">
-  <h3>Erste Entzugserscheinungen</h3>
-  <div class="circle" style="background: conic-gradient(green 0%, #444 0)">
-    <span>0%</span>
-  </div>
-  <p>🕒 Ab 12 Stunden: Reizbarkeit, Unruhe, Schlafstörungen möglich.</p>
-</div>
-<div class="milestone" data-category="Kurzfristig">
-  <h3>Erhöhtes Hungergefühl</h3>
-  <div class="circle" style="background: conic-gradient(green 0%, #444 0)">
-    <span>0%</span>
-  </div>
-  <p>🕒 Nach 2–3 Tagen: Appetit steigt spürbar.</p>
-</div>
-<div class="milestone" data-category="Kurzfristig">
-  <h3>Zuckerstoffwechsel stabilisiert sich</h3>
-  <div class="circle" style="background: conic-gradient(green 0%, #444 0)">
-    <span>0%</span>
-  </div>
-  <p>🕒 Nach 4–5 Tagen: Der Blutzucker reguliert sich besser.</p>
-</div>
-<div class="milestone" data-category="Kurzfristig">
-  <h3>Schleimhäute regenerieren sich</h3>
-  <div class="circle" style="background: conic-gradient(green 0%, #444 0)">
-    <span>0%</span>
-  </div>
-  <p>🕒 Nach 2 Tagen: Heilung in Mund und Nase beginnt.</p>
-</div>
-<div class="milestone" data-category="Kurzfristig">
-  <h3>Finger verfärben sich zurück</h3>
-  <div class="circle" style="background: conic-gradient(green 0%, #444 0)">
-    <span>0%</span>
-  </div>
-  <p>🕒 Nach 5–7 Tagen: Gelbliche Verfärbungen werden blasser.</p>
-</div>
-<div class="milestone" data-category="Kurzfristig">
-  <h3>Zahnfleisch wird besser durchblutet</h3>
-  <div class="circle" style="background: conic-gradient(green 0%, #444 0)">
-    <span>0%</span>
-  </div>
-  <p>🕒 Nach 5 Tagen: Entzündungen gehen zurück.</p>
-</div>
-<div class="milestone" data-category="Kurzfristig">
-  <h3>Besseres Hautbild</h3>
-  <div class="circle" style="background: conic-gradient(green 0%, #444 0)">
-    <span>0%</span>
-  </div>
-  <p>🕒 Nach 1 Woche: Haut wirkt frischer und durchbluteter.</p>
-</div>
-<div class="milestone" data-category="Kurzfristig">
-  <h3>Atem wird frischer</h3>
-  <div class="circle" style="background: conic-gradient(green 0%, #444 0)">
-    <span>0%</span>
-  </div>
-  <p>🕒 Nach 2–3 Tagen: Mundgeruch lässt nach.</p>
-</div>
-<div class="milestone" data-category="Kurzfristig">
-  <h3>Emotionale Achterbahnfahrt</h3>
-  <div class="circle" style="background: conic-gradient(green 0%, #444 0)">
-    <span>0%</span>
-  </div>
-  <p>🕒 Tage 2–6: Stimmungsschwankungen treten auf.</p>
-</div>
-<div class="milestone" data-category="Kurzfristig">
-  <h3>Erster Energieschub</h3>
-  <div class="circle" style="background: conic-gradient(green 0%, #444 0)">
-    <span>0%</span>
-  </div>
-  <p>🕒 Nach 5–7 Tagen: Mehr Wachheit und Energiegefühl.</p>
-</div>
-<div class="milestone" data-category="Kurzfristig">
-  <h3>Magen-Darm-Trakt reagiert</h3>
-  <div class="circle" style="background: conic-gradient(green 0%, #444 0)">
-    <span>0%</span>
-  </div>
-  <p>🕒 Nach 3–5 Tagen: Verdauung kann träge oder schneller werden.</p>
-</div>
-<div class="milestone" data-category="Kurzfristig">
-  <h3>Blutzirkulation verbessert sich weiter</h3>
-  <div class="circle" style="background: conic-gradient(green 0%, #444 0)">
-    <span>0%</span>
-  </div>
-  <p>🕒 Ab Tag 3: Bessere Versorgung bis in die Extremitäten.</p>
-</div>
-<div class="milestone" data-category="Kurzfristig">
-  <h3>Reizbarkeit lässt nach</h3>
-  <div class="circle" style="background: conic-gradient(green 0%, #444 0)">
-    <span>0%</span>
-  </div>
-  <p>🕒 Nach 6–7 Tagen: Die Stimmung stabilisiert sich langsam.</p>
-</div>
-<div class="milestone" data-category="Kurzfristig">
-  <h3>Selbstwertgefühl steigt</h3>
-  <div class="circle" style="background: conic-gradient(green 0%, #444 0)">
-    <span>0%</span>
-  </div>
-  <p>🕒 Täglich zunehmend: Stolz über das Durchhalten wächst.</p>
-</div>
-<div class="milestone" data-category="Kurzfristig">
-  <h3>Händezittern verschwindet</h3>
-  <div class="circle" style="background: conic-gradient(green 0%, #444 0)">
-    <span>0%</span>
-  </div>
-  <p>🕒 Nach 4–6 Tagen: Nervosität lässt nach.</p>
-</div>
-<div class="milestone" data-category="Kurzfristig">
-  <h3>Geruchs- und Geschmackserlebnis stabilisiert sich</h3>
-  <div class="circle" style="background: conic-gradient(green 0%, #444 0)">
-    <span>0%</span>
-  </div>
-  <p>🕒 Nach 4–5 Tagen: Sinnesschärfe nahezu normal.</p>
-</div>
-<div class="milestone" data-category="Kurzfristig">
-  <h3>Schlaf verändert sich</h3>
-  <div class="circle" style="background: conic-gradient(green 0%, #444 0)">
-    <span>0%</span>
-  </div>
-  <p>🕒 Ab Tag 2–3: Schlafrhythmus pendelt sich neu ein.</p>
-</div>
-<div class="milestone" data-category="Kurzfristig">
-  <h3>Der erste Meilenstein – 1 Woche rauchfrei!</h3>
-  <div class="circle" style="background: conic-gradient(green 0%, #444 0)">
-    <span>0%</span>
-  </div>
-  <p>🕒 Tag 7: Rückfallgefahr sinkt deutlich.</p>
-</div>
-$2... vollständige Integration abgeschlossen -->
-  </div>
-</section>
-
-<script>
-const quotes = [
-    "Jede Zigarette, die du nicht rauchst, ist ein Sieg.",
-    "Du wirst stärker mit jedem Tag ohne Nikotin.",
-    "Dein Körper dankt dir – heute, morgen und für immer.",
-    "Rauchfrei leben heißt frei atmen.",
-    "Der schwierigste Schritt ist der erste – und den hast du gemacht.",
-    "Du bist mutiger als du denkst.",
-    "Jede Stunde ohne Zigarette bringt dich deinem Ziel näher.",
-    "Du bist nicht allein – Millionen haben es geschafft, du schaffst es auch.",
-    "Deine Gesundheit ist unbezahlbar.",
-    "Heute ist ein perfekter Tag, um weiter rauchfrei zu bleiben."
-];
-
-function showSection(sectionId) {
-    document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-    document.getElementById(sectionId).classList.add('active');
-    document.querySelectorAll('nav a').forEach(a => a.classList.remove('active-nav'));
-    document.getElementById('nav' + sectionId.charAt(0).toUpperCase() + sectionId.slice(1)).classList.add('active-nav');
-}
-
-const form = document.getElementById('userDataForm');
-form.addEventListener('submit', function(e) {
-    e.preventDefault();
-    const data = new FormData(form);
-    const userData = {};
-    for (const [key, value] of data.entries()) {
-        userData[key] = value;
-    }
-    localStorage.setItem('rauchfreiUserData', JSON.stringify(userData));
-    updateDashboard(userData);
-    updateMilestoneProgress(userData);
-    alert('Daten gespeichert!');
-});
-
-window.onload = function() {
-    const data = JSON.parse(localStorage.getItem('rauchfreiUserData'));
-    if (data) {
-        for (const key in data) {
-            const input = document.getElementById(key);
-            if (input) input.value = data[key];
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.querySelectorAll('nav a').forEach(a => a.classList.remove('active-nav'));
+            document.querySelector(`nav a[onclick*="$<built-in function id>"]`).classList.add('active-nav');
         }
-        updateDashboard(data);
-        updateMilestoneProgress(data);
-    }
-    document.getElementById("quoteText").innerText = quotes[Math.floor(Math.random() * quotes.length)];
-    showSection('start');
-}
 
-function updateDashboard(data) {
-    if (data.name) {
-        document.getElementById("greetingText").innerText = `Hallo ${data.name}, willkommen zurück!`;
-    }
-    if (!data.quitDate) return;
-    const quitDateTime = new Date(data.quitDate + 'T' + (data.quitTime || '00:00'));
-    const now = new Date();
-    const minutes = Math.floor((now - quitDateTime) / 60000);
-    const days = Math.floor(minutes / 1440);
-    const hours = Math.floor((minutes % 1440) / 60);
-    const mins = minutes % 60;
-    document.getElementById("timeSmokeFree").innerText = `${days} Tage, ${hours} Stunden, ${mins} Minuten`;
-    const cigsSaved = Math.floor((minutes / 1440) * parseInt(data.cigsPerDay || 0));
-    document.getElementById("cigsSaved").innerText = cigsSaved;
-    const lifeMinutes = cigsSaved * 11;
-    document.getElementById("lifeGained").innerText = `${Math.floor(lifeMinutes / 1440)} Tage, ${Math.floor((lifeMinutes % 1440) / 60)} Stunden`;
-    const moneySaved = (cigsSaved / parseInt(data.cigsPerPack || 1)) * parseFloat(data.packPrice || 0);
-    document.getElementById("moneySaved").innerText = moneySaved.toFixed(2) + " €";
-}
+        function minutesSinceQuit() {
+            return Math.floor((new Date() - quitDate) / 60000);
+        }
 
-function updateMilestoneProgress(data) {
-    const quitDateTime = new Date(data.quitDate + 'T' + (data.quitTime || '00:00'));
-    const now = new Date();
-    const minutesSinceQuit = Math.floor((now - quitDateTime) / 60000);
+        function renderMilestones() {
+            const list = document.getElementById('milestoneList');
+            let html = "";
+            for (const m of milestones) {
+                html += `<div class="milestone" data-category="${m.Kategorie}">
+                    <h3>${m.Titel}</h3>
+                    <div class="circle" id="circle-${m.Titel.replace(/\s+/g, '')}">0%</div>
+                    <p>${m.Beschreibung}</p>
+                </div>`;
+            }
+            list.innerHTML = html;
+        }
 
-    document.querySelectorAll('.milestone').forEach(m => {
-        const description = m.querySelector('p').innerText;
-        const match = description.match(/Nach (.+?):/);
-        if (!match) return;
+        function updateProgress() {
+            const min = minutesSinceQuit();
+            const totals = {
+                'Kurzfristig': [],
+                'Mittelfristig': [],
+                'Langfristig': [],
+                'Sehr langfristig': []
+            };
+            for (const m of milestones) {
+                const match = m.Beschreibung.match(/Nach (.+?):/);
+                if (!match) continue;
+                const text = match[1];
+                let targetMin = 0;
+                if (text.includes('Minute')) targetMin = parseInt(text);
+                else if (text.includes('Stunde')) targetMin = parseInt(text) * 60;
+                else if (text.includes('Tag')) targetMin = parseInt(text) * 1440;
+                else if (text.includes('Woche')) targetMin = parseInt(text) * 10080;
+                else if (text.includes('Monat')) targetMin = parseInt(text) * 43200;
+                else if (text.includes('Jahr')) targetMin = parseInt(text) * 525600;
+                if (!targetMin || isNaN(targetMin)) continue;
+                const percent = Math.min(100, Math.round((min / targetMin) * 100));
+                totals[m.Kategorie].push(percent);
+                const ring = document.getElementById('circle-' + m.Titel.replace(/\s+/g, ''));
+                if (ring) {
+                    ring.innerHTML = `<span>${percent}%</span>`;
+                    ring.style.background = `conic-gradient(green ${percent}%, #444 ${percent}%)`;
+                }
+            }
+            for (const cat in totals) {
+                const sum = totals[cat].reduce((a,b)=>a+b, 0);
+                const avg = totals[cat].length ? Math.round(sum / totals[cat].length) : 0;
+                const id = cat === 'Kurzfristig' ? 'shortHealth' : cat === 'Mittelfristig' ? 'midHealth' : cat === 'Langfristig' ? 'longHealth' : 'veryHealth';
+                const ring = document.getElementById(id);
+                if (ring) {
+                    ring.innerHTML = `${avg}%`;
+                    ring.style.background = `conic-gradient(green ${avg}%, #444 ${avg}%)`;
+                }
+            }
+        }
 
-        const timeText = match[1];
-        let requiredMinutes = 0;
-        if (timeText.includes('Minute')) requiredMinutes = parseInt(timeText);
-        else if (timeText.includes('Stunde')) requiredMinutes = parseInt(timeText) * 60;
-        else if (timeText.includes('Tag')) requiredMinutes = parseInt(timeText) * 1440;
-        else if (timeText.includes('Woche')) requiredMinutes = parseInt(timeText) * 10080;
-        else if (timeText.includes('Monat')) requiredMinutes = parseInt(timeText) * 43200;
-        else if (timeText.includes('Jahr')) requiredMinutes = parseInt(timeText) * 525600;
-
-        let progress = Math.min(100, Math.round((minutesSinceQuit / requiredMinutes) * 100));
-        if (isNaN(progress) || requiredMinutes === 0) progress = 0;
-
-        const circle = m.querySelector('.circle');
-        circle.innerHTML = `<span>${progress}%</span>`;
-        circle.style.background = `conic-gradient(green ${progress}%, #444 ${progress}%)`;
-    });
-}
-</script>
+        renderMilestones();
+        updateProgress();
+        setInterval(updateProgress, 60000);
+    </script>
 </body>
 </html>
