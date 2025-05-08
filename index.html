@@ -35,40 +35,168 @@
       <div class="health-item"><h4>Sehr langfristig</h4><div class="circle" id="veryHealth">0%</div></div>
     </div>
   </section>
+  <section id="daten" class="section">
+    <h2 style="text-align:center;">Meine Daten</h2>
+    <form id="userDataForm">
+      <label>Name:<input type="text" id="name" required></label>
+      <label>Aufhördatum:<input type="date" id="quitDate" required></label>
+      <label>Uhrzeit:<input type="time" id="quitTime" required></label>
+      <label>Zigaretten/Tag:<input type="number" id="cigsPerDay" required></label>
+      <label>Zigaretten pro Schachtel:<input type="number" id="cigsPerPack" required></label>
+      <label>Preis pro Schachtel (€):<input type="number" step="0.01" id="packPrice" required></label>
+      <label>Alter:<input type="number" id="age"></label>
+      <label>Jahre geraucht:<input type="number" id="yearsSmoked"></label>
+      <button type="submit">Speichern</button>
+    </form>
+  </section>
+  <section id="meilensteine" class="section">
+    <h2 style="text-align:center;">Alle Meilensteine</h2>
+    <div id="milestoneList"></div>
+  </section>
 
-    <section id="daten" class="section">
-  <h2 style="text-align:center;">Meine Daten</h2>
-  <form id="userDataForm">
-    <label>Name:<br><input type="text" id="name" name="name" required></label><br><br>
-    <label>Aufhördatum:<br><input type="date" id="quitDate" name="quitDate" required></label><br><br>
-    <label>Uhrzeit:<br><input type="time" id="quitTime" name="quitTime" required></label><br><br>
-    <label>Zigaretten pro Tag:<br><input type="number" id="cigsPerDay" name="cigsPerDay" required></label><br><br>
-    <label>Zigaretten pro Schachtel:<br><input type="number" id="cigsPerPack" name="cigsPerPack" required></label><br><br>
-    <label>Preis pro Schachtel (€):<br><input type="number" step="0.01" id="packPrice" name="packPrice" required></label><br><br>
-    <label>Alter:<br><input type="number" id="age" name="age"></label><br><br>
-    <label>Jahre geraucht:<br><input type="number" id="yearsSmoked" name="yearsSmoked"></label><br><br>
-    <button type="submit">Speichern</button>
-  </form>
-</section>
-const form = document.getElementById('userDataForm');
-form.addEventListener('submit', function(e) {
-  e.preventDefault();
-  const data = new FormData(form);
-  const userData = {};
-  for (const [key, value] of data.entries()) {
-    userData[key] = value;
+  <script>
+    // Navigation
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('nav a').forEach(a => a.classList.remove('active-nav'));
+      document.querySelector(`nav a[onclick*="${id}"]`).classList.add('active-nav');
+    }
+
+    // Motivationssprüche
+    const sprueche = [
+      "Heute ist ein guter Tag, um stark zu sein.",
+      "Jede Zigarette, die du nicht rauchst, zählt.",
+      "Du atmest jetzt freier.",
+      "Dein Herz dankt dir.",
+      "Du wirst jeden Tag gesünder.",
+      "Freiheit beginnt mit dem ersten Schritt.",
+      "Du schaffst das – und zwar dauerhaft.",
+      "Ein neuer Anfang beginnt jetzt.",
+      "Du bist stärker als der Drang.",
+      "Dein Körper regeneriert sich.",
+      "Du gewinnst Leben zurück.",
+      "Lass den Rauch hinter dir.",
+      "Die Zukunft ist rauchfrei.",
+      "Heute bist du dein Held.",
+      "Mit jedem Atemzug wird’s besser.",
+      "Mach weiter – du bist auf dem Weg.",
+      "Du bist nicht allein.",
+      "Du bist mutig – und frei.",
+      "Rauchfrei ist das neue Glück.",
+      "Du hast dich selbst gewählt."
+    ];
+
+    // Daten speichern
+    const form = document.getElementById("userDataForm");
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const data = {};
+      ["name","quitDate","quitTime","cigsPerDay","cigsPerPack","packPrice","age","yearsSmoked"].forEach(id => {
+        data[id] = document.getElementById(id).value;
+      });
+      localStorage.setItem("rauchfreiData", JSON.stringify(data));
+      alert("Daten gespeichert!");
+      location.reload();
+    });
+
+    // Meilensteindaten – Liste folgt im nächsten Block
+  </script>
+<script>
+  const milestoneData = [
+    { title: "Puls und Blutdruck", days: 0.01, desc: "Puls und Blutdruck sinken auf Normalniveau." },
+    { title: "Körpertemperatur reguliert sich", days: 0.02, desc: "Hände und Füße werden besser durchblutet." },
+    { title: "Durchblutung verbessert sich", days: 0.08, desc: "Extremitäten werden wärmer und besser versorgt." },
+    { title: "Sauerstoffgehalt", days: 0.33, desc: "Sauerstoffgehalt im Blut normalisiert sich." },
+    { title: "Kohlenmonoxidspiegel sinkt", days: 1, desc: "Kohlenmonoxid wird vollständig abgebaut." },
+    { title: "Mentale Klarheit kehrt zurück", days: 1.5, desc: "Konzentration verbessert sich." },
+    { title: "Geruch des Rauchens nimmt ab", days: 2, desc: "Atem, Haut und Kleidung riechen frischer." },
+    { title: "Geschmackssinn kehrt zurück", days: 2, desc: "Essen schmeckt wieder intensiver." },
+    { title: "Nikotinabbau", days: 3, desc: "Nikotin ist komplett aus dem Körper." },
+    { title: "Erster Energieschub", days: 6, desc: "Du fühlst dich vitaler." },
+    { title: "1 Woche rauchfrei – erster großer Meilenstein", days: 7, desc: "Erste kritische Hürde überwunden." },
+    { title: "Lungenfunktion verbessert sich deutlich", days: 21, desc: "Besseres Atemvolumen, weniger Luftnot." },
+    { title: "Husten verschwindet vollständig", days: 180, desc: "Atemwege sind frei." },
+    { title: "Herzinfarktrisiko halbiert", days: 365, desc: "Risiko ist nur noch halb so hoch wie bei Rauchern." },
+    { title: "Schlaganfallrisiko sinkt", days: 1825, desc: "Auf Niveau eines Nichtrauchers." }
+  ];
+
+  // Fortschritt berechnen
+  function loadData() {
+    const data = JSON.parse(localStorage.getItem("rauchfreiData"));
+    if (!data || !data.quitDate || !data.quitTime) return null;
+    const dateStr = `${data.quitDate}T${data.quitTime}`;
+    const start = new Date(dateStr);
+    const now = new Date();
+    const minutes = Math.floor((now - start) / 60000);
+    const days = minutes / 1440;
+    return { ...data, start, minutes, days };
   }
-  localStorage.setItem('rauchfreiUserData', JSON.stringify(userData));
-  alert('Daten gespeichert!');
-  location.reload();
-});
 
-window.onload = function() {
-  const data = JSON.parse(localStorage.getItem('rauchfreiUserData'));
-  if (data) {
-    for (const key in data) {
-      const input = document.getElementById(key);
-      if (input) input.value = data[key];
+  function showGreetingAndSpruch(data) {
+    document.getElementById("userNameDisplay").innerText = data?.name || "Freund";
+    const random = sprueche[Math.floor(Math.random() * sprueche.length)];
+    document.getElementById("motivation").innerText = random;
+  }
+
+  function buildMilestones(data) {
+    const container = document.getElementById("milestoneList");
+    const groups = {
+      "Kurzfristig": milestoneData.filter(m => m.days < 7),
+      "Mittelfristig": milestoneData.filter(m => m.days >= 7 && m.days < 42),
+      "Langfristig": milestoneData.filter(m => m.days >= 42 && m.days <= 365),
+      "Sehr langfristig": milestoneData.filter(m => m.days > 365)
+    };
+
+    for (const [cat, list] of Object.entries(groups)) {
+      const section = document.createElement("div");
+      const header = document.createElement("h3");
+      header.innerText = cat;
+      section.appendChild(header);
+
+      list.forEach(m => {
+        const percent = Math.min(100, Math.round((data.days / m.days) * 100));
+        const div = document.createElement("div");
+        div.className = "milestone";
+        div.innerHTML = `
+          <h4>${m.title}</h4>
+          <div class="circle" style="background: conic-gradient(green ${percent}%, #444 ${percent}%);">
+            <span>${percent}%</span>
+          </div>
+          <p>${m.desc}</p>`;
+        section.appendChild(div);
+      });
+
+      container.appendChild(section);
     }
   }
-};
+
+  function updateDashboard(data) {
+    const groups = {
+      "shortHealth": milestoneData.filter(m => m.days < 7),
+      "midHealth": milestoneData.filter(m => m.days >= 7 && m.days < 42),
+      "longHealth": milestoneData.filter(m => m.days >= 42 && m.days <= 365),
+      "veryHealth": milestoneData.filter(m => m.days > 365)
+    };
+    for (const [id, list] of Object.entries(groups)) {
+      const avg = list.length
+        ? Math.round(list.map(m => Math.min(100, data.days / m.days * 100)).reduce((a, b) => a + b, 0) / list.length)
+        : 0;
+      const el = document.getElementById(id);
+      if (el) {
+        el.innerHTML = `${avg}%`;
+        el.style.background = `conic-gradient(green ${avg}%, #444 ${avg}%)`;
+      }
+    }
+  }
+
+  // Initialisierung
+  const loadedData = loadData();
+  if (loadedData) {
+    showGreetingAndSpruch(loadedData);
+    buildMilestones(loadedData);
+    updateDashboard(loadedData);
+  }
+</script>
+</body>
+</html>
