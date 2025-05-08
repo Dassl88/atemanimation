@@ -1,310 +1,254 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rauchfrei App</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background: #121212;
-            color: white;
-        }
-        header, nav, main, section {
-            padding: 20px;
-        }
-        header h1, section h2 {
-            text-align: center;
-        }
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: #1f1f1f;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            z-index: 1000;
-        }
-        nav a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            cursor: pointer;
-            padding: 10px 20px;
-            border-radius: 5px;
-        }
-        nav a.active-nav {
-            background-color: green;
-        }
-        .circle {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            background: conic-gradient(green 75%, #444 0);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: auto;
-            margin-bottom: 20px;
-        }
-        .circle span {
-            text-align: center;
-            font-size: 18px;
-        }
-        .stats {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .milestone {
-            background: #2b2b2b;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 10px 0;
-            text-align: center;
-        }
-        .milestone h3 {
-            margin: 0 0 10px 0;
-            font-size: 18px;
-        }
-        .milestone p {
-            margin: 5px 0;
-            font-size: 14px;
-        }
-        .section {
-            display: none;
-        }
-        .active {
-            display: block;
-            margin-top: 80px;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            max-width: 400px;
-            margin: auto;
-            background: #1f1f1f;
-            padding: 20px;
-            border-radius: 10px;
-        }
-        label {
-            font-weight: bold;
-        }
-        input, select {
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            background: #2b2b2b;
-            color: white;
-        }
-        button {
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            background: green;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        button:hover {
-            background: darkgreen;
-        }
-        .greeting {
-            text-align: center;
-            margin-bottom: 10px;
-            font-size: 20px;
-        }
-        .quote {
-            text-align: center;
-            font-style: italic;
-            color: #aaa;
-            margin-bottom: 20px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rauchfrei App</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background: #121212;
+        color: white;
+    }
+    header, nav, main, section {
+        padding: 20px;
+    }
+    header h1, section h2 {
+        text-align: center;
+    }
+    nav {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        background: #1f1f1f;
+        display: flex;
+        justify-content: space-around;
+        padding: 10px 0;
+        z-index: 1000;
+    }
+    nav a {
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        cursor: pointer;
+        padding: 10px 20px;
+        border-radius: 5px;
+    }
+    nav a.active-nav {
+        background-color: green;
+    }
+    .circle {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: conic-gradient(green 0%, #444 0);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 10px auto;
+    }
+    .circle span {
+        text-align: center;
+        font-size: 16px;
+    }
+    .health-grid {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        margin-top: 20px;
+    }
+    .health-item {
+        text-align: center;
+        margin: 10px;
+    }
+    .stats {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .section {
+        display: none;
+    }
+    .active {
+        display: block;
+        margin-top: 80px;
+    }
+    .greeting {
+        text-align: center;
+        margin-bottom: 10px;
+        font-size: 20px;
+    }
+    .quote {
+        text-align: center;
+        font-style: italic;
+        color: #aaa;
+        margin-bottom: 20px;
+    }
+</style>
 </head>
 <body>
-    <nav>
-        <a id="navStart" onclick="showSection('start')">Start</a>
-        <a id="navDaten" onclick="showSection('daten')">Daten</a>
-        <a id="navMeilensteine" onclick="showSection('meilensteine')">Meilensteine</a>
-    </nav>
+<nav>
+    <a id="navStart" onclick="showSection('start')">Start</a>
+    <a id="navDaten" onclick="showSection('daten')">Daten</a>
+    <a id="navMeilensteine" onclick="showSection('meilensteine')">Meilensteine</a>
+</nav>
 
-    <section id="start" class="section active">
-        <header>
-            <h1>Rauchfrei Dashboard</h1>
-        </header>
-        <div class="greeting" id="greetingText">Willkommen!</div>
-        <div class="quote" id="quoteText"></div>
-        <div class="circle" id="healthCircle">
-            <span>
-                <strong id="healthPercent">0%</strong><br>
-                Gesundheit
-            </span>
+<section id="start" class="section active">
+    <header>
+        <h1>Rauchfrei Dashboard</h1>
+    </header>
+    <div class="greeting" id="greetingText">Willkommen!</div>
+    <div class="quote" id="quoteText"></div>
+    <div class="health-grid">
+        <div class="health-item">
+            <h3>Kurzfristig</h3>
+            <div class="circle" id="healthKurz"></div>
         </div>
-        <div class="stats" id="stats">
-            <p>Nicht geraucht seit: <strong id="timeSmokeFree">-</strong></p>
-            <p>Nicht gerauchte Zigaretten: <strong id="cigsSaved">-</strong></p>
-            <p>Wiedergewonnene Lebenszeit: <strong id="lifeGained">-</strong></p>
-            <p>Gespartes Geld: <strong id="moneySaved">-</strong></p>
+        <div class="health-item">
+            <h3>Mittelfristig</h3>
+            <div class="circle" id="healthMittel"></div>
         </div>
-    </section>
-
-    <section id="daten" class="section">
-        <header>
-            <h2>Meine Daten</h2>
-        </header>
-        <form id="userDataForm">
-            <label for="name">Name</label>
-            <input type="text" id="name" name="name" placeholder="Dein Name">
-
-            <label for="quitDate">Aufhördatum</label>
-            <input type="date" id="quitDate" name="quitDate">
-
-            <label for="quitTime">Aufhörzeit</label>
-            <input type="time" id="quitTime" name="quitTime">
-
-            <label for="cigsPerDay">Zigaretten pro Tag</label>
-            <input type="number" id="cigsPerDay" name="cigsPerDay" min="0">
-
-            <label for="packPrice">Preis pro Schachtel (€)</label>
-            <input type="number" step="0.01" id="packPrice" name="packPrice" min="0">
-
-            <label for="cigsPerPack">Zigaretten pro Schachtel</label>
-            <input type="number" id="cigsPerPack" name="cigsPerPack" min="1">
-
-            <label for="age">Alter</label>
-            <input type="number" id="age" name="age" min="0">
-
-            <label for="smokeYears">Jahre geraucht</label>
-            <input type="number" id="smokeYears" name="smokeYears" min="0">
-
-            <button type="submit">Speichern</button>
-        </form>
-    </section>
-
-    <section id="meilensteine" class="section">
-        <header>
-            <h2>Meilensteine</h2>
-        </header>
-        <div class="milestone" data-progress="100">
-            <h3>Sauerstoff</h3>
-            <div class="circle">
-                <span>100%</span>
-            </div>
-            <p>Nach 24 Stunden hat sich der Sauerstoffgehalt in deinem Blut wieder normalisiert.</p>
+        <div class="health-item">
+            <h3>Langfristig</h3>
+            <div class="circle" id="healthLang"></div>
         </div>
-        <div class="milestone" data-progress="59">
-            <h3>Kohlenmonoxid</h3>
-            <div class="circle">
-                <span>59%</span>
-            </div>
-            <p>Innerhalb von 48 Stunden ist Kohlenmonoxid aus deinem Körper entfernt.</p>
+        <div class="health-item">
+            <h3>Sehr langfristig</h3>
+            <div class="circle" id="healthSehr"></div>
         </div>
-    </section>
+    </div>
+    <div class="stats">
+        <p>Nicht geraucht seit: <strong id="timeSmokeFree">-</strong></p>
+        <p>Nicht gerauchte Zigaretten: <strong id="cigsSaved">-</strong></p>
+        <p>Wiedergewonnene Lebenszeit: <strong id="lifeGained">-</strong></p>
+        <p>Gespartes Geld: <strong id="moneySaved">-</strong></p>
+    </div>
+</section>
 
-    <script>
-        const quotes = [
-            "Jede Zigarette, die du nicht rauchst, ist ein Sieg.",
-            "Du wirst stärker mit jedem Tag ohne Nikotin.",
-            "Dein Körper dankt dir – heute, morgen und für immer.",
-            "Rauchfrei leben heißt frei atmen.",
-            "Der schwierigste Schritt ist der erste – und den hast du gemacht.",
-            "Du bist mutiger als du denkst.",
-            "Jede Stunde ohne Zigarette bringt dich deinem Ziel näher.",
-            "Du bist nicht allein – Millionen haben es geschafft, du schaffst es auch.",
-            "Deine Gesundheit ist unbezahlbar.",
-            "Heute ist ein perfekter Tag, um weiter rauchfrei zu bleiben.",
-            "Nicht-Raucher zu sein ist ein Geschenk an dich selbst.",
-            "Du bist auf dem Weg in ein besseres Leben.",
-            "Stolz wächst mit jeder Entscheidung gegen die Zigarette.",
-            "Du atmest Freiheit ein, nicht Rauch.",
-            "Erinnere dich an den Grund, warum du aufgehört hast.",
-            "Dein Wille ist stärker als jedes Verlangen.",
-            "Jeder Tag ohne Rauch ist ein Tag voller Kraft.",
-            "Du wirst überrascht sein, wie viel du erreichen kannst.",
-            "Zigaretten brauchen dich – aber du brauchst sie nicht.",
-            "Heute beginnt der Rest deines rauchfreien Lebens."
-        ];
+<section id="daten" class="section">
+    <header>
+        <h2>Meine Daten</h2>
+    </header>
+    <form id="userDataForm">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" placeholder="Dein Name">
+        <label for="quitDate">Aufhördatum</label>
+        <input type="date" id="quitDate" name="quitDate">
+        <label for="quitTime">Aufhörzeit</label>
+        <input type="time" id="quitTime" name="quitTime">
+        <label for="cigsPerDay">Zigaretten pro Tag</label>
+        <input type="number" id="cigsPerDay" name="cigsPerDay" min="0">
+        <label for="packPrice">Preis pro Schachtel (€)</label>
+        <input type="number" step="0.01" id="packPrice" name="packPrice" min="0">
+        <label for="cigsPerPack">Zigaretten pro Schachtel</label>
+        <input type="number" id="cigsPerPack" name="cigsPerPack" min="1">
+        <label for="age">Alter</label>
+        <input type="number" id="age" name="age" min="0">
+        <label for="smokeYears">Jahre geraucht</label>
+        <input type="number" id="smokeYears" name="smokeYears" min="0">
+        <button type="submit">Speichern</button>
+    </form>
+</section>
 
-        function showSection(sectionId) {
-            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-            document.getElementById(sectionId).classList.add('active');
+<section id="meilensteine" class="section">
+    <header>
+        <h2>Meilensteine</h2>
+    </header>
+    <p style="text-align:center;">Alle Meilensteine werden automatisch zugeordnet und berechnet.</p>
+</section>
 
-            document.querySelectorAll('nav a').forEach(a => a.classList.remove('active-nav'));
-            document.getElementById('nav' + sectionId.charAt(0).toUpperCase() + sectionId.slice(1)).classList.add('active-nav');
+<script>
+const quotes = [
+    "Jede Zigarette, die du nicht rauchst, ist ein Sieg.",
+    "Du wirst stärker mit jedem Tag ohne Nikotin.",
+    "Dein Körper dankt dir – heute, morgen und für immer.",
+    "Rauchfrei leben heißt frei atmen.",
+    "Der schwierigste Schritt ist der erste – und den hast du gemacht.",
+    "Du bist mutiger als du denkst.",
+    "Jede Stunde ohne Zigarette bringt dich deinem Ziel näher.",
+    "Du bist nicht allein – Millionen haben es geschafft, du schaffst es auch.",
+    "Deine Gesundheit ist unbezahlbar.",
+    "Heute ist ein perfekter Tag, um weiter rauchfrei zu bleiben.",
+    "Nicht-Raucher zu sein ist ein Geschenk an dich selbst.",
+    "Du bist auf dem Weg in ein besseres Leben.",
+    "Stolz wächst mit jeder Entscheidung gegen die Zigarette.",
+    "Du atmest Freiheit ein, nicht Rauch.",
+    "Erinnere dich an den Grund, warum du aufgehört hast.",
+    "Dein Wille ist stärker als jedes Verlangen.",
+    "Jeder Tag ohne Rauch ist ein Tag voller Kraft.",
+    "Du wirst überrascht sein, wie viel du erreichen kannst.",
+    "Zigaretten brauchen dich – aber du brauchst sie nicht.",
+    "Heute beginnt der Rest deines rauchfreien Lebens."
+];
+
+function showSection(sectionId) {
+    document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+    document.getElementById(sectionId).classList.add('active');
+    document.querySelectorAll('nav a').forEach(a => a.classList.remove('active-nav'));
+    document.getElementById('nav' + sectionId.charAt(0).toUpperCase() + sectionId.slice(1)).classList.add('active-nav');
+}
+
+const form = document.getElementById('userDataForm');
+form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const data = new FormData(form);
+    const userData = {};
+    for (const [key, value] of data.entries()) {
+        userData[key] = value;
+    }
+    localStorage.setItem('rauchfreiUserData', JSON.stringify(userData));
+    updateDashboard(userData);
+    alert('Daten gespeichert!');
+});
+
+window.onload = function() {
+    const data = JSON.parse(localStorage.getItem('rauchfreiUserData'));
+    if (data) {
+        for (const key in data) {
+            const input = document.getElementById(key);
+            if (input) input.value = data[key];
         }
+        updateDashboard(data);
+    }
+    document.getElementById("quoteText").innerText = quotes[Math.floor(Math.random() * quotes.length)];
+    showSection('start');
+}
 
-        const form = document.getElementById('userDataForm');
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const data = new FormData(form);
-            const userData = {};
-            for (const [key, value] of data.entries()) {
-                userData[key] = value;
-            }
-            localStorage.setItem('rauchfreiUserData', JSON.stringify(userData));
-            updateDashboard(userData);
-            alert('Daten gespeichert!');
-        });
+function updateDashboard(data) {
+    if (data.name) {
+        document.getElementById("greetingText").innerText = `Hallo ${data.name}, willkommen zurück!`;
+    }
+    if (!data.quitDate) return;
+    const quitDateTime = new Date(data.quitDate + 'T' + (data.quitTime || '00:00'));
+    const now = new Date();
+    const minutes = Math.floor((now - quitDateTime) / 60000);
+    const days = Math.floor(minutes / 1440);
+    const hours = Math.floor((minutes % 1440) / 60);
+    const mins = minutes % 60;
+    document.getElementById("timeSmokeFree").innerText = `${days} Tage, ${hours} Stunden, ${mins} Minuten`;
 
-        window.onload = function() {
-            const data = JSON.parse(localStorage.getItem('rauchfreiUserData'));
-            if (data) {
-                for (const key in data) {
-                    const input = document.getElementById(key);
-                    if (input) input.value = data[key];
-                }
-                updateDashboard(data);
-            }
-            const quote = quotes[Math.floor(Math.random() * quotes.length)];
-            document.getElementById("quoteText").innerText = quote;
-            showSection('start');
-        }
+    const cigsSaved = Math.floor((minutes / 1440) * parseInt(data.cigsPerDay));
+    document.getElementById("cigsSaved").innerText = cigsSaved;
+    const lifeMinutes = cigsSaved * 11;
+    document.getElementById("lifeGained").innerText = `${Math.floor(lifeMinutes / 1440)} Tage, ${Math.floor((lifeMinutes % 1440) / 60)} Stunden`;
+    const moneySaved = (cigsSaved / parseInt(data.cigsPerPack)) * parseFloat(data.packPrice);
+    document.getElementById("moneySaved").innerText = moneySaved.toFixed(2) + " €";
 
-        function updateDashboard(data) {
-            if (data.name) {
-                document.getElementById("greetingText").innerText = `Hallo ${data.name}, willkommen zurück!`;
-            }
-            if (!data.quitDate) return;
-            const quitDateTime = new Date(data.quitDate + 'T' + (data.quitTime || '00:00'));
-            const now = new Date();
-            const diff = now - quitDateTime;
-            const minutes = Math.floor(diff / 60000);
-            const days = Math.floor(minutes / 1440);
-            const hours = Math.floor((minutes % 1440) / 60);
-            const mins = minutes % 60;
-            document.getElementById("timeSmokeFree").innerText = `${days} Tage, ${hours} Stunden, ${mins} Minuten`;
-
-            const cigsPerDay = parseInt(data.cigsPerDay);
-            const cigsSaved = Math.floor((minutes / 1440) * cigsPerDay);
-            document.getElementById("cigsSaved").innerText = cigsSaved;
-
-            const lifeGainedMinutes = cigsSaved * 11;
-            const lifeDays = Math.floor(lifeGainedMinutes / 1440);
-            const lifeHours = Math.floor((lifeGainedMinutes % 1440) / 60);
-            document.getElementById("lifeGained").innerText = `${lifeDays} Tage, ${lifeHours} Stunden`;
-
-            const pricePerPack = parseFloat(data.packPrice);
-            const cigsPerPack = parseInt(data.cigsPerPack);
-            const moneySaved = (cigsSaved / cigsPerPack) * pricePerPack;
-            document.getElementById("moneySaved").innerText = moneySaved.toFixed(2) + " €";
-
-            const milestoneElements = document.querySelectorAll('.milestone');
-            let totalProgress = 0;
-            let count = 0;
-            milestoneElements.forEach(m => {
-                const progress = parseInt(m.getAttribute('data-progress'));
-                if (!isNaN(progress)) {
-                    totalProgress += progress;
-                    count++;
-                }
-            });
-            const health = count > 0 ? Math.round(totalProgress / count) : 0;
-            document.getElementById("healthPercent").innerText = `${health}%`;
-            document.getElementById("healthCircle").style.background = `conic-gradient(green ${health}%, #444 0)`;
-        }
-    </script>
+    const groups = {
+        Kurz: [20, 30, 480, 1440, 120, 2880, 2880, 2880, 4320, 2880, 4320, 4320, 720, 4320, 6480, 2880, 10080, 7200, 10080, 4320, 10080, 7200, 4320, 10080, 1440, 5760, 6480, 4320, 10080],
+        Mittel: [20160, 25200, 30240, 40320, 30240, 40320, 45360, 40320, 60480, 40320, 50400, 40320, 60480, 40320, 45360, 60480, 40320, 50400, 60480, 50400],
+        Lang: [86400, 129600, 86400, 129600, 129600, 259200, 201600, 388800, 259200, 525600],
+        Sehr: [2628000, 5256000, 5256000, 5256000, 2628000, 1576800, 525600, 7884000, 5256000, 1576800, 2628000, 1576800, 1051200, 2628000, 1051200, 5256000, 1051200, 1051200, 5256000]
+    };
+    for (let cat in groups) {
+        const done = groups[cat].filter(t => minutes >= t).length;
+        const total = groups[cat].length;
+        const percent = Math.round((done / total) * 100);
+        const el = document.getElementById("health" + cat);
+        el.innerHTML = `<span><strong>${percent}%</strong></span>`;
+        el.style.background = `conic-gradient(green ${percent}%, #444 0)`;
+    }
+}
+</script>
 </body>
 </html>
