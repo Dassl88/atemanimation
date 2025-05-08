@@ -14,6 +14,9 @@
         header, nav, main, section {
             padding: 20px;
         }
+        header h1 {
+            text-align: center;
+        }
         nav {
             position: fixed;
             top: 0;
@@ -54,9 +57,10 @@
             padding: 15px;
             border-radius: 10px;
             margin: 10px 0;
+            text-align: center;
         }
         .milestone h3 {
-            margin: 0 0 5px 0;
+            margin: 0 0 10px 0;
             font-size: 18px;
         }
         .milestone p {
@@ -123,7 +127,7 @@
         </div>
         <div class="stats" id="stats">
             <p>Nicht geraucht seit: <strong id="timeSmokeFree">-</strong></p>
-            <p>Gesparte Zigaretten: <strong id="cigsSaved">-</strong></p>
+            <p>Nicht gerauchte Zigaretten: <strong id="cigsSaved">-</strong></p>
             <p>Wiedergewonnene Lebenszeit: <strong id="lifeGained">-</strong></p>
             <p>Gespartes Geld: <strong id="moneySaved">-</strong></p>
         </div>
@@ -139,6 +143,9 @@
 
             <label for="quitDate">Aufhördatum</label>
             <input type="date" id="quitDate" name="quitDate">
+
+            <label for="quitTime">Aufhörzeit</label>
+            <input type="time" id="quitTime" name="quitTime">
 
             <label for="cigsPerDay">Zigaretten pro Tag</label>
             <input type="number" id="cigsPerDay" name="cigsPerDay" min="0">
@@ -164,17 +171,17 @@
             <h2>Meilensteine</h2>
         </header>
         <div class="milestone">
+            <h3>Sauerstoff</h3>
             <div class="circle" style="background: conic-gradient(green 100%, #444 0); width: 100px; height: 100px;">
                 <span>100%</span>
             </div>
-            <h3>Sauerstoff</h3>
             <p>Nach 24 Stunden hat sich der Sauerstoffgehalt in deinem Blut wieder normalisiert.</p>
         </div>
         <div class="milestone">
+            <h3>Kohlenmonoxid</h3>
             <div class="circle" style="background: conic-gradient(green 59%, #444 0); width: 100px; height: 100px;">
                 <span>59%</span>
             </div>
-            <h3>Kohlenmonoxid</h3>
             <p>Innerhalb von 48 Stunden ist Kohlenmonoxid aus deinem Körper entfernt.</p>
         </div>
     </section>
@@ -210,9 +217,10 @@
         }
 
         function updateDashboard(data) {
-            const quitDate = new Date(data.quitDate);
+            if (!data.quitDate) return;
+            const quitDateTime = new Date(data.quitDate + 'T' + (data.quitTime || '00:00'));
             const now = new Date();
-            const diff = now - quitDate;
+            const diff = now - quitDateTime;
             const minutes = Math.floor(diff / 60000);
             const days = Math.floor(minutes / 1440);
             const hours = Math.floor((minutes % 1440) / 60);
