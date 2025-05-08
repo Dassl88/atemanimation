@@ -14,7 +14,7 @@
         header, nav, main, section {
             padding: 20px;
         }
-        header h1 {
+        header h1, section h2 {
             text-align: center;
         }
         nav {
@@ -170,16 +170,16 @@
         <header>
             <h2>Meilensteine</h2>
         </header>
-        <div class="milestone">
+        <div class="milestone" data-progress="100">
             <h3>Sauerstoff</h3>
-            <div class="circle" style="background: conic-gradient(green 100%, #444 0); width: 100px; height: 100px;">
+            <div class="circle">
                 <span>100%</span>
             </div>
             <p>Nach 24 Stunden hat sich der Sauerstoffgehalt in deinem Blut wieder normalisiert.</p>
         </div>
-        <div class="milestone">
+        <div class="milestone" data-progress="59">
             <h3>Kohlenmonoxid</h3>
-            <div class="circle" style="background: conic-gradient(green 59%, #444 0); width: 100px; height: 100px;">
+            <div class="circle">
                 <span>59%</span>
             </div>
             <p>Innerhalb von 48 Stunden ist Kohlenmonoxid aus deinem Körper entfernt.</p>
@@ -231,7 +231,7 @@
             const cigsSaved = Math.floor((minutes / 1440) * cigsPerDay);
             document.getElementById("cigsSaved").innerText = cigsSaved;
 
-            const lifeGainedMinutes = cigsSaved * 11; // Durchschnittlich 11 Minuten pro Zigarette
+            const lifeGainedMinutes = cigsSaved * 11;
             const lifeDays = Math.floor(lifeGainedMinutes / 1440);
             const lifeHours = Math.floor((lifeGainedMinutes % 1440) / 60);
             document.getElementById("lifeGained").innerText = `${lifeDays} Tage, ${lifeHours} Stunden`;
@@ -241,13 +241,18 @@
             const moneySaved = (cigsSaved / cigsPerPack) * pricePerPack;
             document.getElementById("moneySaved").innerText = moneySaved.toFixed(2) + " €";
 
-            // Gesundheit (vereinfachte Logik)
-            let health = 0;
-            if (minutes > 10080) health += 25; // 7 Tage
-            if (minutes > 43200) health += 25; // 30 Tage
-            if (minutes > 129600) health += 25; // 3 Monate
-            if (minutes > 525600) health += 25; // 1 Jahr
-
+            // Gesundheit aus allen Meilensteinen berechnen
+            const milestoneElements = document.querySelectorAll('.milestone');
+            let totalProgress = 0;
+            let count = 0;
+            milestoneElements.forEach(m => {
+                const progress = parseInt(m.getAttribute('data-progress'));
+                if (!isNaN(progress)) {
+                    totalProgress += progress;
+                    count++;
+                }
+            });
+            const health = count > 0 ? Math.round(totalProgress / count) : 0;
             document.getElementById("healthPercent").innerText = `${health}%`;
             document.getElementById("healthCircle").style.background = `conic-gradient(green ${health}%, #444 0)`;
         }
