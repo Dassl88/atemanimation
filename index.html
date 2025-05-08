@@ -11,21 +11,24 @@
             background: #121212;
             color: white;
         }
-        header, nav, main {
+        header, nav, main, section {
             padding: 20px;
         }
         nav {
             position: fixed;
-            bottom: 0;
+            top: 0;
             width: 100%;
             background: #1f1f1f;
             display: flex;
             justify-content: space-around;
             padding: 10px 0;
+            z-index: 1000;
         }
         nav a {
             color: white;
             text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
         }
         .circle {
             width: 150px;
@@ -52,13 +55,26 @@
             border-radius: 10px;
             margin: 10px 0;
         }
+        .section {
+            display: none;
+        }
+        .active {
+            display: block;
+            margin-top: 80px;
+        }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Rauchfrei Dashboard</h1>
-    </header>
-    <main>
+    <nav>
+        <a onclick="showSection('start')">Start</a>
+        <a onclick="showSection('daten')">Daten</a>
+        <a onclick="showSection('meilensteine')">Meilensteine</a>
+    </nav>
+
+    <section id="start" class="section active">
+        <header>
+            <h1>Rauchfrei Dashboard</h1>
+        </header>
         <div class="circle">
             <span>
                 <strong>75%</strong><br>
@@ -71,7 +87,19 @@
             <p>Wiedergewonnene Lebenszeit: <strong>1 Tag, 4 Stunden</strong></p>
             <p>Gespartes Geld: <strong>62,00 €</strong></p>
         </div>
-        <h2>Meilensteine</h2>
+    </section>
+
+    <section id="daten" class="section">
+        <header>
+            <h2>Meine Daten</h2>
+        </header>
+        <p>(Hier folgt später ein Formular zur Eingabe der Nutzerdaten)</p>
+    </section>
+
+    <section id="meilensteine" class="section">
+        <header>
+            <h2>Meilensteine</h2>
+        </header>
         <div class="milestone">
             <div class="circle" style="background: conic-gradient(green 100%, #444 0); width: 100px; height: 100px;">
                 <span>100%</span>
@@ -85,11 +113,13 @@
             <p>Kohlenmonoxid aus dem Körper</p>
         </div>
         <!-- Weitere Meilensteine hier -->
-    </main>
-    <nav>
-        <a href="#">Start</a>
-        <a href="#">Daten</a>
-        <a href="#">Meilensteine</a>
-    </nav>
+    </section>
+
+    <script>
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+        }
+    </script>
 </body>
 </html>
