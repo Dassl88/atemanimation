@@ -1,21 +1,71 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Rauchfrei App</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    body { font-family: Arial; background: #121212; color: white; margin: 0; }
-    nav { display: flex; justify-content: space-around; background: #1f1f1f; padding: 10px; position: sticky; top: 0; }
-    nav a { color: white; padding: 10px 20px; text-decoration: none; }
-    nav a.active-nav { background: green; border-radius: 5px; }
-    .section { display: none; padding: 20px; }
-    .section.active { display: block; }
-    .circle { width: 100px; height: 100px; border-radius: 50%; background: conic-gradient(green 0%, #444 0); display: flex; align-items: center; justify-content: center; margin: 10px auto; font-weight: bold; }
-    .milestone { background: #1f1f1f; margin: 15px 0; padding: 15px; border-radius: 10px; text-align: center; }
-    form label { display: block; margin-top: 10px; }
-    form input { width: 100%; padding: 8px; margin-top: 5px; }
-    form button { margin-top: 15px; padding: 10px; background: green; color: white; border: none; cursor: pointer; }
+    body {
+      background-color: #121212;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding-bottom: 100px;
+    }
+    nav {
+      background-color: #1f1f1f;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+    }
+    nav a.active-nav {
+      background-color: green;
+    }
+    .section {
+      display: none;
+      padding: 20px;
+    }
+    .section.active {
+      display: block;
+    }
+    .circle {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: conic-gradient(green 0%, #444 0%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 10px auto;
+      font-weight: bold;
+      font-size: 16px;
+    }
+    .stat-box {
+      background: #1f1f1f;
+      margin: 10px auto;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      width: 80%;
+    }
+    .health-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .health-item {
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -26,232 +76,203 @@
   </nav>
 
   <section id="dashboard" class="section active">
-    <h2 style="text-align:center;">Hallo <span id="userNameDisplay"></span> 👋</h2>
-    <p style="text-align:center;" id="motivation"></p>
+    <h2 style="text-align:center;">Willkommen <span id="userNameDisplay">👤</span></h2>
+    <p style="text-align:center;" id="motivationSpruch">Motivationsspruch erscheint hier</p>
+
+    <div class="stat-box" id="zeitBox">⏳ Rauchfrei seit: ...</div>
+    <div class="stat-box" id="zigBox">🚭 Nicht gerauchte Zigaretten: ...</div>
+    <div class="stat-box" id="geldBox">💰 Gespartes Geld: ...</div>
+    <div class="stat-box" id="lebenBox">❤️ Gewonnene Lebenszeit: ...</div>
+
+    <h3 style="text-align:center; margin-top: 40px;">Wiedererlangte Gesundheit</h3>
     <div class="health-grid">
-      <div class="health-item"><h4>Kurzfristig</h4><div class="circle" id="shortHealth">0%</div></div>
-      <div class="health-item"><h4>Mittelfristig</h4><div class="circle" id="midHealth">0%</div></div>
-      <div class="health-item"><h4>Langfristig</h4><div class="circle" id="longHealth">0%</div></div>
-      <div class="health-item"><h4>Sehr langfristig</h4><div class="circle" id="veryHealth">0%</div></div>
+      <div class="health-item">
+        <strong>Kurzfristig</strong><br />
+        <small>1 Min – 1 Woche</small>
+        <div class="circle" id="shortHealth">0%</div>
+      </div>
+      <div class="health-item">
+        <strong>Mittelfristig</strong><br />
+        <small>1 – 6 Wochen</small>
+        <div class="circle" id="midHealth">0%</div>
+      </div>
+      <div class="health-item">
+        <strong>Langfristig</strong><br />
+        <small>6 Wochen – 1 Jahr</small>
+        <div class="circle" id="longHealth">0%</div>
+      </div>
+      <div class="health-item">
+        <strong>Sehr langfristig</strong><br />
+        <small>1 Jahr – 15 Jahre</small>
+        <div class="circle" id="veryHealth">0%</div>
+      </div>
     </div>
   </section>
-  <section id="daten" class="section">
-    <h2 style="text-align:center;">Meine Daten</h2>
-    <form id="userDataForm">
-      <label>Name:<input type="text" id="name" required></label>
-      <label>Aufhördatum:<input type="date" id="quitDate" required></label>
-      <label>Uhrzeit:<input type="time" id="quitTime" required></label>
-      <label>Zigaretten/Tag:<input type="number" id="cigsPerDay" required></label>
-      <label>Zigaretten pro Schachtel:<input type="number" id="cigsPerPack" required></label>
-      <label>Preis pro Schachtel (€):<input type="number" step="0.01" id="packPrice" required></label>
-      <label>Alter:<input type="number" id="age"></label>
-      <label>Jahre geraucht:<input type="number" id="yearsSmoked"></label>
-      <button type="submit">Speichern</button>
-    </form>
-  </section>
-  <section id="meilensteine" class="section">
-    <h2 style="text-align:center;">Alle Meilensteine</h2>
-    <div id="milestoneList"></div>
-  </section>
-
-  <script>
-    // Navigation
-    function showSection(id) {
-      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      document.querySelectorAll('nav a').forEach(a => a.classList.remove('active-nav'));
-      document.querySelector(`nav a[onclick*="${id}"]`).classList.add('active-nav');
-    }
-
-    // Motivationssprüche
-    const sprueche = [
-      "Heute ist ein guter Tag, um stark zu sein.",
-      "Jede Zigarette, die du nicht rauchst, zählt.",
-      "Du atmest jetzt freier.",
-      "Dein Herz dankt dir.",
-      "Du wirst jeden Tag gesünder.",
-      "Freiheit beginnt mit dem ersten Schritt.",
-      "Du schaffst das – und zwar dauerhaft.",
-      "Ein neuer Anfang beginnt jetzt.",
-      "Du bist stärker als der Drang.",
-      "Dein Körper regeneriert sich.",
-      "Du gewinnst Leben zurück.",
-      "Lass den Rauch hinter dir.",
-      "Die Zukunft ist rauchfrei.",
-      "Heute bist du dein Held.",
-      "Mit jedem Atemzug wird’s besser.",
-      "Mach weiter – du bist auf dem Weg.",
-      "Du bist nicht allein.",
-      "Du bist mutig – und frei.",
-      "Rauchfrei ist das neue Glück.",
-      "Du hast dich selbst gewählt."
-    ];
-
-    // Daten speichern
-    const form = document.getElementById("userDataForm");
-    form.addEventListener("submit", function(e) {
-      e.preventDefault();
-      const data = {};
-      ["name","quitDate","quitTime","cigsPerDay","cigsPerPack","packPrice","age","yearsSmoked"].forEach(id => {
-        data[id] = document.getElementById(id).value;
-      });
-      localStorage.setItem("rauchfreiData", JSON.stringify(data));
-      alert("Daten gespeichert!");
-      location.reload();
-    });
-
-    // Meilensteindaten – Liste folgt im nächsten Block
-  </script>
+<section id="daten" class="section">
+  <h2 style="text-align:center;">Meine Daten</h2>
+  <form id="userDataForm" style="max-width: 400px; margin: auto;">
+    <label>Name:
+      <input type="text" id="name" name="name" required>
+    </label><br><br>
+    <label>Aufhördatum:
+      <input type="date" id="quitDate" name="quitDate" required>
+    </label><br><br>
+    <label>Uhrzeit:
+      <input type="time" id="quitTime" name="quitTime" required>
+    </label><br><br>
+    <label>Zigaretten pro Tag:
+      <input type="number" id="cigsPerDay" name="cigsPerDay" required>
+    </label><br><br>
+    <label>Zigaretten pro Schachtel:
+      <input type="number" id="cigsPerPack" name="cigsPerPack" required>
+    </label><br><br>
+    <label>Preis pro Schachtel (€):
+      <input type="number" step="0.01" id="packPrice" name="packPrice" required>
+    </label><br><br>
+    <label>Alter:
+      <input type="number" id="age" name="age">
+    </label><br><br>
+    <label>Jahre geraucht:
+      <input type="number" id="yearsSmoked" name="yearsSmoked">
+    </label><br><br>
+    <button type="submit">Daten speichern</button>
+  </form>
+</section>
+<section id="meilensteine" class="section">
+  <h2 style="text-align:center;">Meilensteine</h2>
+  <div id="milestoneList" style="max-width: 800px; margin: auto;"></div>
+</section>
 <script>
-  const milestoneData = [ 
-  { title: "Puls und Blutdruck", days: 0.01, desc: "Puls und Blutdruck sinken auf Normalniveau." },
-  { title: "Körpertemperatur reguliert sich", days: 0.02, desc: "Hände und Füße werden besser durchblutet." },
-  { title: "Durchblutung verbessert sich", days: 0.08, desc: "Extremitäten werden wärmer und besser versorgt." },
-  { title: "Sauerstoffgehalt", days: 0.33, desc: "Sauerstoffgehalt im Blut normalisiert sich." },
-  { title: "Erste Entzugserscheinungen", days: 0.5, desc: "Reizbarkeit und Unruhe treten auf." },
-  { title: "Kohlenmonoxidspiegel sinkt", days: 1, desc: "Kohlenmonoxid wird vollständig abgebaut." },
-  { title: "Mentale Klarheit kehrt zurück", days: 1.5, desc: "Konzentration verbessert sich." },
-  { title: "Geruch des Rauchens nimmt ab", days: 2, desc: "Atem, Haut und Kleidung riechen frischer." },
-  { title: "Riechsinn schärft sich", days: 2, desc: "Geruchssinn funktioniert deutlich besser." },
-  { title: "Geschmackssinn kehrt zurück", days: 2, desc: "Essen schmeckt wieder intensiver." },
-  { title: "Nikotinabbau", days: 3, desc: "Nikotin ist komplett aus dem Körper." },
-  { title: "Atemwege beginnen sich zu reinigen", days: 2, desc: "Lunge transportiert Schleim aktiv ab." },
-  { title: "Raucherhusten nimmt zu", days: 3, desc: "Lunge beginnt sich zu reinigen, was Husten verstärkt." },
-  { title: "Händezittern verschwindet", days: 5, desc: "Zittern durch Entzug klingt ab." },
-  { title: "Zuckerstoffwechsel stabilisiert sich", days: 5, desc: "Blutzuckerwerte normalisieren sich." },
-  { title: "Zahnfleisch wird besser durchblutet", days: 5, desc: "Zahnfleisch beginnt zu heilen." },
-  { title: "Finger verfärben sich zurück", days: 6, desc: "Gelbfärbung geht langsam zurück." },
-  { title: "Selbstwertgefühl steigt", days: 6, desc: "Stolz auf die Veränderung wächst." },
-  { title: "Erster Energieschub", days: 6, desc: "Du fühlst dich vitaler." },
-  { title: "Besseres Hautbild", days: 7, desc: "Haut sieht frischer aus." },
-  { title: "Atem wird frischer", days: 3, desc: "Mundgeruch verschwindet." },
-  { title: "1 Woche rauchfrei – erster großer Meilenstein", days: 7, desc: "Erste kritische Hürde überwunden." },
-  { title: "Lungenfunktion verbessert sich deutlich", days: 21, desc: "Besseres Atemvolumen, weniger Luftnot." },
-  { title: "Atemnot reduziert sich", days: 21, desc: "Lunge arbeitet spürbar effizienter." },
-  { title: "Husten lässt nach", days: 28, desc: "Reizhusten verschwindet." },
-  { title: "Flimmerhärchen regenerieren sich", days: 28, desc: "Reinigung der Lunge funktioniert wieder." },
-  { title: "Immunsystem wird stärker", days: 21, desc: "Abwehrkräfte steigen." },
-  { title: "Besserer Teint", days: 28, desc: "Gesunde Hautfarbe kehrt zurück." },
-  { title: "Sexualfunktion verbessert sich", days: 28, desc: "Bessere Durchblutung = bessere Leistung." },
-  { title: "Emotionale Ausgeglichenheit", days: 42, desc: "Stimmung wird dauerhaft stabil." },
-  { title: "Mehr Ausdauer beim Sport", days: 28, desc: "Du kannst dich länger körperlich betätigen." },
-  { title: "Schlaf wird erholsamer", days: 35, desc: "Tiefschlafphasen stabilisieren sich." },
-  { title: "Konzentration vollständig zurück", days: 28, desc: "Du bist geistig wieder voll leistungsfähig." },
-  { title: "Mehr Energie im Alltag", days: 35, desc: "Du fühlst dich kraftvoller." },
-  { title: "Schweiß riecht neutraler", days: 28, desc: "Kein Teergeruch mehr über Hautausscheidung." },
-  { title: "Blut fließt besser", days: 35, desc: "Geringeres Risiko für Blutgerinnsel." },
-  { title: "Infektanfälligkeit sinkt", days: 42, desc: "Weniger grippale Infekte." },
-  { title: "Zellregeneration beschleunigt sich", days: 28, desc: "Körper beginnt, sich neu aufzubauen." },
-  { title: "Entzündungswerte sinken", days: 42, desc: "Chronische Entzündungen lassen nach." },
-  { title: "Herzfrequenzvariabilität verbessert sich", days: 42, desc: "Bessere Anpassung an Belastung." },
-  { title: "Nägel und Haare wachsen gesünder", days: 42, desc: "Nährstoffaufnahme verbessert sich sichtbar." },
-    { title: "Zähne werden heller", days: 75, desc: "Verfärbungen bilden sich zurück." },
-  { title: "Haut wirkt jünger und gesünder", days: 90, desc: "Frischer Teint und weniger Falten." },
-  { title: "Stoffwechsel stabilisiert sich langfristig", days: 60, desc: "Körpergewicht reguliert sich." },
-  { title: "Verdauung normalisiert sich dauerhaft", days: 90, desc: "Regelmäßiger Rhythmus." },
-  { title: "Schleimproduktion reduziert sich", days: 120, desc: "Lunge produziert weniger Auswurf." },
-  { title: "Husten verschwindet vollständig", days: 180, desc: "Atemwege sind frei." },
-  { title: "Atemtiefe verbessert sich deutlich", days: 150, desc: "Du atmest tiefer und freier." },
-  { title: "Lungenfunktion nahezu regeneriert", days: 270, desc: "Leistungsfähigkeit fast wie vor dem Rauchen." },
-  { title: "Psychische Entlastung dauerhaft spürbar", days: 180, desc: "Kein innerer Suchtdruck mehr." },
-  { title: "Herzinfarktrisiko halbiert", days: 365, desc: "Risiko ist nur noch halb so hoch wie bei Rauchern." },
-  { title: "Immunsystem auf Top-Niveau", days: 540, desc: "Immunfunktion entspricht der eines Nichtrauchers." },
-  { title: "Fruchtbarkeit langfristig verbessert", days: 730, desc: "Hormonspiegel und Fruchtbarkeit steigen." },
-  { title: "Zellalterung verlangsamt sich spürbar", days: 730, desc: "Zellen erneuern sich effizienter." },
-  { title: "Emotionale Resilienz gestärkt", days: 730, desc: "Stärkere Bewältigungsstrategien." },
-  { title: "Gelenkgesundheit verbessert sich", days: 1095, desc: "Weniger Entzündungen und Abbauprozesse." },
-  { title: "Nichtraucheridentität gefestigt", days: 1460, desc: "Rauchen ist kein Thema mehr." },
-  { title: "Rückfallrisiko minimal", days: 1825, desc: "Psychisch komplett losgelöst vom Rauchen." },
-  { title: "Diabetesrisiko reduziert sich", days: 1825, desc: "Stoffwechsel normalisiert sich nachhaltig." },
-  { title: "Schlaganfallrisiko auf Nichtraucher-Niveau", days: 1825, desc: "Großes Risiko verringert." },
-  { title: "Krebsrisiko insgesamt deutlich gesenkt", days: 2190, desc: "Fortschreitende Risikoreduktion." },
-  { title: "COPD-Risiko langfristig deutlich geringer", days: 2920, desc: "Lungenfunktion bleibt stabil." },
-  { title: "Kehlkopf-, Speiseröhren-, Mundkrebsrisiko halbiert", days: 3285, desc: "Stark gesenktes Krebsrisiko." },
-  { title: "Bauchspeicheldrüsenkrebsrisiko sinkt deutlich", days: 3650, desc: "Fast wieder wie bei Nichtrauchern." },
-  { title: "Herz-Kreislauf-Gesundheit vollständig erholt", days: 4380, desc: "Arterien und Herz funktionieren wie bei Nichtrauchern." },
-  { title: "Bessere Gehirnleistung im Alter", days: 3650, desc: "Weniger Risiko für Demenz und Vergesslichkeit." },
-  { title: "Langsamerer Alterungsprozess", days: 730, desc: "Zellalterung verläuft messbar langsamer." },
-  { title: "Lebenserwartung deutlich erhöht", days: 3650, desc: "5–10 Jahre mehr Leben im Vergleich zu Rauchern." },
-  { title: "Höhere Lebensqualität auf allen Ebenen", days: 3650, desc: "Gesundheit, Wohlbefinden und Energie auf hohem Niveau." },
-  { title: "Selbstvertrauen maximal", days: 1095, desc: "Stolz auf die Veränderung tief verankert." }
+  function showSection(id) {
+    document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+    document.querySelectorAll("nav a").forEach(a => a.classList.remove("active-nav"));
+    document.querySelector(`nav a[onclick*="${id}"]`).classList.add("active-nav");
+  }
+
+  const sprueche = [
+    "Heute ist ein guter Tag, um stark zu sein.",
+    "Du gewinnst jeden Tag mehr zurück.",
+    "Dein Körper sagt Danke.",
+    "Freiheit beginnt mit dem ersten Schritt.",
+    "Du bist stärker als du denkst.",
+    "Jede Zigarette, die du nicht rauchst, zählt.",
+    "Atme durch – frei und klar.",
+    "Deine Gesundheit gehört dir.",
+    "Mach weiter – du wirst belohnt.",
+    "Du bist auf dem richtigen Weg.",
+    "Der erste Tag vom Rest deines Lebens.",
+    "Du hast heute schon gewonnen.",
+    "Es wird jeden Tag leichter.",
+    "Sei stolz auf dich.",
+    "Du bist ein Vorbild.",
+    "Dein Herz schlägt freier.",
+    "Deine Lunge atmet auf.",
+    "Heute bist du ein Held.",
+    "Rauchfrei heißt Lebensqualität.",
+    "Bleib stark – es lohnt sich."
   ];
 
-  // Fortschritt berechnen
-  function loadData() {
-    const data = JSON.parse(localStorage.getItem("rauchfreiData"));
-    if (!data || !data.quitDate || !data.quitTime) return null;
-    const dateStr = `${data.quitDate}T${data.quitTime}`;
-    const start = new Date(dateStr);
+  const form = document.getElementById("userDataForm");
+  form.addEventListener("submit", function(e) {
+    e.preventDefault();
+    const fields = ["name","quitDate","quitTime","cigsPerDay","cigsPerPack","packPrice","age","yearsSmoked"];
+    const userData = {};
+    fields.forEach(f => userData[f] = document.getElementById(f).value);
+    localStorage.setItem("rauchfreiUserData", JSON.stringify(userData));
+    alert("Daten gespeichert!");
+    location.reload();
+  });
+
+  function loadUserData() {
+    const d = JSON.parse(localStorage.getItem("rauchfreiUserData"));
+    if (!d || !d.quitDate || !d.quitTime) return null;
+    const start = new Date(`${d.quitDate}T${d.quitTime}`);
     const now = new Date();
     const minutes = Math.floor((now - start) / 60000);
     const days = minutes / 1440;
-    return { ...data, start, minutes, days };
+    return { ...d, start, minutes, days };
   }
 
-  function showGreetingAndSpruch(data) {
-    document.getElementById("userNameDisplay").innerText = data?.name || "Freund";
-    const random = sprueche[Math.floor(Math.random() * sprueche.length)];
-    document.getElementById("motivation").innerText = random;
+  function fillDashboard(data) {
+    document.getElementById("userNameDisplay").textContent = data.name || "Freund";
+    document.getElementById("motivationSpruch").textContent = sprueche[Math.floor(Math.random() * sprueche.length)];
+
+    const zigsPerDay = parseFloat(data.cigsPerDay);
+    const packs = parseFloat(data.cigsPerPack);
+    const price = parseFloat(data.packPrice);
+    const zigs = Math.round((zigsPerDay / 1440) * data.minutes);
+    const euros = ((zigs / packs) * price).toFixed(2);
+    const lifetime = Math.round(zigs * 10); // 10 Minuten pro Zigarette
+
+    document.getElementById("zeitBox").textContent = `⏳ Rauchfrei seit: ${Math.floor(data.days)} Tage`;
+    document.getElementById("zigBox").textContent = `🚭 Nicht gerauchte Zigaretten: ${zigs}`;
+    document.getElementById("geldBox").textContent = `💰 Gespartes Geld: ${euros} €`;
+    document.getElementById("lebenBox").textContent = `❤️ Gewonnene Lebenszeit: ${Math.floor(lifetime / 1440)} Tage ${Math.floor((lifetime % 1440) / 60)} Std`;
   }
 
-  function buildMilestones(data) {
+  const milestoneData = [/* <<< Hier vollständiges milestoneData Array einsetzen (aus vorheriger Antwort) */];
+
+  function updateHealthCircles(data) {
+    const cats = {
+      shortHealth: milestoneData.filter(m => m.days < 7),
+      midHealth: milestoneData.filter(m => m.days >= 7 && m.days < 42),
+      longHealth: milestoneData.filter(m => m.days >= 42 && m.days <= 365),
+      veryHealth: milestoneData.filter(m => m.days > 365)
+    };
+    for (let id in cats) {
+      const list = cats[id];
+      const avg = list.length
+        ? Math.round(list.map(m => Math.min(100, data.days / m.days * 100)).reduce((a, b) => a + b, 0) / list.length)
+        : 0;
+      const el = document.getElementById(id);
+      el.innerHTML = `${avg}%`;
+      el.style.background = `conic-gradient(green ${avg}%, #444 ${avg}%)`;
+    }
+  }
+
+  function renderMilestones(data) {
     const container = document.getElementById("milestoneList");
+    container.innerHTML = "";
     const groups = {
       "Kurzfristig": milestoneData.filter(m => m.days < 7),
       "Mittelfristig": milestoneData.filter(m => m.days >= 7 && m.days < 42),
       "Langfristig": milestoneData.filter(m => m.days >= 42 && m.days <= 365),
       "Sehr langfristig": milestoneData.filter(m => m.days > 365)
     };
-
-    for (const [cat, list] of Object.entries(groups)) {
-      const section = document.createElement("div");
+    for (let cat in groups) {
+      const groupBox = document.createElement("div");
       const header = document.createElement("h3");
       header.innerText = cat;
-      section.appendChild(header);
+      header.style.textAlign = "center";
+      groupBox.appendChild(header);
 
-      list.forEach(m => {
+      groups[cat].forEach(m => {
         const percent = Math.min(100, Math.round((data.days / m.days) * 100));
-        const div = document.createElement("div");
-        div.className = "milestone";
-        div.innerHTML = `
+        const box = document.createElement("div");
+        box.className = "milestone";
+        box.innerHTML = `
           <h4>${m.title}</h4>
-          <div class="circle" style="background: conic-gradient(green ${percent}%, #444 ${percent}%);">
-            <span>${percent}%</span>
-          </div>
+          <div class="circle" style="background: conic-gradient(green ${percent}%, #444 ${percent}%);">${percent}%</div>
           <p>${m.desc}</p>`;
-        section.appendChild(div);
+        groupBox.appendChild(box);
       });
 
-      container.appendChild(section);
+      container.appendChild(groupBox);
     }
   }
 
-  function updateDashboard(data) {
-    const groups = {
-      "shortHealth": milestoneData.filter(m => m.days < 7),
-      "midHealth": milestoneData.filter(m => m.days >= 7 && m.days < 42),
-      "longHealth": milestoneData.filter(m => m.days >= 42 && m.days <= 365),
-      "veryHealth": milestoneData.filter(m => m.days > 365)
-    };
-    for (const [id, list] of Object.entries(groups)) {
-      const avg = list.length
-        ? Math.round(list.map(m => Math.min(100, data.days / m.days * 100)).reduce((a, b) => a + b, 0) / list.length)
-        : 0;
-      const el = document.getElementById(id);
-      if (el) {
-        el.innerHTML = `${avg}%`;
-        el.style.background = `conic-gradient(green ${avg}%, #444 ${avg}%)`;
+  window.onload = () => {
+    const data = loadUserData();
+    if (data) {
+      fillDashboard(data);
+      renderMilestones(data);
+      updateHealthCircles(data);
+      for (let key in data) {
+        if (document.getElementById(key)) document.getElementById(key).value = data[key];
       }
     }
-  }
-
-  // Initialisierung
-  const loadedData = loadData();
-  if (loadedData) {
-    showGreetingAndSpruch(loadedData);
-    buildMilestones(loadedData);
-    updateDashboard(loadedData);
-  }
+  };
 </script>
 </body>
 </html>
