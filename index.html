@@ -66,6 +66,58 @@
     .health-item {
       text-align: center;
     }
+    #milestoneList h3 {
+      font-size: 1.6rem;
+      background-color: #2b7a78;
+      color: white;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 40px;
+      text-align: center;
+    }
+    h4, p {
+      text-align: center;
+    }
+    h4 {
+      font-weight: bold;
+    }
+    .milestone p {
+      font-weight: normal;
+      margin-top: 8px;
+      margin-bottom: 20px;
+      font-size: 0.95rem;
+    }
+    #userDataForm {
+      background: #1f1f1f;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 400px;
+      margin: auto;
+    }
+    #userDataForm label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    #userDataForm input {
+      width: 100%;
+      padding: 6px;
+      margin-top: 4px;
+      border-radius: 4px;
+      border: none;
+      background: #2c2c2c;
+      color: #fff;
+    }
+    #userDataForm button {
+      margin-top: 15px;
+      width: 100%;
+      padding: 10px;
+      background-color: green;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
   </style>
 </head>
 <body>
@@ -78,7 +130,6 @@
   <section id="dashboard" class="section active">
     <h2 style="text-align:center;">Willkommen <span id="userNameDisplay">👤</span></h2>
     <p style="text-align:center;" id="motivationSpruch">Motivationsspruch erscheint hier</p>
-
     <div class="stat-box" id="zeitBox">⏳ Rauchfrei seit: ...</div>
     <div class="stat-box" id="zigBox">🚭 Nicht gerauchte Zigaretten: ...</div>
     <div class="stat-box" id="geldBox">💰 Gespartes Geld: ...</div>
@@ -110,108 +161,146 @@
   </section>
 <section id="daten" class="section">
   <h2 style="text-align:center;">Meine Daten</h2>
-  <form id="userDataForm" style="max-width: 400px; margin: auto;">
+  <form id="userDataForm">
     <label>Name:
       <input type="text" id="name" name="name" required>
-    </label><br><br>
+    </label>
     <label>Aufhördatum:
       <input type="date" id="quitDate" name="quitDate" required>
-    </label><br><br>
+    </label>
     <label>Uhrzeit:
       <input type="time" id="quitTime" name="quitTime" required>
-    </label><br><br>
+    </label>
     <label>Zigaretten pro Tag:
       <input type="number" id="cigsPerDay" name="cigsPerDay" required>
-    </label><br><br>
+    </label>
     <label>Zigaretten pro Schachtel:
       <input type="number" id="cigsPerPack" name="cigsPerPack" required>
-    </label><br><br>
+    </label>
     <label>Preis pro Schachtel (€):
       <input type="number" step="0.01" id="packPrice" name="packPrice" required>
-    </label><br><br>
+    </label>
     <label>Alter:
       <input type="number" id="age" name="age">
-    </label><br><br>
+    </label>
     <label>Jahre geraucht:
       <input type="number" id="yearsSmoked" name="yearsSmoked">
-    </label><br><br>
+    </label>
     <button type="submit">Daten speichern</button>
   </form>
 </section>
+
 <section id="meilensteine" class="section">
   <h2 style="text-align:center;">Meilensteine</h2>
   <div id="milestoneList" style="max-width: 800px; margin: auto;"></div>
 </section>
+
 <script>
-  function showSection(id) {
-    document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
-    document.getElementById(id).classList.add("active");
-    document.querySelectorAll("nav a").forEach(a => a.classList.remove("active-nav"));
-    document.querySelector(nav a[onclick*="${id}"]).classList.add("active-nav");
+function showSection(id) {
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  document.querySelectorAll("nav a").forEach(a => a.classList.remove("active-nav"));
+  document.querySelector(nav a[onclick*="${id}"]).classList.add("active-nav");
+}
+
+function updateLiveTimer(startDate) {
+  function refresh() {
+    const jetzt = new Date();
+    const diff = jetzt - startDate;
+    const sek = Math.floor(diff / 1000);
+    const tage = Math.floor(sek / 86400);
+    const stunden = Math.floor((sek % 86400) / 3600);
+    const minuten = Math.floor((sek % 3600) / 60);
+    const sekunden = sek % 60;
+
+    const text = ⏳ Rauchfrei seit: ${tage} Tage, ${stunden} Std, ${minuten} Min, ${sekunden} Sek;
+    document.getElementById("zeitBox").textContent = text;
   }
+  refresh();
+  setInterval(refresh, 1000);
+}
 
-  const sprueche = [
-    "Heute ist ein guter Tag, um stark zu sein.",
-    "Du gewinnst jeden Tag mehr zurück.",
-    "Dein Körper sagt Danke.",
-    "Freiheit beginnt mit dem ersten Schritt.",
-    "Du bist stärker als du denkst.",
-    "Jede Zigarette, die du nicht rauchst, zählt.",
-    "Atme durch – frei und klar.",
-    "Deine Gesundheit gehört dir.",
-    "Mach weiter – du wirst belohnt.",
-    "Du bist auf dem richtigen Weg.",
-    "Der erste Tag vom Rest deines Lebens.",
-    "Du hast heute schon gewonnen.",
-    "Es wird jeden Tag leichter.",
-    "Sei stolz auf dich.",
-    "Du bist ein Vorbild.",
-    "Dein Herz schlägt freier.",
-    "Deine Lunge atmet auf.",
-    "Heute bist du ein Held.",
-    "Rauchfrei heißt Lebensqualität.",
-    "Bleib stark – es lohnt sich."
-  ];
+const sprueche = [
+  "Heute ist ein guter Tag, um stark zu sein.",
+  "Du gewinnst jeden Tag mehr zurück.",
+  "Dein Körper sagt Danke.",
+  "Freiheit beginnt mit dem ersten Schritt.",
+  "Du bist stärker als du denkst.",
+  "Jede Zigarette, die du nicht rauchst, zählt.",
+  "Atme durch – frei und klar.",
+  "Deine Gesundheit gehört dir.",
+  "Mach weiter – du wirst belohnt.",
+  "Du bist auf dem richtigen Weg.",
+  "Der erste Tag vom Rest deines Lebens.",
+  "Du hast heute schon gewonnen.",
+  "Es wird jeden Tag leichter.",
+  "Sei stolz auf dich.",
+  "Du bist ein Vorbild.",
+  "Dein Herz schlägt freier.",
+  "Deine Lunge atmet auf.",
+  "Heute bist du ein Held.",
+  "Rauchfrei heißt Lebensqualität.",
+  "Bleib stark – es lohnt sich."
+];
+</script>
+<script>
+const form = document.getElementById("userDataForm");
+form.addEventListener("submit", function(e) {
+  e.preventDefault();
+  const fields = ["name", "quitDate", "quitTime", "cigsPerDay", "cigsPerPack", "packPrice", "age", "yearsSmoked"];
+  const userData = {};
+  fields.forEach(f => userData[f] = document.getElementById(f).value);
+  localStorage.setItem("rauchfreiUserData", JSON.stringify(userData));
+  alert("Daten gespeichert!");
+  location.reload();
+});
 
-  const form = document.getElementById("userDataForm");
-  form.addEventListener("submit", function(e) {
-    e.preventDefault();
-    const fields = ["name","quitDate","quitTime","cigsPerDay","cigsPerPack","packPrice","age","yearsSmoked"];
-    const userData = {};
-    fields.forEach(f => userData[f] = document.getElementById(f).value);
-    localStorage.setItem("rauchfreiUserData", JSON.stringify(userData));
-    alert("Daten gespeichert!");
-    location.reload();
-  });
+function loadUserData() {
+  const d = JSON.parse(localStorage.getItem("rauchfreiUserData"));
+  if (!d || !d.quitDate || !d.quitTime) return null;
+  const start = new Date(${d.quitDate}T${d.quitTime});
+  const now = new Date();
+  const minutes = Math.floor((now - start) / 60000);
+  const days = minutes / 1440;
+  return { ...d, start, minutes, days };
+}
 
-  function loadUserData() {
-    const d = JSON.parse(localStorage.getItem("rauchfreiUserData"));
-    if (!d || !d.quitDate || !d.quitTime) return null;
-    const start = new Date(${d.quitDate}T${d.quitTime});
-    const now = new Date();
-    const minutes = Math.floor((now - start) / 60000);
-    const days = minutes / 1440;
-    return { ...d, start, minutes, days };
+function fillDashboard(data) {
+  document.getElementById("userNameDisplay").textContent = data.name || "Freund";
+  document.getElementById("motivationSpruch").textContent = sprueche[Math.floor(Math.random() * sprueche.length)];
+
+  const zigsPerDay = parseFloat(data.cigsPerDay);
+  const packs = parseFloat(data.cigsPerPack);
+  const price = parseFloat(data.packPrice);
+  const zigs = Math.round((zigsPerDay / 1440) * data.minutes);
+  const euros = ((zigs / packs) * price).toFixed(2);
+  const lifetime = Math.round(zigs * 10); // 10 Minuten pro Zigarette
+
+  document.getElementById("zigBox").textContent = 🚭 Nicht gerauchte Zigaretten: ${zigs};
+  document.getElementById("geldBox").textContent = 💰 Gespartes Geld: ${euros} €;
+  document.getElementById("lebenBox").textContent = ❤️ Gewonnene Lebenszeit: ${Math.floor(lifetime / 1440)} Tage ${Math.floor((lifetime % 1440) / 60)} Std;
+}
+
+function updateHealthCircles(data) {
+  const cats = {
+    shortHealth: milestoneData.filter(m => m.days < 7),
+    midHealth: milestoneData.filter(m => m.days >= 7 && m.days < 42),
+    longHealth: milestoneData.filter(m => m.days >= 42 && m.days <= 365),
+    veryHealth: milestoneData.filter(m => m.days > 365)
+  };
+  for (let id in cats) {
+    const list = cats[id];
+    const avg = list.length
+      ? Math.round(list.map(m => Math.min(100, data.days / m.days * 100)).reduce((a, b) => a + b, 0) / list.length)
+      : 0;
+    const el = document.getElementById(id);
+    el.innerHTML = ${avg}%;
+    el.style.background = conic-gradient(green ${avg}%, #444 ${avg}%);
   }
-
-  function fillDashboard(data) {
-    document.getElementById("userNameDisplay").textContent = data.name || "Freund";
-    document.getElementById("motivationSpruch").textContent = sprueche[Math.floor(Math.random() * sprueche.length)];
-
-    const zigsPerDay = parseFloat(data.cigsPerDay);
-    const packs = parseFloat(data.cigsPerPack);
-    const price = parseFloat(data.packPrice);
-    const zigs = Math.round((zigsPerDay / 1440) * data.minutes);
-    const euros = ((zigs / packs) * price).toFixed(2);
-    const lifetime = Math.round(zigs * 10); // 10 Minuten pro Zigarette
-
-    document.getElementById("zeitBox").textContent = ⏳ Rauchfrei seit: ${Math.floor(data.days)} Tage;
-    document.getElementById("zigBox").textContent = 🚭 Nicht gerauchte Zigaretten: ${zigs};
-    document.getElementById("geldBox").textContent = 💰 Gespartes Geld: ${euros} €;
-    document.getElementById("lebenBox").textContent = ❤️ Gewonnene Lebenszeit: ${Math.floor(lifetime / 1440)} Tage ${Math.floor((lifetime % 1440) / 60)} Std;
-  }
-
-  const milestoneData = [ { title: "Puls und Blutdruck", days: 0.01, desc: "20 Minuten Puls und Blutdruck sinken auf Normalniveau." },
+}
+</script>
+<script>
+const milestoneData =  [ { title: "Puls und Blutdruck", days: 0.01, desc: "20 Minuten Puls und Blutdruck sinken auf Normalniveau." },
   { title: "Körpertemperatur reguliert sich", days: 0.02, desc: " 30 Minuten Hände und Füße werden besser durchblutet." },
   { title: "Durchblutung verbessert sich", days: 0.08, desc: " 2 Stunden Extremitäten werden wärmer und besser versorgt." },
   { title: "Sauerstoffgehalt", days: 0.33, desc: " 8 Stunden Sauerstoffgehalt im Blut normalisiert sich." },
@@ -282,66 +371,51 @@
   { title: "Höhere Lebensqualität auf allen Ebenen", days: 3650, desc: "3650 Tage Gesundheit, Wohlbefinden und Energie auf hohem Niveau." },
   { title: "Selbstvertrauen maximal", days: 1095, desc: "1095 Tage Stolz auf die Veränderung tief verankert." }
 ];
-  function updateHealthCircles(data) {
-    const cats = {
-      shortHealth: milestoneData.filter(m => m.days < 7),
-      midHealth: milestoneData.filter(m => m.days >= 7 && m.days < 42),
-      longHealth: milestoneData.filter(m => m.days >= 42 && m.days <= 365),
-      veryHealth: milestoneData.filter(m => m.days > 365)
-    };
-    for (let id in cats) {
-      const list = cats[id];
-      const avg = list.length
-        ? Math.round(list.map(m => Math.min(100, data.days / m.days * 100)).reduce((a, b) => a + b, 0) / list.length)
-        : 0;
-      const el = document.getElementById(id);
-      el.innerHTML = ${avg}%;
-      el.style.background = conic-gradient(green ${avg}%, #444 ${avg}%);
-    }
+
+function renderMilestones(data) {
+  const container = document.getElementById("milestoneList");
+  container.innerHTML = "";
+  const groups = {
+    "Kurzfristig": milestoneData.filter(m => m.days < 7),
+    "Mittelfristig": milestoneData.filter(m => m.days >= 7 && m.days < 42),
+    "Langfristig": milestoneData.filter(m => m.days >= 42 && m.days <= 365),
+    "Sehr langfristig": milestoneData.filter(m => m.days > 365)
+  };
+  for (let cat in groups) {
+    const groupBox = document.createElement("div");
+    const header = document.createElement("h3");
+    header.innerText = cat;
+    groupBox.appendChild(header);
+
+    groups[cat].forEach(m => {
+      const percent = Math.min(100, Math.round((data.days / m.days) * 100));
+      const box = document.createElement("div");
+      box.className = "milestone";
+      box.innerHTML = 
+        <h4>${m.title}</h4>
+        <div class="circle" style="background: conic-gradient(green ${percent}%, #444 ${percent}%);">${percent}%</div>
+        <p>${m.desc}</p>;
+      groupBox.appendChild(box);
+    });
+
+    container.appendChild(groupBox);
   }
+}
 
-  function renderMilestones(data) {
-    const container = document.getElementById("milestoneList");
-    container.innerHTML = "";
-    const groups = {
-      "Kurzfristig": milestoneData.filter(m => m.days < 7),
-      "Mittelfristig": milestoneData.filter(m => m.days >= 7 && m.days < 42),
-      "Langfristig": milestoneData.filter(m => m.days >= 42 && m.days <= 365),
-      "Sehr langfristig": milestoneData.filter(m => m.days > 365)
-    };
-    for (let cat in groups) {
-      const groupBox = document.createElement("div");
-      const header = document.createElement("h3");
-      header.innerText = cat;
-      header.style.textAlign = "center";
-      groupBox.appendChild(header);
-
-      groups[cat].forEach(m => {
-        const percent = Math.min(100, Math.round((data.days / m.days) * 100));
-        const box = document.createElement("div");
-        box.className = "milestone";
-        box.innerHTML = 
-          <h4>${m.title}</h4>
-          <div class="circle" style="background: conic-gradient(green ${percent}%, #444 ${percent}%);">${percent}%</div>
-          <p>${m.desc}</p>;
-        groupBox.appendChild(box);
-      });
-
-      container.appendChild(groupBox);
-    }
-  }
-
-  window.onload = () => {
-    const data = loadUserData();
-    if (data) {
-      fillDashboard(data);
-      renderMilestones(data);
-      updateHealthCircles(data);
-      for (let key in data) {
-        if (document.getElementById(key)) document.getElementById(key).value = data[key];
+window.onload = () => {
+  const data = loadUserData();
+  if (data) {
+    fillDashboard(data);
+    renderMilestones(data);
+    updateHealthCircles(data);
+    updateLiveTimer(new Date(data.start));
+    for (let key in data) {
+      if (document.getElementById(key)) {
+        document.getElementById(key).value = data[key];
       }
     }
-  };
+  }
+};
 </script>
 </body>
 </html>
