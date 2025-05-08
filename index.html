@@ -227,17 +227,7 @@ const quotes = [
     "Jede Stunde ohne Zigarette bringt dich deinem Ziel näher.",
     "Du bist nicht allein – Millionen haben es geschafft, du schaffst es auch.",
     "Deine Gesundheit ist unbezahlbar.",
-    "Heute ist ein perfekter Tag, um weiter rauchfrei zu bleiben.",
-    "Nicht-Raucher zu sein ist ein Geschenk an dich selbst.",
-    "Du bist auf dem Weg in ein besseres Leben.",
-    "Stolz wächst mit jeder Entscheidung gegen die Zigarette.",
-    "Du atmest Freiheit ein, nicht Rauch.",
-    "Erinnere dich an den Grund, warum du aufgehört hast.",
-    "Dein Wille ist stärker als jedes Verlangen.",
-    "Jeder Tag ohne Rauch ist ein Tag voller Kraft.",
-    "Du wirst überrascht sein, wie viel du erreichen kannst.",
-    "Zigaretten brauchen dich – aber du brauchst sie nicht.",
-    "Heute beginnt der Rest deines rauchfreien Lebens."
+    "Heute ist ein perfekter Tag, um weiter rauchfrei zu bleiben."
 ];
 
 function showSection(sectionId) {
@@ -257,6 +247,7 @@ form.addEventListener('submit', function(e) {
     }
     localStorage.setItem('rauchfreiUserData', JSON.stringify(userData));
     updateDashboard(userData);
+    updateMilestoneProgress(userData);
     alert('Daten gespeichert!');
 });
 
@@ -268,6 +259,7 @@ window.onload = function() {
             if (input) input.value = data[key];
         }
         updateDashboard(data);
+        updateMilestoneProgress(data);
     }
     document.getElementById("quoteText").innerText = quotes[Math.floor(Math.random() * quotes.length)];
     showSection('start');
@@ -285,28 +277,40 @@ function updateDashboard(data) {
     const hours = Math.floor((minutes % 1440) / 60);
     const mins = minutes % 60;
     document.getElementById("timeSmokeFree").innerText = `${days} Tage, ${hours} Stunden, ${mins} Minuten`;
-
-    const cigsSaved = Math.floor((minutes / 1440) * parseInt(data.cigsPerDay));
+    const cigsSaved = Math.floor((minutes / 1440) * parseInt(data.cigsPerDay || 0));
     document.getElementById("cigsSaved").innerText = cigsSaved;
     const lifeMinutes = cigsSaved * 11;
     document.getElementById("lifeGained").innerText = `${Math.floor(lifeMinutes / 1440)} Tage, ${Math.floor((lifeMinutes % 1440) / 60)} Stunden`;
-    const moneySaved = (cigsSaved / parseInt(data.cigsPerPack)) * parseFloat(data.packPrice);
+    const moneySaved = (cigsSaved / parseInt(data.cigsPerPack || 1)) * parseFloat(data.packPrice || 0);
     document.getElementById("moneySaved").innerText = moneySaved.toFixed(2) + " €";
+}
 
-    const groups = {
-        Kurz: [20, 30, 480, 1440, 120, 2880, 2880, 2880, 4320, 2880, 4320, 4320, 720, 4320, 6480, 2880, 10080, 7200, 10080, 4320, 10080, 7200, 4320, 10080, 1440, 5760, 6480, 4320, 10080],
-        Mittel: [20160, 25200, 30240, 40320, 30240, 40320, 45360, 40320, 60480, 40320, 50400, 40320, 60480, 40320, 45360, 60480, 40320, 50400, 60480, 50400],
-        Lang: [86400, 129600, 86400, 129600, 129600, 259200, 201600, 388800, 259200, 525600],
-        Sehr: [2628000, 5256000, 5256000, 5256000, 2628000, 1576800, 525600, 7884000, 5256000, 1576800, 2628000, 1576800, 1051200, 2628000, 1051200, 5256000, 1051200, 1051200, 5256000]
-    };
-    for (let cat in groups) {
-        const done = groups[cat].filter(t => minutes >= t).length;
-        const total = groups[cat].length;
-        const percent = Math.round((done / total) * 100);
-        const el = document.getElementById("health" + cat);
-        el.innerHTML = `<span><strong>${percent}%</strong></span>`;
-        el.style.background = `conic-gradient(green ${percent}%, #444 0)`;
-    }
+function updateMilestoneProgress(data) {
+    const quitDateTime = new Date(data.quitDate + 'T' + (data.quitTime || '00:00'));
+    const now = new Date();
+    const minutesSinceQuit = Math.floor((now - quitDateTime) / 60000);
+
+    document.querySelectorAll('.milestone').forEach(m => {
+        const description = m.querySelector('p').innerText;
+        const match = description.match(/Nach (.+?):/);
+        if (!match) return;
+
+        const timeText = match[1];
+        let requiredMinutes = 0;
+        if (timeText.includes('Minute')) requiredMinutes = parseInt(timeText);
+        else if (timeText.includes('Stunde')) requiredMinutes = parseInt(timeText) * 60;
+        else if (timeText.includes('Tag')) requiredMinutes = parseInt(timeText) * 1440;
+        else if (timeText.includes('Woche')) requiredMinutes = parseInt(timeText) * 10080;
+        else if (timeText.includes('Monat')) requiredMinutes = parseInt(timeText) * 43200;
+        else if (timeText.includes('Jahr')) requiredMinutes = parseInt(timeText) * 525600;
+
+        let progress = Math.min(100, Math.round((minutesSinceQuit / requiredMinutes) * 100));
+        if (isNaN(progress) || requiredMinutes === 0) progress = 0;
+
+        const circle = m.querySelector('.circle');
+        circle.innerHTML = `<span>${progress}%</span>`;
+        circle.style.background = `conic-gradient(green ${progress}%, #444 ${progress}%)`;
+    });
 }
 </script>
 </body>
