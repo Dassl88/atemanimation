@@ -207,6 +207,25 @@
     setInterval(refresh, 1000);
   }
 
+
+// Kurzfristige Entwöhnung (14 Tage)
+const kurzMax = 14;
+const kurzProgress = Math.min(100, Math.round((data.days / kurzMax) * 100));
+const kurzBar = document.getElementById("kurzSucht");
+kurzBar.style.width = `${kurzProgress}%`;
+kurzBar.textContent = `${kurzProgress}%`;
+
+// Langfristige Entwöhnung (5 Jahre)
+const langMax = 1825;
+const langProgress = Math.min(100, Math.round((data.days / langMax) * 100));
+const langBar = document.getElementById("langSucht");
+langBar.style.width = `${langProgress}%`;
+langBar.textContent = `${langProgress}%`;
+
+
+
+
+  
   const sprueche = [
     "Heute ist ein guter Tag, um stark zu sein.",
     "Du gewinnst jeden Tag mehr zurück.",
@@ -268,6 +287,32 @@
       `❤️ Gewonnene Lebenszeit: ${Math.floor(lifetime / 1440)} Tage ${Math.floor((lifetime % 1440) / 60)} Std`;
   }
 
+
+<h3 style="text-align:center; margin-top: 40px;">Suchtdruck Verlauf</h3>
+
+<div style="width: 80%; margin: 15px auto;">
+  <strong>Kurzfristige Entwöhnung (14 Tage)</strong>
+  <div style="background: #444; border-radius: 20px; overflow: hidden; height: 25px; margin-top: 5px;">
+    <div id="kurzSucht" style="height: 100%; width: 0%; background: linear-gradient(to right, red, orange, yellow, green); text-align: center; color: black; font-weight: bold;">
+      0%
+    </div>
+  </div>
+</div>
+
+<div style="width: 80%; margin: 15px auto;">
+  <strong>Langfristiger Suchtdruck (5 Jahre)</strong>
+  <div style="background: #444; border-radius: 20px; overflow: hidden; height: 25px; margin-top: 5px;">
+    <div id="langSucht" style="height: 100%; width: 0%; background: linear-gradient(to right, orange, yellow, green); text-align: center; color: black; font-weight: bold;">
+      0%
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
   const milestoneData =  [ { title: "Puls und Blutdruck", days: 0.01, desc: "20 Minuten Puls und Blutdruck sinken auf Normalniveau." },
   { title: "Körpertemperatur reguliert sich", days: 0.02, desc: " 30 Minuten Hände und Füße werden besser durchblutet." },
   { title: "Durchblutung verbessert sich", days: 0.08, desc: " 2 Stunden Extremitäten werden wärmer und besser versorgt." },
