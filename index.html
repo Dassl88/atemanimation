@@ -32,6 +32,11 @@
             text-decoration: none;
             font-weight: bold;
             cursor: pointer;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+        nav a.active-nav {
+            background-color: green;
         }
         .circle {
             width: 150px;
@@ -106,19 +111,32 @@
         button:hover {
             background: darkgreen;
         }
+        .greeting {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+        .quote {
+            text-align: center;
+            font-style: italic;
+            color: #aaa;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
     <nav>
-        <a onclick="showSection('start')">Start</a>
-        <a onclick="showSection('daten')">Daten</a>
-        <a onclick="showSection('meilensteine')">Meilensteine</a>
+        <a id="navStart" onclick="showSection('start')">Start</a>
+        <a id="navDaten" onclick="showSection('daten')">Daten</a>
+        <a id="navMeilensteine" onclick="showSection('meilensteine')">Meilensteine</a>
     </nav>
 
     <section id="start" class="section active">
         <header>
             <h1>Rauchfrei Dashboard</h1>
         </header>
+        <div class="greeting" id="greetingText">Willkommen!</div>
+        <div class="quote">„Jeder Tag ohne Zigarette bringt dich deinem besten Ich näher.“</div>
         <div class="circle" id="healthCircle">
             <span>
                 <strong id="healthPercent">0%</strong><br>
@@ -190,6 +208,9 @@
         function showSection(sectionId) {
             document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
             document.getElementById(sectionId).classList.add('active');
+
+            document.querySelectorAll('nav a').forEach(a => a.classList.remove('active-nav'));
+            document.getElementById('nav' + sectionId.charAt(0).toUpperCase() + sectionId.slice(1)).classList.add('active-nav');
         }
 
         const form = document.getElementById('userDataForm');
@@ -214,9 +235,13 @@
                 }
                 updateDashboard(data);
             }
+            showSection('start');
         }
 
         function updateDashboard(data) {
+            if (data.name) {
+                document.getElementById("greetingText").innerText = `Hallo ${data.name}, willkommen zurück!`;
+            }
             if (!data.quitDate) return;
             const quitDateTime = new Date(data.quitDate + 'T' + (data.quitTime || '00:00'));
             const now = new Date();
@@ -241,7 +266,6 @@
             const moneySaved = (cigsSaved / cigsPerPack) * pricePerPack;
             document.getElementById("moneySaved").innerText = moneySaved.toFixed(2) + " €";
 
-            // Gesundheit aus allen Meilensteinen berechnen
             const milestoneElements = document.querySelectorAll('.milestone');
             let totalProgress = 0;
             let count = 0;
