@@ -55,6 +55,14 @@
             border-radius: 10px;
             margin: 10px 0;
         }
+        .milestone h3 {
+            margin: 0 0 5px 0;
+            font-size: 18px;
+        }
+        .milestone p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
         .section {
             display: none;
         }
@@ -107,17 +115,17 @@
         <header>
             <h1>Rauchfrei Dashboard</h1>
         </header>
-        <div class="circle">
+        <div class="circle" id="healthCircle">
             <span>
-                <strong>75%</strong><br>
+                <strong id="healthPercent">75%</strong><br>
                 Gesundheit
             </span>
         </div>
-        <div class="stats">
-            <p>Nicht geraucht seit: <strong>12 Tage, 5 Stunden, 42 Minuten</strong></p>
-            <p>Gesparte Zigaretten: <strong>248</strong></p>
-            <p>Wiedergewonnene Lebenszeit: <strong>1 Tag, 4 Stunden</strong></p>
-            <p>Gespartes Geld: <strong>62,00 €</strong></p>
+        <div class="stats" id="stats">
+            <p>Nicht geraucht seit: <strong id="timeSmokeFree">-</strong></p>
+            <p>Gesparte Zigaretten: <strong id="cigsSaved">-</strong></p>
+            <p>Wiedergewonnene Lebenszeit: <strong id="lifeGained">-</strong></p>
+            <p>Gespartes Geld: <strong id="moneySaved">-</strong></p>
         </div>
     </section>
 
@@ -159,21 +167,45 @@
             <div class="circle" style="background: conic-gradient(green 100%, #444 0); width: 100px; height: 100px;">
                 <span>100%</span>
             </div>
-            <p>Sauerstoff-Gehalt normal</p>
+            <h3>Sauerstoff</h3>
+            <p>Nach 24 Stunden hat sich der Sauerstoffgehalt in deinem Blut wieder normalisiert.</p>
         </div>
         <div class="milestone">
             <div class="circle" style="background: conic-gradient(green 59%, #444 0); width: 100px; height: 100px;">
                 <span>59%</span>
             </div>
-            <p>Kohlenmonoxid aus dem Körper</p>
+            <h3>Kohlenmonoxid</h3>
+            <p>Innerhalb von 48 Stunden ist Kohlenmonoxid aus deinem Körper entfernt.</p>
         </div>
-        <!-- Weitere Meilensteine hier -->
     </section>
 
     <script>
         function showSection(sectionId) {
             document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
             document.getElementById(sectionId).classList.add('active');
+        }
+
+        const form = document.getElementById('userDataForm');
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const data = new FormData(form);
+            const userData = {};
+            for (const [key, value] of data.entries()) {
+                userData[key] = value;
+            }
+            localStorage.setItem('rauchfreiUserData', JSON.stringify(userData));
+            alert('Daten gespeichert!');
+        });
+
+        window.onload = function() {
+            const data = JSON.parse(localStorage.getItem('rauchfreiUserData'));
+            if (data) {
+                for (const key in data) {
+                    const input = document.getElementById(key);
+                    if (input) input.value = data[key];
+                }
+                // Optional: Berechnung und Anzeige basierend auf gespeicherten Daten hier einfügen
+            }
         }
     </script>
 </body>
