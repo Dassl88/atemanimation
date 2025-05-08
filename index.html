@@ -136,7 +136,7 @@
             <h1>Rauchfrei Dashboard</h1>
         </header>
         <div class="greeting" id="greetingText">Willkommen!</div>
-        <div class="quote">„Jeder Tag ohne Zigarette bringt dich deinem besten Ich näher.“</div>
+        <div class="quote" id="quoteText"></div>
         <div class="circle" id="healthCircle">
             <span>
                 <strong id="healthPercent">0%</strong><br>
@@ -205,6 +205,29 @@
     </section>
 
     <script>
+        const quotes = [
+            "Jede Zigarette, die du nicht rauchst, ist ein Sieg.",
+            "Du wirst stärker mit jedem Tag ohne Nikotin.",
+            "Dein Körper dankt dir – heute, morgen und für immer.",
+            "Rauchfrei leben heißt frei atmen.",
+            "Der schwierigste Schritt ist der erste – und den hast du gemacht.",
+            "Du bist mutiger als du denkst.",
+            "Jede Stunde ohne Zigarette bringt dich deinem Ziel näher.",
+            "Du bist nicht allein – Millionen haben es geschafft, du schaffst es auch.",
+            "Deine Gesundheit ist unbezahlbar.",
+            "Heute ist ein perfekter Tag, um weiter rauchfrei zu bleiben.",
+            "Nicht-Raucher zu sein ist ein Geschenk an dich selbst.",
+            "Du bist auf dem Weg in ein besseres Leben.",
+            "Stolz wächst mit jeder Entscheidung gegen die Zigarette.",
+            "Du atmest Freiheit ein, nicht Rauch.",
+            "Erinnere dich an den Grund, warum du aufgehört hast.",
+            "Dein Wille ist stärker als jedes Verlangen.",
+            "Jeder Tag ohne Rauch ist ein Tag voller Kraft.",
+            "Du wirst überrascht sein, wie viel du erreichen kannst.",
+            "Zigaretten brauchen dich – aber du brauchst sie nicht.",
+            "Heute beginnt der Rest deines rauchfreien Lebens."
+        ];
+
         function showSection(sectionId) {
             document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
             document.getElementById(sectionId).classList.add('active');
@@ -235,6 +258,8 @@
                 }
                 updateDashboard(data);
             }
+            const quote = quotes[Math.floor(Math.random() * quotes.length)];
+            document.getElementById("quoteText").innerText = quote;
             showSection('start');
         }
 
