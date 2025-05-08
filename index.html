@@ -222,3 +222,113 @@ function loadUserData() {
   const days = minutes / 1440;
   return { ...d, start, minutes, days };
 }
+function fillDashboard(data) {
+  document.getElementById("userNameDisplay").textContent = data.name || "Freund";
+  document.getElementById("motivationSpruch").textContent =
+    sprueche[Math.floor(Math.random() * sprueche.length)];
+
+  const zigsPerDay = parseFloat(data.cigsPerDay);
+  const packs = parseFloat(data.cigsPerPack);
+  const price = parseFloat(data.packPrice);
+  const zigs = Math.round((zigsPerDay / 1440) * data.minutes);
+  const euros = ((zigs / packs) * price).toFixed(2);
+  const lifetime = Math.round(zigs * 10); // 10 Minuten pro Zigarette
+
+  document.getElementById("zeitBox").textContent = `⏳ Rauchfrei seit: ${Math.floor(data.days)} Tage`;
+  document.getElementById("zigBox").textContent = `🚭 Nicht gerauchte Zigaretten: ${zigs}`;
+  document.getElementById("geldBox").textContent = `💰 Gespartes Geld: ${euros} €`;
+  document.getElementById("lebenBox").textContent = `❤️ Gewonnene Lebenszeit: ${Math.floor(lifetime / 1440)} Tage ${Math.floor((lifetime % 1440) / 60)} Std`;
+
+  const kurzMax = 14;
+  const kurzProgress = Math.min(100, Math.round((data.days / kurzMax) * 100));
+  const kurzBar = document.getElementById("kurzSucht");
+  kurzBar.style.width = `${kurzProgress}%`;
+  kurzBar.textContent = `${kurzProgress}%`;
+
+  const langMax = 1825;
+  const langProgress = Math.min(100, Math.round((data.days / langMax) * 100));
+  const langBar = document.getElementById("langSucht");
+  langBar.style.width = `${langProgress}%`;
+  langBar.textContent = `${langProgress}%`;
+}
+
+function updateHealthCircles(data) {
+  const cats = {
+    shortHealth: milestoneData.filter(m => m.days < 7),
+    midHealth: milestoneData.filter(m => m.days >= 7 && m.days < 42),
+    longHealth: milestoneData.filter(m => m.days >= 42 && m.days <= 365),
+    veryHealth: milestoneData.filter(m => m.days > 365)
+  };
+
+  for (let id in cats) {
+    const list = cats[id];
+    const avg = list.length
+      ? Math.round(list.map(m => Math.min(100, data.days / m.days * 100)).reduce((a, b) => a + b, 0) / list.length)
+      : 0;
+    const el = document.getElementById(id);
+    el.innerHTML = `${avg}%`;
+    el.style.background = `conic-gradient(green ${avg}%, #444 ${avg}%)`;
+  }
+}
+const milestoneData = [
+  { title: "Puls und Blutdruck", days: 0.01, desc: "🕒 Nach 20 Minuten: Puls und Blutdruck sinken auf Normalniveau." },
+  { title: "Körpertemperatur reguliert sich", days: 0.02, desc: "🕒 Nach 30 Minuten: Hände und Füße werden besser durchblutet." },
+  { title: "Sauerstoffgehalt", days: 0.33, desc: "🕒 Nach 8 Stunden: Sauerstoffgehalt im Blut normalisiert sich." },
+  { title: "Kohlenmonoxidspiegel sinkt", days: 1, desc: "🕒 Nach 24 Stunden: Kohlenmonoxid wird abgebaut." },
+  { title: "Nikotinabbau", days: 3, desc: "🕒 Nach 2–3 Tagen: Nikotin ist vollständig abgebaut." },
+  { title: "Mentale Klarheit kehrt zurück", days: 3, desc: "🕒 Nach 3 Tagen: Konzentration verbessert sich." },
+  { title: "1 Woche rauchfrei", days: 7, desc: "🕒 Tag 7: Rückfallgefahr sinkt deutlich." },
+  { title: "Lungenfunktion verbessert sich", days: 21, desc: "🕒 Nach 3 Wochen: Spürbar mehr Luft beim Atmen." },
+  { title: "Husten lässt nach", days: 28, desc: "🕒 Nach 4 Wochen: Reizhusten verschwindet." },
+  { title: "Herzinfarktrisiko halbiert", days: 365, desc: "🕒 Nach 1 Jahr: Risiko halbiert sich." },
+  { title: "Schlaganfallrisiko sinkt", days: 1825, desc: "🕒 Nach 5 Jahren: Risiko auf Niveau von Nichtrauchern." }
+  // Du kannst hier gerne ALLE Meilensteine aus deiner Liste ergänzen
+];
+
+function renderMilestones(data) {
+  const container = document.getElementById("milestoneList");
+  container.innerHTML = "";
+
+  const groups = {
+    "Kurzfristig": milestoneData.filter(m => m.days < 7),
+    "Mittelfristig": milestoneData.filter(m => m.days >= 7 && m.days < 42),
+    "Langfristig": milestoneData.filter(m => m.days >= 42 && m.days <= 365),
+    "Sehr langfristig": milestoneData.filter(m => m.days > 365)
+  };
+
+  for (let cat in groups) {
+    const groupBox = document.createElement("div");
+    groupBox.innerHTML = `<h3 style="text-align:center;">${cat}</h3>`;
+
+    groups[cat].forEach(m => {
+      const percent = Math.min(100, Math.round((data.days / m.days) * 100));
+      const box = document.createElement("div");
+      box.style = "margin: 20px; padding: 10px; background: #1c1c1c; border-radius: 10px; text-align: center;";
+      box.innerHTML = `
+        <h4>${m.title}</h4>
+        <div class="circle" style="background: conic-gradient(green ${percent}%, #444 ${percent}%);">${percent}%</div>
+        <p>${m.desc}</p>
+      `;
+      groupBox.appendChild(box);
+    });
+
+    container.appendChild(groupBox);
+  }
+}
+
+window.onload = () => {
+  const data = loadUserData();
+  if (data) {
+    fillDashboard(data);
+    updateHealthCircles(data);
+    renderMilestones(data);
+    for (let key in data) {
+      if (document.getElementById(key)) {
+        document.getElementById(key).value = data[key];
+      }
+    }
+  }
+};
+</script>
+</body>
+</html>
