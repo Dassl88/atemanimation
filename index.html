@@ -2,24 +2,24 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <title>Rauchfrei App</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rauchfrei App</title>
   <style>
     body {
       background-color: #121212;
       color: #fff;
       font-family: Arial, sans-serif;
       margin: 0;
-      padding-bottom: 100px;
+      padding: 0 0 100px 0;
     }
     nav {
       background-color: #1f1f1f;
       display: flex;
       justify-content: space-around;
-      padding: 10px 0;
+      padding: 12px 0;
       position: sticky;
       top: 0;
-      z-index: 100;
+      z-index: 1000;
     }
     nav a {
       color: white;
@@ -36,18 +36,6 @@
     }
     .section.active {
       display: block;
-    }
-    .circle {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      background: conic-gradient(green 0%, #444 0%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 10px auto;
-      font-weight: bold;
-      font-size: 16px;
     }
     .stat-box {
       background: #1f1f1f;
@@ -66,95 +54,118 @@
     .health-item {
       text-align: center;
     }
+    .circle {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: conic-gradient(green 0%, #444 0%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 10px auto;
+      font-weight: bold;
+      font-size: 16px;
+    }
   </style>
 </head>
 <body>
-<nav>
-  <a href="#" class="active-nav" onclick="showSection('dashboard')">Dashboard</a>
-  <a href="#" onclick="showSection('meilensteine')">Meilensteine</a>
-  <a href="#" onclick="showSection('daten')">Meine Daten</a>
-</nav>
+  <nav>
+    <a href="#" class="active-nav" onclick="showSection('dashboard')">Dashboard</a>
+    <a href="#" onclick="showSection('meilensteine')">Meilensteine</a>
+    <a href="#" onclick="showSection('daten')">Meine Daten</a>
+  </nav>
 
-<section id="dashboard" class="section active">
-  <h2 style="text-align:center;">Willkommen <span id="userNameDisplay">👤</span></h2>
-  <p style="text-align:center;" id="motivationSpruch">Motivationsspruch erscheint hier</p>
-  <div class="stat-box" id="zeitBox">⏳ Rauchfrei seit: ...</div>
-  <div class="stat-box" id="zigBox">🚭 Nicht gerauchte Zigaretten: ...</div>
-  <div class="stat-box" id="geldBox">💰 Gespartes Geld: ...</div>
-  <div class="stat-box" id="lebenBox">❤️ Gewonnene Lebenszeit: ...</div>
+  <section id="dashboard" class="section active">
+    <h2 style="text-align:center;">Willkommen <span id="userNameDisplay">👤</span></h2>
+    <p style="text-align:center;" id="motivationSpruch">Du schaffst das! 🚀</p>
 
-  <h3 style="text-align:center; margin-top: 40px;">Wiedererlangte Gesundheit</h3>
-  <div class="health-grid">
-    <div class="health-item">
-      <strong>Kurzfristig</strong><br />
-      <small>1 Min – 1 Woche</small>
-      <div class="circle" id="shortHealth">0%</div>
-    </div>
-    <div class="health-item">
-      <strong>Mittelfristig</strong><br />
-      <small>1 – 6 Wochen</small>
-      <div class="circle" id="midHealth">0%</div>
-    </div>
-    <div class="health-item">
-      <strong>Langfristig</strong><br />
-      <small>6 Wochen – 1 Jahr</small>
-      <div class="circle" id="longHealth">0%</div>
-    </div>
-    <div class="health-item">
-      <strong>Sehr langfristig</strong><br />
-      <small>1 Jahr – 15 Jahre</small>
-      <div class="circle" id="veryHealth">0%</div>
-    </div>
-  </div>
+    <div class="stat-box" id="zeitBox">⏳ Rauchfrei seit: ...</div>
+    <div class="stat-box" id="zigBox">🚭 Nicht gerauchte Zigaretten: ...</div>
+    <div class="stat-box" id="geldBox">💰 Gespartes Geld: ...</div>
+    <div class="stat-box" id="lebenBox">❤️ Gewonnene Lebenszeit: ...</div>
 
-  <h3 style="text-align:center; margin-top: 40px;">Suchtdruck Verlauf</h3>
-
-  <div style="width: 80%; margin: 15px auto;">
-    <strong>Kurzfristige Entwöhnung (14 Tage)</strong>
-    <div style="background: #444; border-radius: 20px; overflow: hidden; height: 25px; margin-top: 5px;">
-      <div id="kurzSucht" style="height: 100%; width: 0%; background: linear-gradient(to right, red, orange, yellow, green); text-align: center; color: black; font-weight: bold;">
-        0%
+    <h3 style="text-align:center; margin-top: 40px;">Wiedererlangte Gesundheit</h3>
+    <div class="health-grid">
+      <div class="health-item">
+        <strong>Kurzfristig</strong><br />
+        <small>1 Min – 1 Woche</small>
+        <div class="circle" id="shortHealth">0%</div>
+      </div>
+      <div class="health-item">
+        <strong>Mittelfristig</strong><br />
+        <small>1 – 6 Wochen</small>
+        <div class="circle" id="midHealth">0%</div>
+      </div>
+      <div class="health-item">
+        <strong>Langfristig</strong><br />
+        <small>6 Wochen – 1 Jahr</small>
+        <div class="circle" id="longHealth">0%</div>
+      </div>
+      <div class="health-item">
+        <strong>Sehr langfristig</strong><br />
+        <small>1 Jahr – 15 Jahre</small>
+        <div class="circle" id="veryHealth">0%</div>
       </div>
     </div>
-  </div>
 
-  <div style="width: 80%; margin: 15px auto;">
-    <strong>Langfristiger Suchtdruck (5 Jahre)</strong>
-    <div style="background: #444; border-radius: 20px; overflow: hidden; height: 25px; margin-top: 5px;">
-      <div id="langSucht" style="height: 100%; width: 0%; background: linear-gradient(to right, orange, yellow, green); text-align: center; color: black; font-weight: bold;">
-        0%
+    <h3 style="text-align:center; margin-top: 40px;">Suchtdruck Verlauf</h3>
+
+    <div style="width: 80%; margin: 15px auto;">
+      <strong>Kurzfristige Entwöhnung (14 Tage)</strong>
+      <div style="background: #444; border-radius: 20px; overflow: hidden; height: 25px; margin-top: 5px;">
+        <div id="kurzSucht" style="height: 100%; width: 0%; background: linear-gradient(to right, red, orange, yellow, green); text-align: center; color: black; font-weight: bold;">
+          0%
+        </div>
       </div>
     </div>
-  </div>
-</section>
+
+    <div style="width: 80%; margin: 15px auto;">
+      <strong>Langfristiger Suchtdruck (5 Jahre)</strong>
+      <div style="background: #444; border-radius: 20px; overflow: hidden; height: 25px; margin-top: 5px;">
+        <div id="langSucht" style="height: 100%; width: 0%; background: linear-gradient(to right, orange, yellow, green); text-align: center; color: black; font-weight: bold;">
+          0%
+        </div>
+      </div>
+    </div>
+  </section>
 <section id="daten" class="section">
   <h2 style="text-align:center;">Meine Daten</h2>
-  <form id="userDataForm" style="max-width: 400px; margin: auto;">
-    <label>Name:
-      <input type="text" id="name" name="name" required>
-    </label><br><br>
-    <label>Aufhördatum:
-      <input type="date" id="quitDate" name="quitDate" required>
-    </label><br><br>
-    <label>Uhrzeit:
-      <input type="time" id="quitTime" name="quitTime" required>
-    </label><br><br>
-    <label>Zigaretten pro Tag:
-      <input type="number" id="cigsPerDay" name="cigsPerDay" required>
-    </label><br><br>
-    <label>Zigaretten pro Schachtel:
-      <input type="number" id="cigsPerPack" name="cigsPerPack" required>
-    </label><br><br>
-    <label>Preis pro Schachtel (€):
-      <input type="number" step="0.01" id="packPrice" name="packPrice" required>
-    </label><br><br>
-    <label>Alter:
-      <input type="number" id="age" name="age">
-    </label><br><br>
-    <label>Jahre geraucht:
-      <input type="number" id="yearsSmoked" name="yearsSmoked">
-    </label><br><br>
-    <button type="submit">Daten speichern</button>
+  <form id="userDataForm" style="max-width: 400px; margin: 0 auto; background: #1f1f1f; padding: 20px; border-radius: 10px;">
+    <div style="margin-bottom: 15px;">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required style="width: 100%; padding: 8px; border-radius: 5px; border: none;">
+    </div>
+    <div style="margin-bottom: 15px;">
+      <label for="quitDate">Aufhördatum:</label>
+      <input type="date" id="quitDate" name="quitDate" required style="width: 100%; padding: 8px; border-radius: 5px; border: none;">
+    </div>
+    <div style="margin-bottom: 15px;">
+      <label for="quitTime">Uhrzeit:</label>
+      <input type="time" id="quitTime" name="quitTime" required style="width: 100%; padding: 8px; border-radius: 5px; border: none;">
+    </div>
+    <div style="margin-bottom: 15px;">
+      <label for="cigsPerDay">Zigaretten pro Tag:</label>
+      <input type="number" id="cigsPerDay" name="cigsPerDay" required style="width: 100%; padding: 8px; border-radius: 5px; border: none;">
+    </div>
+    <div style="margin-bottom: 15px;">
+      <label for="cigsPerPack">Zigaretten pro Schachtel:</label>
+      <input type="number" id="cigsPerPack" name="cigsPerPack" required style="width: 100%; padding: 8px; border-radius: 5px; border: none;">
+    </div>
+    <div style="margin-bottom: 15px;">
+      <label for="packPrice">Preis pro Schachtel (€):</label>
+      <input type="number" step="0.01" id="packPrice" name="packPrice" required style="width: 100%; padding: 8px; border-radius: 5px; border: none;">
+    </div>
+    <div style="margin-bottom: 15px;">
+      <label for="age">Alter:</label>
+      <input type="number" id="age" name="age" style="width: 100%; padding: 8px; border-radius: 5px; border: none;">
+    </div>
+    <div style="margin-bottom: 15px;">
+      <label for="yearsSmoked">Jahre geraucht:</label>
+      <input type="number" id="yearsSmoked" name="yearsSmoked" style="width: 100%; padding: 8px; border-radius: 5px; border: none;">
+    </div>
+    <button type="submit" style="width: 100%; padding: 10px; font-size: 1rem; background-color: green; color: white; border: none; border-radius: 5px;">
+      Daten speichern
+    </button>
   </form>
 </section>
 <section id="meilensteine" class="section">
@@ -192,8 +203,7 @@ const sprueche = [
   "Bleib stark – es lohnt sich."
 ];
 
-const form = document.getElementById("userDataForm");
-form.addEventListener("submit", function(e) {
+document.getElementById("userDataForm").addEventListener("submit", function(e) {
   e.preventDefault();
   const fields = ["name", "quitDate", "quitTime", "cigsPerDay", "cigsPerPack", "packPrice", "age", "yearsSmoked"];
   const userData = {};
@@ -212,50 +222,3 @@ function loadUserData() {
   const days = minutes / 1440;
   return { ...d, start, minutes, days };
 }
-
-function fillDashboard(data) {
-  document.getElementById("userNameDisplay").textContent = data.name || "Freund";
-  document.getElementById("motivationSpruch").textContent = sprueche[Math.floor(Math.random() * sprueche.length)];
-
-  const zigsPerDay = parseFloat(data.cigsPerDay);
-  const packs = parseFloat(data.cigsPerPack);
-  const price = parseFloat(data.packPrice);
-  const zigs = Math.round((zigsPerDay / 1440) * data.minutes);
-  const euros = ((zigs / packs) * price).toFixed(2);
-  const lifetime = Math.round(zigs * 10); // 10 Minuten pro Zigarette
-
-  document.getElementById("zeitBox").textContent = `⏳ Rauchfrei seit: ${Math.floor(data.days)} Tage`;
-  document.getElementById("zigBox").textContent = `🚭 Nicht gerauchte Zigaretten: ${zigs}`;
-  document.getElementById("geldBox").textContent = `💰 Gespartes Geld: ${euros} €`;
-  document.getElementById("lebenBox").textContent = `❤️ Gewonnene Lebenszeit: ${Math.floor(lifetime / 1440)} Tage ${Math.floor((lifetime % 1440) / 60)} Std`;
-
-  // ✅ Fortschrittsbalken berechnen
-  const kurzMax = 14;
-  const kurzProgress = Math.min(100, Math.round((data.days / kurzMax) * 100));
-  const kurzBar = document.getElementById("kurzSucht");
-  kurzBar.style.width = `${kurzProgress}%`;
-  kurzBar.textContent = `${kurzProgress}%`;
-
-  const langMax = 1825;
-  const langProgress = Math.min(100, Math.round((data.days / langMax) * 100));
-  const langBar = document.getElementById("langSucht");
-  langBar.style.width = `${langProgress}%`;
-  langBar.textContent = `${langProgress}%`;
-}
-
-// Hier kannst du noch updateHealthCircles() & renderMilestones() hinzufügen, wenn noch nicht drin
-
-window.onload = () => {
-  const data = loadUserData();
-  if (data) {
-    fillDashboard(data);
-    // updateHealthCircles(data);
-    // renderMilestones(data);
-    for (let key in data) {
-      if (document.getElementById(key)) document.getElementById(key).value = data[key];
-    }
-  }
-};
-</script>
-</body>
-</html>
